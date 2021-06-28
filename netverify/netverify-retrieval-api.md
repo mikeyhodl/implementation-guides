@@ -9,6 +9,7 @@ This guide describes how to implement the ID Verification Retrieval API.
 
 | Date    | Description|
 |:--------|:------------|
+| 2021-06-23   |Added reject reason code 113 for MISMATCHING\_DATA\_REPEATED\_FACE |
 | 2021-05-21   |Added "personalNumberValidation" to "additionalChecks" |
 | 2020-08-15   |Removed EU and US address format |
 | 2020-05-26   |Added "enrollmentTransactionReference" to Authentication retrieval |
@@ -502,10 +503,11 @@ Successful requests will return HTTP status code `200 OK` along with a JSON obje
 |Name| Type   | Max. Length    | Description|
 |:------------------------|:--------|:--------|:------------|
 |rejectReasonCode |string| 5  |see below |
-|rejectReasonDescription |string |255  |Possible codes and descriptions for verification status DENIED\_FRAUD:<br>100	MANIPULATED\_DOCUMENT<br/>105	FRAUDSTER<br/>106	FAKE<br/>107	PHOTO\_MISMATCH<br/>108	MRZ\_CHECK\_FAILED<br/>109	PUNCHED\_DOCUMENT<br/>110	CHIP\_DATA\_MANIPULATED (only available for ePassport)<br/>111	MISMATCH\_PRINTED\_BARCODE_DATA<br><br>Possible codes and descriptions for verificationStatus = ERROR\_NOT\_READABLE\_ID:<br/>102	PHOTOCOPY\_BLACK\_WHITE<br/>103	PHOTOCOPY\_COLOR<br/>104	DIGITAL\_COPY<br/>200	NOT\_READABLE\_DOCUMENT<br/>201	NO\_DOCUMENT<br/>202	SAMPLE\_DOCUMENT<br/>206	MISSING\_BACK<br/>207	WRONG\_DOCUMENT\_PAGE<br/>209	MISSING\_SIGNATURE<br/>210	CAMERA\_BLACK\_WHITE<br/>211	DIFFERENT\_PERSONS\_SHOWN<br/>300	MANUAL\_REJECTION|
+|rejectReasonDescription |string |255  |Possible codes and descriptions for verification status DENIED\_FRAUD:<br>100	MANIPULATED\_DOCUMENT<br/>105	FRAUDSTER<br/>106	FAKE<br/>107	PHOTO\_MISMATCH<br/>108	MRZ\_CHECK\_FAILED<br/>109	PUNCHED\_DOCUMENT<br/>110	CHIP\_DATA\_MANIPULATED (only available for ePassport)<br/>111	MISMATCH\_PRINTED\_BARCODE\_DATA<br/>113	MISMATCHING\_DATA\_REPEATED\_FACE<sup>1</sup><br><br>Possible codes and descriptions for verificationStatus = ERROR\_NOT\_READABLE\_ID:<br/>102	PHOTOCOPY\_BLACK\_WHITE<br/>103	PHOTOCOPY\_COLOR<br/>104	DIGITAL\_COPY<br/>200	NOT\_READABLE\_DOCUMENT<br/>201	NO\_DOCUMENT<br/>202	SAMPLE\_DOCUMENT<br/>206	MISSING\_BACK<br/>207	WRONG\_DOCUMENT\_PAGE<br/>209	MISSING\_SIGNATURE<br/>210	CAMERA\_BLACK\_WHITE<br/>211	DIFFERENT\_PERSONS\_SHOWN<br/>300	MANUAL\_REJECTION|
 |rejectReasonDetails |JSON object / JSON array  |   |Reject reason details as JSON object (if only one item is returned) or JSON array (containing JSON objects) if rejectReasonCode = 100 or 200, see table below |
 
 <br>
+<sup>1</sup>activation required
 
 #### Parameter `rejectReasonDetails`
 
@@ -574,7 +576,7 @@ See [1:n Best Practice](https://support.jumio.com/hc/en-us/articles/126080371379
 
 |Name |  Type    | Description|
 |:-------------------------------|:---------|:---------------|
-|searchResults   | enum | If verificationStatus = APPROVED\_VERIFIED possible values: <br />• POSITIVE\_RESULT<br />• NEGATIVE\_RESULT<br />else<br>• CHECK\_NOT\_DONE (see `searchResponse`)|
+|searchResults   | enum | If verificationStatus = APPROVED\_VERIFIED possible values: <br />• POSITIVE\_RESULT<br />• NEGATIVE\_RESULT<br />else<br>• CHECK\_NOT\_DONE (see `searchReason`)|
 |searchReason   | enum |Possible values: <br />• NOT\_ENOUGH\_DATA<br />• TECHNICAL\_ERROR |
 
 ## Examples
