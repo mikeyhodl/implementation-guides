@@ -137,7 +137,7 @@ The following parameters are posted to your callback URL for ID Verification Web
 |optionalData2   |255  |Optional field of MRZ line 2 | |
 |dni   |255  |DNI as available on the ID if idCountry = ESP and idSubtype = NATIONAL\_ID  | |
 |curp   |255  |CURP is available if idCountry = MEX and idType = PASSPORT, DRIVING\_LICENSE, or ID\_CARD and idSubtype = ELECTORAL\_ID  |activation required |
-|gender   |2  |Possible values: M, F<br>• if idCountry = FRA, HKG and idSubtype = NATIONAL\_ID (MRZ type CNIS)<br> •	if idCountry = BHR, SGP and idType = PASSPORT, ID\_CARD, DRIVING\_LICENSE<br> •	if idCountry = CHL and idType = ID\_CARD <br>• if idCountry = PHL and idType = DRIVING\_LICENSE <br>• if idCountry = PER and idType = PASSPORT, ID\_CARD <br>• if idType = VISA and additional extraction for Visa enabled <br>• if readable: best effort| |  
+|gender   |2  |Possible values: M, F<br>• if idCountry = FRA, HKG and idSubtype = NATIONAL\_ID (MRZ type CNIS)<br> •	if idCountry = BHR, SGP and idType = PASSPORT, ID\_CARD, DRIVING\_LICENSE<br> •	if idCountry = CHL and idType = ID\_CARD <br>• if idCountry = PHL and idType = DRIVING\_LICENSE <br>• if idCountry = PER and idType = PASSPORT, ID\_CARD <br>• if idType = VISA and additional extraction for Visa enabled <br>• if readable: best effort |activation required |
 |presetCountry   | 3  |Possible countries:<br />•	[ISO 3166-1 alpha-3](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) country code <br /> • XKX (Kosovo)| |
 |presetIdType   |    |Possible ID types: PASSPORT, DRIVING\_LICENSE, ID\_CARD| |
 |dlCarPermission|255 |Only available if:<br/> •Extraction supported for specific country<br/>•verificationStatus = APPROVED\_VERIFIED<br/><br/>Possible values:<br /> • YES<br /> • NO<br /> • NOT\_READABLE|activation required|
@@ -233,8 +233,11 @@ We encourage to use a standard library to convert the timestamp received from Ju
 |Parameter `rejectReason` | Type   | Max. Length    | Description|
 |:------------------------|:--------|:--------|:------------|
 |rejectReasonCode |String| 5  |see below |
-|rejectReasonDescription |String |64  |Possible codes and descriptions for verification status DENIED\_FRAUD:<br>100	MANIPULATED\_DOCUMENT<br/>105	FRAUDSTER<br/>106	FAKE<br/>107	PHOTO\_MISMATCH<br/>108	MRZ\_CHECK\_FAILED<br/>109	PUNCHED\_DOCUMENT<br/>110	CHIP\_DATA\_MANIPULATED (only available for ePassport)<br/>111	MISMATCH\_PRINTED\_BARCODE_DATA<br><br>Possible codes and descriptions for verificationStatus = ERROR\_NOT\_READABLE\_ID:<br/>102	PHOTOCOPY\_BLACK\_WHITE<br/>103	PHOTOCOPY\_COLOR (for sources WEB\_CAM and REDIRECT\_CAM)<br/>104	DIGITAL\_COPY<br/>200	NOT\_READABLE\_DOCUMENT<br/>201	NO\_DOCUMENT<br/>202	SAMPLE\_DOCUMENT<br/>206	MISSING\_BACK<br/>207	WRONG\_DOCUMENT\_PAGE<br/>209	MISSING\_SIGNATURE<br/>210	CAMERA\_BLACK\_WHITE<br/>211	DIFFERENT\_PERSONS\_SHOWN (documents of multiple people in one image)<br/>213 INVALID\_WATERMARK<br/>300	MANUAL\_REJECTION|
+|rejectReasonDescription |String |64  |Possible codes and descriptions for verification status DENIED\_FRAUD:<br>100	MANIPULATED\_DOCUMENT<br/>105	FRAUDSTER<br/>106	FAKE<br/>107	PHOTO\_MISMATCH<br/>108	MRZ\_CHECK\_FAILED<br/>109	PUNCHED\_DOCUMENT<br/>110	CHIP\_DATA\_MANIPULATED (only available for ePassport)<br/>111	MISMATCH\_PRINTED\_BARCODE\_DATA<br/>113 MISMATCHING\_DATA\_REPEATED\_FACE<sup>1</sup><br><br>Possible codes and descriptions for verificationStatus = ERROR\_NOT\_READABLE\_ID:<br/>102	PHOTOCOPY\_BLACK\_WHITE<br/>103	PHOTOCOPY\_COLOR (for sources WEB\_CAM and REDIRECT\_CAM)<br/>104	DIGITAL\_COPY<br/>200	NOT\_READABLE\_DOCUMENT<br/>201	NO\_DOCUMENT<br/>202	SAMPLE\_DOCUMENT<br/>206	MISSING\_BACK<br/>207	WRONG\_DOCUMENT\_PAGE<br/>209	MISSING\_SIGNATURE<br/>210	CAMERA\_BLACK\_WHITE<br/>211	DIFFERENT\_PERSONS\_SHOWN (documents of multiple people in one image)<br/>213 INVALID\_WATERMARK<br/>300	MANUAL\_REJECTION|
 |rejectReasonDetails |JSON object / JSON array  |   |Reject reason details as JSON object (if only one item is returned) or JSON array (containing JSON objects) if rejectReasonCode = 100 or 200, see table below |
+
+<br>
+<sup>1</sup>activation required
 
 
 ### Reject reason details
