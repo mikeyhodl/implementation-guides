@@ -155,12 +155,17 @@ We encourage to use a standard library to convert the timestamp received from Ju
 
 ### Supported documents for address extraction
 
-|Country    |ID card    |Driving license    |Passport    |Callback format<br>(until August 15)|Callback format<br>(from August 15)<sup>1</sup>|
-|:------------|:-------|:--------------|:--------------|:-------|:-------|
-|Australia|No|Yes|No|US|Raw|
-|Canada|No|Yes|No|US|Raw|
-|United Kingdom|No|Yes|No|Raw|Raw|
-|United States|Yes|Yes|No|US|Raw|
+|Country    |ID card    |Driving license    |Passport    |Callback format|
+|:------------|:-------|:--------------|:--------------|:-------|
+|Australia|No|Yes|No|Raw|
+|Canada|No|Yes|No|Raw|
+|France|Yes|No|No|Raw|
+|United Kingdom|No|Yes|No|Raw|
+|Indonesia|Yes|No|No|Raw|
+|Ireland|No|Yes|No|Raw|
+|Mexico|Yes|No|No|Raw|
+|Malaysia|Yes|No|No|Raw|
+|United States|Yes|Yes|No|Raw|
 
 <sup>1</sup> see [Upcoming Address format changes](#upcoming-address-format-changes)
 
