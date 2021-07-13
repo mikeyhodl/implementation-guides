@@ -167,7 +167,6 @@ We encourage to use a standard library to convert the timestamp received from Ju
 |Malaysia|Yes|No|No|Raw|
 |United States|Yes|Yes|No|Raw|
 
-<sup>1</sup> see [Upcoming Address format changes](#upcoming-address-format-changes)
 
 #### US address format
 
