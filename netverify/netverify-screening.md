@@ -61,7 +61,7 @@ To create a new profile, click **Add new search profile**.
 
 On this page, you will be asked to
 
-- Select search profile name
+- Select search profile ID
 - Select source list by type and/or location
 - Select group
 
