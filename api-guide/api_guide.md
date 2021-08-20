@@ -1313,13 +1313,13 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 | completedAt                        | string | Timestamp (UTC) of the completion.<br>Format: YYYY-MM-DDThh:mm:ss.SSSZ |
 | account                            | object | Possible values:<br>•	account.id                                       |
 | account.id                         | string | UUID of the account                                                    |
-| workflow                           | object | Possible values:<br>• workflow.id <br>• workflow.status <br>• workflow.definitionKey |
+| workflow                           | object | Possible values:<br>• workflow.id <br>• workflow.status <br>• workflow.definitionKey<br>• workflow.userReference<br>• workflow.customerInternalReference |
 | workflow.id                        | string | UUID of the workflow                                                   |
 | workflow.status                    | string | Possible values:<br>• INITIATED<br>• ACQUIRED<br>• PROCESSED<br>• SESSION_EXPIRED<br>•	TOKEN_EXPIRED   |
 | workflow.definitionKey             | string | See [supported keys](#workflow-definition-keys)                        |
 | workflow.userReference             | string | Customer internal reference for a request to link it in the customer backend (must not contain any PII) |
 | workflow.customerInternalReference | string | Reference for the end user in the customer backend (must not contain any PII) |
-| credentials                        | array (object)  | See [workflow.steps](#workflowsteps)                               |
+| credentials                        | array (object)  | See [credentials](#credentials)                               |
 | capabilities                       | object | See [capabilities](#capabilities)                                      |
 
 #### credentials
@@ -1342,15 +1342,19 @@ __Capability execution dependencies:__
  * usability (PASSED) --> similarity
  * usability (PASSED) --> authentication
 
-| Parameter       | Type  | Note            | Dependency     |
-|-----------------|-------|-----------------|----------------|
-| usability       | array (object) | See [usability](#capabilitiesusability)     | none      |
-| liveness        | array (object) | See [liveness](#capabilitiesliveness)       | usability |
-| similarity      | array (object) | See [similarity](#capabilitiessimilarity)   | usability |
-| authentication  | array (object) | See [authentication](#capabilitiesauthentication)   | usability |
-| imageChecks     | array (object) | See [imageChecks](#capabilitiesimageChecks) | usability |
-| extraction      | array (object) | See [extraction](#capabilitiesextraction)   | usability, imageChecks |
-| dataChecks      | array (object) | See [dataChecks](#capabilitiesdataChecks)   | usability, imageChecks, extraction |
+| Parameter              | Type  | Note            | Dependency     |
+|------------------------|-------|-----------------|----------------|
+| usability              | array (object) | See [usability](#capabilitiesusability)     | none      |
+| liveness               | array (object) | See [liveness](#capabilitiesliveness)       | usability |
+| similarity             | array (object) | See [similarity](#capabilitiessimilarity)   | usability |
+| authentication         | array (object) | See [authentication](#capabilitiesauthentication)   | usability |
+| imageChecks            | array (object) | See [imageChecks](#capabilitiesimageChecks) | usability |
+| extraction             | array (object) | See [extraction](#capabilitiesextraction)   | usability, imageChecks |
+| dataChecks             | array (object) | See [dataChecks](#capabilitiesdataChecks)   | usability, imageChecks, extraction |
+| watchlistScreening     | array (object) | See [watchlistScreening](#capabilitieswatchlistScreening)   | usability, extraction |
+| addressVerification    | array (object) | See [addressVerification](#capabilitiesaddressVerification)   | usability, extraction |
+| proofOfResidence       | array (object) | See [proofOfResidence](#capabilitiesproofOfResidence)   | usability, extraction |
+| govtDBCheck            | array (object) | See [govtDBCheck](#capabilitiesgovtDBCheck)   | usability, extraction |
 
 #### capabilities.usability
 
@@ -1362,9 +1366,9 @@ __Dependency:__ none
 | credentials.id         | string |              |
 | credentials.category   | string | ID           |
 | decision               | object |              |
-| decision.type          | string | Possible values:<br>• PASSED<br>• REJECTED<br>• WARNING<br>• NOT_EXECUTED |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |              |
-| decision.details.label | string | Possible values:<br>• OK<br>• BLACK_WHITE<br>• MISSING_PAGE<br>• MISSING_SIGNATURE<br>• NOT_A_DOCUMENT<br>• BAD_QUALITY<br>• PHOTOCOPY<br>• UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_DOCUMENT_TYPE<br>• NOT_UPLOADED<br>• TECHNICAL_ERROR<br>• LIVENESS_UNDETERMINED |
+| decision.details.label | string | Possible values:<br>• BAD_QUALITY<br>• BLACK_WHITE<br>• LIVENESS_UNDETERMINED<br>• MISSING_PAGE<br>• MISSING_SIGNATURE<br>• NOT_A_DOCUMENT<br>• NOT_UPLOADED<br>• OK<br>• PHOTOCOPY<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_DOCUMENT_TYPE |
 
 #### capabilities.liveness
 
@@ -1376,9 +1380,9 @@ __Dependency:__ [usability](#capabilitiesusability)
 | credentials.id         | string |                            |
 | credentials.category   | string | ID                         |
 | decision               | object |                            |
-| decision.type          | string | Possible values:<br>• PASSED<br>• REJECTED<br>• WARNING<br>• NOT_EXECUTED |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• OK<br>• LIVENESS_UNDETERMINED<br>• ID_USED_AS_SELFIE<br>• MULTIPLE_PEOPLE<br>• DIGITAL_COPY<br>• PHOTOCOPY<br>• MANIPULATED<br>• NO_FACE_PRESENT<br>• FACE_NOT_FULLY_VISIBLE<br>• BLACK_WHITE<br>• AGE_DIFFERENCE<br>• BAD_QUALITY<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
+| decision.details.label | string | Possible values:<br>• AGE_DIFFERENCE<br>• BAD_QUALITY<br>• BLACK_WHITE<br>• DIGITAL_COPY<br>• FACE_NOT_FULLY_VISIBLE<br>• ID_USED_AS_SELFIE<br>• LIVENESS_UNDETERMINED<br>• MANIPULATED<br>• MULTIPLE_PEOPLE<br>• NO_FACE_PRESENT<br>• OK<br>• PHOTOCOPY<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
 | validFaceMapForAuthentication   | string | href to manage facemap   |
 | data                   | object |              |
 | data.type              | object | Possible values:<br>• IPROOV_STANDARD<br>• IPROOV_PREMIUM (SDK channel only)<br>• JUMIO_STANDARD  |
@@ -1393,9 +1397,9 @@ __Dependency:__ [usability](#capabilitiesusability)
 | credentials.id         | string |              |
 | credentials.category   | string | ID           |
 | decision               | object |              |
-| decision.type          | string | Possible values:<br>• PASSED<br>• REJECTED<br>• WARNING<br>• NOT_EXECUTED |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |              |
-| decision.details.label | string | Possible values:<br>• MATCH<br>• NO_MATCH <br>• NOT_POSSIBLE <br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
+| decision.details.label | string | Possible values: <br>• PRECONDITION_NOT_FULFILLED<br>• MATCH<br>• NO_MATCH <br>• NOT_POSSIBLE<br>• TECHNICAL_ERROR |
 | data                   | object |              |
 | data.similarity        | string | Possible values:<br>• MATCH<br>• NO_MATCH<br>• NOT_POSSIBLE               |
 
@@ -1409,9 +1413,9 @@ __Dependency:__ [usability](#capabilitiesusability)
 | credentials.id         | string |                            |
 | credentials.category   | string | ID                         |
 | decision               | object |                            |
-| decision.type          | string | Possible values:<br>• PASSED<br>• REJECTED<br>• NOT_EXECUTED    |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED    |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• OK<br>• FAILED<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR          |
+| decision.details.label | string | Possible values:<br>• FAILED<br>• OK<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR          |
 | validFaceMapForAuthentication   | string | href to manage facemap                                 |
 
 #### capabilities.imageChecks
@@ -1424,9 +1428,9 @@ __Dependency:__ [usability](#capabilitiesusability)
 | credentials.id         | string |                            |
 | credentials.category   | string | ID                         |
 | decision               | object |                            |
-| decision.type          | string | Possible values:<br>• PASSED<br>• REJECTED<br>• WARNING<br>• NOT_EXECUTED |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• OK<br>• DIFFERENT_PERSON<br>• DIGITAL_COPY<br>• WATERMARK<br>• MANIPULATED_DOCUMENT<br>• OTHER_REJECTION<br>• GHOST_IMAGE_DIFFERENT<br>• PUNCHED<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br>• SAMPLE       |
+| decision.details.label | string | Possible values:<br>• DIFFERENT_PERSON<br>• DIGITAL_COPY<br>• GHOST_IMAGE_DIFFERENT<br>• MANIPULATED_DOCUMENT<br>• OK<br>• OTHER_REJECTION<br>• PRECONDITION_NOT_FULFILLED<br>• PUNCHED<br>• SAMPLE<br>• TECHNICAL_ERROR<br>• WATERMARK       |
 
 #### capabilities.extraction
 
@@ -1436,7 +1440,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 |------------------------|--------|----------------------------|
 | credentials            | object | Possible values:<br>• credentials.decision <br>• credentials.data        |
 | decision               | object | Possible values:<br>• decision.type<br>• decision.details                |
-| decision.type          | string | Possible values:<br>• PASSED <br>• NOT_EXECUTED                          |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED <br>• PASSED                          |
 | decision.details       | object | Possible values:<br>• decision.details.label                             |
 | decision.details.label | string | Possible values:<br>• OK<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR       |
 | data                   | string | See [extraction.data](#capabilitiesextractiondata)                                             |
@@ -1507,9 +1511,69 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | credentials.id         | string |                            |
 | credentials.category   | string | ID                         |
 | decision               | object |                            |
-| decision.type          | string | Possible values:<br>• PASSED<br>• REJECTED<br>• NOT_EXECUTED |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• OK<br>• NFC_CERTIFICATE<br>• MISMATCHING_DATAPOINTS<br>• MRZ_CHECKSUM<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
+| decision.details.label | string | Possible values:<br>• MISMATCHING_DATAPOINTS<br>• MRZ_CHECKSUM<br>• NFC_CERTIFICATE<br>• OK<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
+
+#### capabilities.watchlistScreening
+
+__Dependencies:__ [usability](#capabilitiesusability), [extraction](#capabilitiesextraction)
+
+| Parameter              | Type   | Note                       |
+|------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability                             |
+| decision               | object |                            |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• WARNING |
+| decision.details       | object |                            |
+| decision.details.label | string | Possible values:<br>• EXTRACTION_NOT_DONE<br>• INVALID_MERCHANT_SETTINGS<br>• MISMATCHING_DATA_REPEATED_FACE<br>• NO_VALID_ID_CREDENTIAL<br>• NOT_ENOUGH_DATA<br>• OK<br>• TECHNICAL_ERROR<br>• VALIDATION_FAILED |
+| data                   | object | See [watchlistScreening.data](#capabilitieswatchlistScreeningdata)                            |
+
+#### capabilities.watchlistScreening.data
+
+| Parameter              | Type   | Note                       |
+|------------------------|--------|----------------------------|
+| searchDate             | string |  Timestamp (UTC) of the response.<br>Format: YYYY-MM-DDThh:mm:ss.SSSZ                      |
+| searchStatus           | string | Possible values:<br>• DONE<br>• NOT_DONE<br>• ERROR                      |
+| searchId               | string | Only when searchStatus = DONE                      |
+| searchReference        | string | Only when searchStatus = DONE                      |
+| searchResultUrl        | string | Only when searchStatus = DONE                      |
+| searchResults          | integer | Only when searchStatus = DONE                    |
+
+#### capabilities.addressVerification
+
+__Dependencies:__ [usability](#capabilitiesusability), [extraction](#capabilitiesextraction)
+
+| Parameter              | Type   | Note                       |
+|------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability                             |
+| decision               | object |                            |
+| decision.type          | string | Possible values:<br>• PASSED<br>• REJECTED<br>• WARNING |
+| decision.details       | object |                            |
+| decision.details.label | string | Possible values:<br>• ALERT<br>• OK<br>• REJECTED |
+
+#### capabilities.proofOfResidence
+
+__Dependencies:__ [usability](#capabilitiesusability), [extraction](#capabilitiesextraction)
+
+| Parameter              | Type   | Note                       |
+|------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability                             |
+| decision               | object |                            |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
+| decision.details       | object |                            |
+| decision.details.label | string | Possible values:<br>• ALERT<br>• OK<br>• REJECTED |
+
+#### capabilities.govtDBCheck
+
+__Dependencies:__ [usability](#capabilitiesusability), [extraction](#capabilitiesextraction)
+
+| Parameter              | Type   | Note                       |
+|------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability                             |
+| decision               | object |                            |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
+| decision.details       | object |                            |
+| decision.details.label | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 
 ### Examples
 
@@ -1627,6 +1691,30 @@ Authorization: Bearer xxx
                     }
                 }
             }
+        ]
+        "watchlistScreening":[
+            {
+                "credentials": [
+                    {
+                        "id": "33333333-3333-3333-aaaaaaaaaaaa",
+                        "category": "ID"
+                      }
+                  ],
+                  "decision": {
+                      "type": "PASSED",
+                      "details": {
+                          "label": "OK"
+                      }
+                    },
+                    "data": {
+                        "searchDate": "2021-07-07T06:51:04.000Z",
+                        "searchId": "123456789",
+                        "searchReference": "1234567890-ABCDEFGH",
+                        "searchResultUrl": "https://app.complyadvantage.com/public/search/1234567890-ABCDEFGH/123456789",
+                        "searchResults": 0,
+                        "searchStatus": "SUCCESS"
+                    }
+            }       
         ]
     }
 }
