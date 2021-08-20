@@ -153,6 +153,9 @@ __Response:__
     "account": {
         "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
     },
+    "web": {
+        "href": "https://mycompany.web.amer-1.jumio.ai/web/v4/app?authorizationToken=xxx&locale=de"
+    },
     "sdk": {
         "token": "xxx"
     },
@@ -1212,6 +1215,9 @@ HTTP Request Method: __POST__
 * EU: `https://account.emea-1.jumio.ai/api/v1/accounts`
 * SG: `https://account.apac-1.jumio.ai/api/v1/accounts`
 
+| ⚠️&nbsp;&nbsp; `userReference` is required to be defined in the initiate for WF32 in order for Screening to work.
+|:----------|
+
 __Request:__
 ```
 curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts' \
@@ -1236,34 +1242,69 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts'
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE",
+        "userReference": "YOUR_USER_REFERENCE"
     }'
 ```
 
 __Response:__
 ```
-"watchlistScreening":{
-  {
-    "credentials": [
-    {
-      "id": "33333333-3333-3333-aaaaaaaaaaaa",
-      "category": "ID"
-    }],
-    "decision": {
-      "type": "PASSED",
-      "details": {
-        "label": "OK"
-      }
+{
+    "timestamp": "2021-08-20T11:36:34.005Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
     },
-    "data": {
-      "searchDate": "2021-07-07T06:51:04.000Z",
-      "searchId": "123456789",
-      "searchReference": "1234567890-ABCDEFGH",
-      "searchResultUrl": "https://app.complyadvantage.com/public/search/1234567890-ABCDEFGH/123456789",
-      "searchResults": 0,
-      "searchStatus": "SUCCESS"
+    "web": {
+        "href": "https://mycompany.web.amer-1.jumio.ai/web/v4/app?authorizationToken=xxx&locale=de"
+    },
+    "sdk": {
+        "token": "xxx"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa",
+        "credentials": [
+            {
+                "id": "33333333-3333-3333-aaaaaaaaaaaa",
+                "category": "ID",
+                "allowedChannels": [
+                    "WEB",
+                    "API",
+                    "SDK"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                      "front": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/FRONT",
+                      "back": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/BACK"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
+            },
+            {
+                "id": "33333333-3333-3333-bbbbbbbbbbbb",
+                "category": "SELFIE",
+                "allowedChannels": [
+                    "WEB",
+                    "API",
+                    "SDK"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "face": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/FACE"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
+            },
+            {
+                "id": "33333333-3333-3333-cccccccccccc",
+                "category": "FACEMAP",
+                "allowedChannels": [
+                    "WEB",
+                    "SDK"
+                ]
+            }
+        ]
     }
-  }
 }
 ```
 
