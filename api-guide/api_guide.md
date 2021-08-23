@@ -1352,9 +1352,9 @@ __Capability execution dependencies:__
 | extraction             | array (object) | See [extraction](#capabilitiesextraction)   | usability, imageChecks |
 | dataChecks             | array (object) | See [dataChecks](#capabilitiesdataChecks)   | usability, imageChecks, extraction |
 | watchlistScreening     | array (object) | See [watchlistScreening](#capabilitieswatchlistScreening)   | usability, extraction |
-| addressVerification    | array (object) | See [addressVerification](#capabilitiesaddressVerification)   | usability, extraction |
-| proofOfResidence       | array (object) | See [proofOfResidence](#capabilitiesproofOfResidence)   | usability, extraction |
-| govtDBCheck            | array (object) | See [govtDBCheck](#capabilitiesgovtDBCheck)   | usability, extraction |
+| addressValidation      | array (object) | See [addressValidation](#capabilitiesaddressValidation)   | usability, extraction |
+| proofOfResidency       | array (object) | See [proofOfResidency](#capabilitiesproofOfResidency)   | usability, extraction |
+| drivingLicenseVerification            | array (object) | See [drivingLicenseVerification](#capabilitiesdrivingLicenseVerification)   | usability, extraction |
 
 #### capabilities.usability
 
@@ -1534,24 +1534,12 @@ __Dependencies:__ [usability](#capabilitiesusability), [extraction](#capabilitie
 |------------------------|--------|----------------------------|
 | searchDate             | string |  Timestamp (UTC) of the response.<br>Format: YYYY-MM-DDThh:mm:ss.SSSZ                      |
 | searchStatus           | string | Possible values:<br>• DONE<br>• NOT_DONE<br>• ERROR                      |
-| searchId               | string | Only when searchStatus = DONE                      |
-| searchReference        | string | Only when searchStatus = DONE                      |
-| searchResultUrl        | string | Only when searchStatus = DONE                      |
-| searchResults          | integer | Only when searchStatus = DONE                    |
+| searchId               | string | Only if searchStatus = DONE                      |
+| searchReference        | string | Only if searchStatus = DONE                      |
+| searchResultUrl        | string | Only if searchStatus = DONE                      |
+| searchResults          | integer | Only if searchStatus = DONE                    |
 
-#### capabilities.addressVerification
-
-__Dependencies:__ [usability](#capabilitiesusability), [extraction](#capabilitiesextraction)
-
-| Parameter              | Type   | Note                       |
-|------------------------|--------|----------------------------|
-| id                     | string | UUID of the capability                             |
-| decision               | object |                            |
-| decision.type          | string | Possible values:<br>• PASSED<br>• REJECTED<br>• WARNING |
-| decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• ALERT<br>• OK<br>• REJECTED |
-
-#### capabilities.proofOfResidence
+#### capabilities.addressValidation
 
 __Dependencies:__ [usability](#capabilitiesusability), [extraction](#capabilitiesextraction)
 
@@ -1561,9 +1549,9 @@ __Dependencies:__ [usability](#capabilitiesusability), [extraction](#capabilitie
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• ALERT<br>• OK<br>• REJECTED |
+| decision.details.label | string | Possible values:<br>• ALERT<br>• DENY<br>• NOT_ENOUGH_DATA<br>• OK<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY |
 
-#### capabilities.govtDBCheck
+#### capabilities.proofOfResidency
 
 __Dependencies:__ [usability](#capabilitiesusability), [extraction](#capabilitiesextraction)
 
@@ -1573,7 +1561,19 @@ __Dependencies:__ [usability](#capabilitiesusability), [extraction](#capabilitie
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
+| decision.details.label | string | Possible values:<br>• ALERT<br>• DENY<br>• NOT_ENOUGH_DATA<br>• OK<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY |
+
+#### capabilities.drivingLicenseVerification
+
+__Dependencies:__ [usability](#capabilitiesusability), [extraction](#capabilitiesextraction)
+
+| Parameter              | Type   | Note                       |
+|------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability                             |
+| decision               | object |                            |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
+| decision.details       | object |                            |
+| decision.details.label | string | Possible values:<br>• ALERT<br>• DENY<br>• OK<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_STATE<br>• VALIDATION_FAILED |
 
 ### Examples
 
@@ -1692,32 +1692,84 @@ Authorization: Bearer xxx
                 }
             }
         ]
-        "watchlistScreening":[
-            {
-                "credentials": [
-                    {
-                        "id": "33333333-3333-3333-aaaaaaaaaaaa",
-                        "category": "ID"
-                      }
-                  ],
-                  "decision": {
-                      "type": "PASSED",
-                      "details": {
-                          "label": "OK"
-                      }
-                    },
-                    "data": {
-                        "searchDate": "2021-07-07T06:51:04.000Z",
-                        "searchId": "123456789",
-                        "searchReference": "1234567890-ABCDEFGH",
-                        "searchResultUrl": "https://app.complyadvantage.com/public/search/1234567890-ABCDEFGH/123456789",
-                        "searchResults": 0,
-                        "searchStatus": "SUCCESS"
+        "watchlistScreening": [
+             {
+                     "id": "1411111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                     "credentials": [
+                         {
+                             "id": "33333333-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                             "category": "ID"
+                         }
+                     ],
+                     "decision": {
+                         "type": "PASSED",
+                         "details": {
+                             "label": "OK"
+                         }
+                     },
+                     "data": {
+                      "searchDate": "2021-07-15T10:44:11.000Z",
+                      "searchId": "12345678",
+                      "searchReference": "1626345851-xxxxxx",
+                      "searchResultUrl": "https://app.complyadvantage.com/public/search/123456XXC-xxxx/xxxccc",
+                      "searchResults": 0,
+                      "searchStatus": "SUCCESS"
                     }
-            }       
-        ]
-    }
-}
+                 }
+             ],
+          “addressValidation”: [
+              {
+                     "id": "1511111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                     "credentials": [
+                         {
+                             "id": "33333333-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                             "category": "ID"
+                         }
+                     ],
+                     "decision": {
+                         "type": "PASSED",
+                         "details": {
+                             "label": "OK"
+                         }
+                     },
+            }
+          ],
+          “proofOfResidency”: [
+           {
+                     "id": "1611111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                     "credentials": [
+                         {
+                             "id": "33333333-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                             "category": "ID"
+                         }
+                     ],
+                     "decision": {
+                         "type": "PASSED",
+                         "details": {
+                             "label": "OK"
+                         }
+                     },
+            }
+          ],
+          "drivingLicenseVerification": [
+          {
+                     "id": "1711111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                     "credentials": [
+                         {
+                             "id": "33333333-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                             "category": "ID"
+                         }
+                     ],
+                     "decision": {
+                         "type": "PASSED",
+                         "details": {
+                             "label": "OK"
+                         }
+                     },
+            }
+         ]
+         }
+     }
 ```
 
 ## Get Images
