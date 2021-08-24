@@ -1523,9 +1523,9 @@ __Dependencies:__ [usability](#capabilitiesusability), [extraction](#capabilitie
 |------------------------|--------|----------------------------|
 | id                     | string | UUID of the capability                             |
 | decision               | object |                            |
-| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• WARNING |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• EXTRACTION_NOT_DONE<br>• INVALID_MERCHANT_SETTINGS<br>• MISMATCHING_DATA_REPEATED_FACE<br>• NO_VALID_ID_CREDENTIAL<br>• NOT_ENOUGH_DATA<br>• OK<br>• TECHNICAL_ERROR<br>• VALIDATION_FAILED |
+| decision.details.label | string | Possible values:<br>• ALERT<br>• EXTRACTION_NOT_DONE<br>• INVALID_MERCHANT_SETTINGS<br>• NOT_ENOUGH_DATA<br>• NO_VALID_ID_CREDENTIAL<br>• OK<br>• TECHNICAL_ERROR<br>• VALIDATION_FAILED |
 | data                   | object | See [watchlistScreening.data](#capabilitieswatchlistScreeningdata)                            |
 
 #### capabilities.watchlistScreening.data
@@ -1711,7 +1711,7 @@ Authorization: Bearer xxx
                       "searchDate": "2021-07-15T10:44:11.000Z",
                       "searchId": "12345678",
                       "searchReference": "1626345851-xxxxxx",
-                      "searchResultUrl": "https://app.complyadvantage.com/public/search/123456XXC-xxxx/xxxccc",
+                      "searchResultUrl": "https://app.xxx.com/public/search/123456XXC-xxxx/xxxccc",
                       "searchResults": 0,
                       "searchStatus": "SUCCESS"
                     }
