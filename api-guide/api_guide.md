@@ -348,7 +348,7 @@ YOUR_ACCESS_TOKEN' \
 | 9             | [Authentication](workflow_descriptions.md#workflow-9-authentication) | Compares the facemap of a user to an existing facemap that has already been captured. The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](workflow_descriptions.md#workflow-3-id-and-identity-verification) or [Workflow 5](workflow_descriptions.md#workflow-5-similarity-to-existing-id). |   
 | 16            | [Authentication on Premise](workflow_descriptions.md#workflow-16-authentication-on-premise) | Compares the facemap of a user to an existing facemap that was previously captured and is stored on the customer side. <br><br>  The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](#workflow-3-id-and-identity-verification) or [Workflow 5](workflow_descriptions.md#workflow-5-similarity-to-existing-id), and can be retrieved with the [Retrieval API](#retrieval) using the [`validFaceMapForAuthentication`](#capabilitiesliveness) parameter. |
 | 20            | [Similarity of Two Images](workflow_descriptions.md#workflow-20-similarity-of-two-images) | Matches the user's selfie with the photo on the ID to verify they are the same person. |
-| 32            | [ID Verification, Identity Verification, Screening](workflow_descriptions.md#workflow-32-id-verification-identity-verification-screening) | Verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user's face with the photo on the ID and performs a liveness check to ensure the person is physically present. Checks if user is part of any sanctions list using Comply Advantage. |
+| 32            | [ID Verification, Identity Verification, Screening](workflow_descriptions.md#workflow-32-id-verification-identity-verification-screening) | Verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user's face with the photo on the ID and performs a liveness check to ensure the person is physically present. Checks if user is part of any sanctions list. |
 
 Workflows are specified using the `key` attribute in the `workflowDefinition` object:
 ```
@@ -1337,10 +1337,14 @@ Since workflow execution consists of a chain of multiple capability executions (
 This means that some capabilities should not be executed if any of the previous capabilities were not successful because they were REJECTED or NOT_EXECUTED. If, for example, __usability__ has passed, but __imageChecks__ got rejected with the reason DIGITAL_COPY, the consequent __extraction__ and __dataChecks__ cannot be executed because of PRECONDITION_NOT_FULFILLED. The precondition in this case would be to successfully pass __imageChecks__.
 
 __Capability execution dependencies:__
- * usability (PASSED) --> imageChecks (PASSED) --> extraction (PASSED) --> dataChecks
- * usability (PASSED) --> liveness
- * usability (PASSED) --> similarity
- * usability (PASSED) --> authentication
+ * usability --> imageChecks --> extraction --> dataChecks
+ * usability --> liveness
+ * usability --> similarity
+ * usability --> authentication
+ * usability --> imageChecks --> extraction --> watchlistScreening
+ * usability --> imageChecks --> extraction --> addressValidation
+ * usability --> imageChecks --> extraction --> proofOfResidency
+ * usability --> imageChecks --> extraction --> drivingLicenseVerification
 
 | Parameter              | Type  | Note            | Dependency     |
 |------------------------|-------|-----------------|----------------|
@@ -1351,10 +1355,10 @@ __Capability execution dependencies:__
 | imageChecks            | array (object) | See [imageChecks](#capabilitiesimageChecks) | usability |
 | extraction             | array (object) | See [extraction](#capabilitiesextraction)   | usability, imageChecks |
 | dataChecks             | array (object) | See [dataChecks](#capabilitiesdataChecks)   | usability, imageChecks, extraction |
-| watchlistScreening     | array (object) | See [watchlistScreening](#capabilitieswatchlistScreening)   | usability, extraction |
-| addressValidation      | array (object) | See [addressValidation](#capabilitiesaddressValidation)   | usability, extraction |
-| proofOfResidency       | array (object) | See [proofOfResidency](#capabilitiesproofOfResidency)   | usability, extraction |
-| drivingLicenseVerification            | array (object) | See [drivingLicenseVerification](#capabilitiesdrivingLicenseVerification)   | usability, extraction |
+| watchlistScreening     | array (object) | See [watchlistScreening](#capabilitieswatchlistScreening)   | usability, imageChecks, extraction |
+| addressValidation      | array (object) | See [addressValidation](#capabilitiesaddressValidation)     | usability, imageChecks, extraction |
+| proofOfResidency       | array (object) | See [proofOfResidency](#capabilitiesproofOfResidency)       | usability, imageChecks, extraction |
+| drivingLicenseVerification | array (object) | See [drivingLicenseVerification](#capabilitiesdrivingLicenseVerification)   | usability, imageChecks, extraction |
 
 #### capabilities.usability
 
@@ -1368,7 +1372,7 @@ __Dependency:__ none
 | decision               | object |              |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |              |
-| decision.details.label | string | Possible values:<br>• BAD_QUALITY<br>• BLACK_WHITE<br>• LIVENESS_UNDETERMINED<br>• MISSING_PAGE<br>• MISSING_SIGNATURE<br>• NOT_A_DOCUMENT<br>• NOT_UPLOADED<br>• OK<br>• PHOTOCOPY<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_DOCUMENT_TYPE |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• BAD_QUALITY<br>• BLACK_WHITE<br>• MISSING_PAGE<br>• MISSING_SIGNATURE<br>• NOT_A_DOCUMENT<br>• PHOTOCOPY<br><br>if decision.type = WARNING:<br>• LIVENESS_UNDETERMINED<br>•  UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_DOCUMENT_TYPE |
 
 #### capabilities.liveness
 
@@ -1382,10 +1386,10 @@ __Dependency:__ [usability](#capabilitiesusability)
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• AGE_DIFFERENCE<br>• BAD_QUALITY<br>• BLACK_WHITE<br>• DIGITAL_COPY<br>• FACE_NOT_FULLY_VISIBLE<br>• ID_USED_AS_SELFIE<br>• LIVENESS_UNDETERMINED<br>• MANIPULATED<br>• MULTIPLE_PEOPLE<br>• NO_FACE_PRESENT<br>• OK<br>• PHOTOCOPY<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
+| decision.details.label | string | if decision.type = REJECTED:<br>• LIVENESS_UNDETERMINED<br>• ID_USED_AS_SELFIE<br>• MULTIPLE_PEOPLE<br>• DIGITAL_COPY<br>• PHOTOCOPY<br>• MANIPULATED<br>• NO_FACE_PRESENT<br>• FACE_NOT_FULLY_VISIBLE<br>• BLACK_WHITE<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = WARNING:<br>• AGE_DIFFERENCE<br>• BAD_QUALITY<br><br>if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
 | validFaceMapForAuthentication   | string | href to manage facemap   |
 | data                   | object |              |
-| data.type              | object | Possible values:<br>• IPROOV_STANDARD<br>• IPROOV_PREMIUM (SDK channel only)<br>• JUMIO_STANDARD  |
+| data.type              | object | Possible values:<br>• IPROOV_STANDARD<br>• IPROOV_PREMIUM (SDK channel only)<br>• JUMIO_STANDARD |
 
 #### capabilities.similarity
 
@@ -1399,9 +1403,9 @@ __Dependency:__ [usability](#capabilitiesusability)
 | decision               | object |              |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |              |
-| decision.details.label | string | Possible values: <br>• PRECONDITION_NOT_FULFILLED<br>• MATCH<br>• NO_MATCH <br>• NOT_POSSIBLE<br>• TECHNICAL_ERROR |
+| decision.details.label | string | if decision.type = REJECTED:<br>• NO_MATCH<br><br>if decision.type = PASSED:<br>• MATCH<br><br>if decision.type = WARNING:<br>• NOT_POSSIBLE<br><br>if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
 | data                   | object |              |
-| data.similarity        | string | Possible values:<br>• MATCH<br>• NO_MATCH<br>• NOT_POSSIBLE               |
+| data.similarity        | string | Possible values:<br>• MATCH<br>• NOT_MATCH<br>• NOT_POSSIBLE |
 
 #### capabilities.authentication
 
@@ -1415,7 +1419,7 @@ __Dependency:__ [usability](#capabilitiesusability)
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED    |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• FAILED<br>• OK<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR          |
+| decision.details.label | string | if decision.type = PASSED:<br>• OK<br><br>if decision.type =REJECTED:<br>• FAILED<br><br>if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
 | validFaceMapForAuthentication   | string | href to manage facemap                                 |
 
 #### capabilities.imageChecks
@@ -1430,7 +1434,7 @@ __Dependency:__ [usability](#capabilitiesusability)
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• DIFFERENT_PERSON<br>• DIGITAL_COPY<br>• GHOST_IMAGE_DIFFERENT<br>• MANIPULATED_DOCUMENT<br>• OK<br>• OTHER_REJECTION<br>• PRECONDITION_NOT_FULFILLED<br>• PUNCHED<br>• SAMPLE<br>• TECHNICAL_ERROR<br>• WATERMARK       |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DIGITAL_COPY<br>• WATERMARK<br>• MANIPULATED_DOCUMENT<br>• OTHER_REJECTION<br>• GHOST_IMAGE_DIFFERENT<br>• PUNCHED<br>• SAMPLE<br>• CHIP_MISSING<br>• FAKE<br><br>if decision.type = WARNING:<br>• DIFFERENT_PERSON<br>• REPEATED_FACE |
 
 #### capabilities.extraction
 
@@ -1442,8 +1446,8 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | decision               | object | Possible values:<br>• decision.type<br>• decision.details                |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED <br>• PASSED                          |
 | decision.details       | object | Possible values:<br>• decision.details.label                             |
-| decision.details.label | string | Possible values:<br>• OK<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR       |
-| data                   | string | See [extraction.data](#capabilitiesextractiondata)                                             |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK |
+| data                   | string | See [extraction.data](#capabilitiesextractiondata)                       |
 
 #### capabilities.extraction.data
 
@@ -1513,67 +1517,67 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• MISMATCHING_DATAPOINTS<br>• MRZ_CHECKSUM<br>• NFC_CERTIFICATE<br>• OK<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• NFC_CERTIFICATE<br>• MISMATCHING_DATAPOINTS<br>• MRZ_CHECKSUM<br>• MISMATCHING_DATA_REPEATED_FACE |
 
 #### capabilities.watchlistScreening
 
-__Dependencies:__ [usability](#capabilitiesusability), [extraction](#capabilitiesextraction)
+__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimageChecks), [extraction](#capabilitiesextraction)
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
-| id                     | string | UUID of the capability                             |
+| id                     | string | UUID of the capability     |
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• ALERT<br>• EXTRACTION_NOT_DONE<br>• INVALID_MERCHANT_SETTINGS<br>• NOT_ENOUGH_DATA<br>• NO_VALID_ID_CREDENTIAL<br>• OK<br>• TECHNICAL_ERROR<br>• VALIDATION_FAILED |
-| data                   | object | See [watchlistScreening.data](#capabilitieswatchlistScreeningdata)                            |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• NOT_ENOUGH_DATA<br>• VALIDATION_FAILED<br>• INVALID_MERCHANT_SETTINGS<br>• TECHNICAL_ERROR<br>• EXTRACTION_NOT_DONE<br>• NO_VALID_ID_CREDENTIAL<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = WARNING:<br>• ALERT |
+| data                   | object | See [watchlistScreening.data](#capabilitieswatchlistScreeningdata)        |
 
 #### capabilities.watchlistScreening.data
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
-| searchDate             | string |  Timestamp (UTC) of the response.<br>Format: YYYY-MM-DDThh:mm:ss.SSSZ                      |
+| searchDate             | string | Timestamp (UTC) of the response.<br>Format: YYYY-MM-DDThh:mm:ss.SSSZ    |
 | searchStatus           | string | Possible values:<br>• DONE<br>• NOT_DONE<br>• ERROR                      |
 | searchId               | string | Only if searchStatus = DONE                      |
 | searchReference        | string | Only if searchStatus = DONE                      |
 | searchResultUrl        | string | Only if searchStatus = DONE                      |
-| searchResults          | integer | Only if searchStatus = DONE                    |
+| searchResults          | integer | Only if searchStatus = DONE                     |
 
 #### capabilities.addressValidation
 
-__Dependencies:__ [usability](#capabilitiesusability), [extraction](#capabilitiesextraction)
+__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimageChecks), [extraction](#capabilitiesextraction)
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
-| id                     | string | UUID of the capability                             |
+| id                     | string | UUID of the capability     |
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• ALERT<br>• DENY<br>• NOT_ENOUGH_DATA<br>• OK<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• NOT_ENOUGH_DATA<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br><br>if decision.type = PASSED<br>• OK<br><br>if decision.type = REJECTED:<br>• DENY<br><br>if decision.type = WARNING:<br>• ALERT |
 
 #### capabilities.proofOfResidency
 
-__Dependencies:__ [usability](#capabilitiesusability), [extraction](#capabilitiesextraction)
+__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimageChecks), [extraction](#capabilitiesextraction)
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
-| id                     | string | UUID of the capability                             |
+| id                     | string | UUID of the capability     |
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• ALERT<br>• DENY<br>• NOT_ENOUGH_DATA<br>• OK<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• NOT_ENOUGH_DATA<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DENY<br><br>if decision.type = WARNING:<br>• ALERT |
 
 #### capabilities.drivingLicenseVerification
 
-__Dependencies:__ [usability](#capabilitiesusability), [extraction](#capabilitiesextraction)
+__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimageChecks), [extraction](#capabilitiesextraction)
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
-| id                     | string | UUID of the capability                             |
+| id                     | string | UUID of the capability     |
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• ALERT<br>• DENY<br>• OK<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_STATE<br>• VALIDATION_FAILED |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_STATE<br>• VALIDATION_FAILED<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DENY<br><br>if decision.type = WARNING:<br>• ALERT |
 
 ### Examples
 
