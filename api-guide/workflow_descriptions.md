@@ -481,6 +481,7 @@ __Request Path Parameters:__
 | credentialsId       | string | UUID of the credentials                   |
 
 __Request Body:__
+
 | Key  | Value                                                          |
 |------|----------------------------------------------------------------|
 | file | JPEG, PNG  (max. size 10 MB and max resolution of 8000 x 8000) |
@@ -960,14 +961,14 @@ In order of dependency:
 
 #### Initiate Account Creation
 
-HTTP Request Method: __PUT__
+HTTP Request Method: __POST__
 * US: `https://account.amer-1.jumio.ai/api/v1/accounts`
 * EU: `https://account.emea-1.jumio.ai/api/v1/accounts`
 * SG: `https://account.apac-1.jumio.ai/api/v1/accounts`
 
 __Request ID / Selfie:__
 ```
-curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts' \
+curl --location --request POST 'https://account.amer-1.jumio.ai/api/v1/accounts' \
 --header 'Content-Type: application/json' \
 --header 'User-Agent: User Demo' \
 --header 'Authorization: Bearer xxx' \
@@ -981,7 +982,7 @@ curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts' 
 
 __Request ID / ID:__
 ```
-curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts' \
+curl --location --request POST 'https://account.amer-1.jumio.ai/api/v1/accounts' \
 --header 'Content-Type: application/json' \
 --header 'User-Agent: User Demo' \
 --header 'Authorization: Bearer xxx' \
@@ -999,7 +1000,196 @@ curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts' 
 
 __Request Selfie / Selfie:__
 ```
-curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts' \
+curl --location --request POST 'https://account.amer-1.jumio.ai/api/v1/accounts' \
+--header 'Content-Type: application/json' \
+--header 'User-Agent: User Demo' \
+--header 'Authorization: Bearer xxx' \
+--data-raw '{
+    "customerInternalReference": "CUSTOMER_REFERENCE",
+    "workflowDefinition": {
+        "key": 20,
+        "credentials": [
+            {"category":"SELFIE"},
+            {"category":"SELFIE"}
+        ]
+    }
+}'
+```
+
+__Response ID / Selfie:__
+```
+{
+    "timestamp": "2021-05-21T14:52:37.815Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa",
+        "credentials": [
+            {
+                "id": "33333333-3333-3333-aaaaaaaaaaaa",
+                "category": "ID",
+                "allowedChannels": [
+                    "API"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "front": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/FRONT",
+                        "back": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/BACK"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
+            },
+            {
+                "id": "33333333-3333-3333-bbbbbbbbbbbb",
+                "category": "SELFIE",
+                "allowedChannels": [
+                    "API"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "face": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/FACE"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
+            }
+        ]
+    }
+}
+```
+
+__Response ID / ID:__
+```
+{
+    "timestamp": "2021-09-03T10:17:24.806Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa",
+        "credentials": [
+            {
+                "id": "33333333-3333-3333-aaaaaaaaaaaa",
+                "category": "ID",
+                "allowedChannels": [
+                    "API"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "front": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/FRONT",
+                        "back": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/BACK"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
+            },
+            {
+                "id": "33333333-3333-3333-bbbbbbbbbbbb",
+                "category": "ID",
+                "allowedChannels": [
+                    "API"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "front": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/FRONT",
+                        "back": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/BACK"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
+            }
+        ]
+    }
+}
+```
+
+__Response Selfie / Selfie:__
+```
+{
+    "timestamp": "2021-09-03T10:17:24.806Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa",
+        "credentials": [
+            {
+                "id": "33333333-3333-3333-aaaaaaaaaaaa",
+                "category": "SELFIE",
+                "allowedChannels": [
+                    "API"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "face": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/FACE"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
+            },
+            {
+                "id": "33333333-3333-3333-bbbbbbbbbbbb",
+                "category": "SELFIE",
+                "allowedChannels": [
+                    "API"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "face": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/FACE"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
+            }
+        ]
+    }
+}
+```
+
+#### Initiate Account Update
+
+HTTP Request Method: __PUT__
+* US: `https://account.amer-1.jumio.ai/api/v1/accounts/<accountId>`
+* EU: `https://account.emea-1.jumio.ai/api/v1/accounts/<accountId>`
+* SG: `https://account.apac-1.jumio.ai/api/v1/accounts/<accountId>`
+
+__Request ID / Selfie:__
+```
+curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts/<accountId>' \
+--header 'Content-Type: application/json' \
+--header 'User-Agent: User Demo' \
+--header 'Authorization: Bearer xxx' \
+--data-raw '{
+    "customerInternalReference": "CUSTOMER_REFERENCE",
+    "workflowDefinition": {
+        "key": 20
+    }
+}'
+```
+
+__Request ID / ID:__
+```
+curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts/<accountId>' \
+--header 'Content-Type: application/json' \
+--header 'User-Agent: User Demo' \
+--header 'Authorization: Bearer xxx' \
+--data-raw '{
+    "customerInternalReference": "CUSTOMER_REFERENCE",
+    "workflowDefinition": {
+        "key": 20,
+        "credentials": [
+            {"category":"ID"},
+            {"category":"ID"}
+        ]
+    }
+}'
+```
+
+__Request Selfie / Selfie:__
+```
+curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts/<accountId>' \
 --header 'Content-Type: application/json' \
 --header 'User-Agent: User Demo' \
 --header 'Authorization: Bearer xxx' \
@@ -1155,16 +1345,18 @@ HTTP Request Method: __POST__
 * SG: `https://api.apac-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>/credentials/<credentialsId>/parts/<classifier>`
 
 __Request Path Parameters:__
-| Parameter           | Type   | Note                                      |
-|---------------------|--------|-------------------------------------------|
-| accountId           | string | UUID of the account                       |
-| workflowExecutionId | string | UUID of the workflow                      |
-| credentialsId       | string | UUID of the credentials                   |
-| classifier          | string | FRONT, BACK                               |
+
+| Parameter           | Type   | Note          |
+|---------------------|--------|---------------|
+| accountId           | string | UUID of the account        |
+| workflowExecutionId | string | UUID of the workflow       |
+| credentialsId       | string | UUID of the credentials    |
+| classifier          | string | FRONT, BACK                |
 
 __Request Body:__
-| Key  | Value                                                          |
-|------|----------------------------------------------------------------|
+
+| Key  | Value      |
+|------|------------|
 | file | JPEG, PNG  (max. size 10 MB and max resolution of 8000 x 8000) |
 
 __Request:__
@@ -1213,6 +1405,7 @@ __Request Path Parameters:__
 | credentialsId       | string | UUID of the credentials                   |
 
 __Request Body:__
+
 | Key  | Value                                                          |
 |------|----------------------------------------------------------------|
 | file | JPEG, PNG  (max. size 10 MB and max resolution of 8000 x 8000) |
