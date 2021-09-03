@@ -347,7 +347,7 @@ YOUR_ACCESS_TOKEN' \
 | 6             | [Standalone Liveness](workflow_descriptions.md#workflow-6-standalone-liveness) | Captures a user's face to verify that the person is physically present and not presenting a photo or other fake as their selfie. |   
 | 9             | [Authentication](workflow_descriptions.md#workflow-9-authentication) | Compares the facemap of a user to an existing facemap that has already been captured. The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](workflow_descriptions.md#workflow-3-id-and-identity-verification) or [Workflow 5](workflow_descriptions.md#workflow-5-similarity-to-existing-id). |   
 | 16            | [Authentication on Premise](workflow_descriptions.md#workflow-16-authentication-on-premise) | Compares the facemap of a user to an existing facemap that was previously captured and is stored on the customer side. <br><br>  The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](#workflow-3-id-and-identity-verification) or [Workflow 5](workflow_descriptions.md#workflow-5-similarity-to-existing-id), and can be retrieved with the [Retrieval API](#retrieval) using the [`validFaceMapForAuthentication`](#capabilitiesliveness) parameter. |
-| 20            | [Similarity of Two Images](workflow_descriptions.md#workflow-20-similarity-of-two-images) | Matches the user's selfie with the photo on the ID to verify they are the same person. |
+| 20            | [Similarity of Two Images](workflow_descriptions.md#workflow-20-similarity-of-two-images) | Matches the user photos on two IDs, two user selfies or a user's selfie with the photo on the ID to verify they are the same person. |
 | 32            | [ID Verification, Identity Verification, Screening](workflow_descriptions.md#workflow-32-id-verification-identity-verification-screening) | Verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user's face with the photo on the ID and performs a liveness check to ensure the person is physically present. Checks if user is part of any sanctions list. |
 
 Workflows are specified using the `key` attribute in the `workflowDefinition` object:
@@ -1143,7 +1143,7 @@ A callback URL can also be specified per account, see instructions in sections [
 ## Best Practices
 * Use callbacks to check if a workflow has finished processing.
 * Once Jumio has sent the callback, save it on your side and send back a __200 OK__ response.
-* Afterwards, to retrieve transaction details or images, use the Retrieval API(#get-workflow-details).
+* Afterwards, to retrieve transaction details or images, use the [Retrieval API](#get-workflow-details).
 
 ## Jumio Callback IP Addresses
 Allowlist the following IP addresses for callbacks, and use them to verify that the callback originated from Jumio.
@@ -1817,7 +1817,8 @@ The following fields are required in the header section of your request:
 `Accept: application/json`   
 `User-Agent: YourCompany YourApp/v1.0`   
 
-| ⚠️&nbsp;&nbsp; Jumio requires the `User-Agent` value to reflect your business or entity name for API troubleshooting. |:----------|
+| ⚠️&nbsp;&nbsp; Jumio requires the `User-Agent` value to reflect your business or entity name for API troubleshooting.
+|:----------|
 
 | ℹ️&nbsp;&nbsp; Calls with missing or suspicious headers, suspicious parameter values, or without OAuth2 will result in HTTP status code __403 Forbidden__
 |:----------|
