@@ -203,7 +203,7 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 | Parameter             | Type                    | Notes                                                                                                                           |
 |-----------------------|-------------------------|-----------------------------------------------------------------------------|
 | id                    | string                  | UUID of the credentials                                                     |
-| category              | string                  | Credential category.<br>Possible values:<br>• ID<br>•	FACEMAP<br>• DOCUMENT<br>• SELFIE |
+| category              | string                  | Possible values:<br>• ID<br>•	FACEMAP<br>• DOCUMENT<br>• SELFIE |
 | country               | object                  | Defined at least one ISO 3166-1 alpha-3 country code for the workflow definition.<br>Possible values: <br>•	[ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) |
 | type                  | object                  | Defined number of credential type codes.<br>Possible values: <br>• ID_CARD<br>•	DRIVING LICENSE<br>• PASSPORT<br>• VISA |
 | allowedChannels       | array                   | Channels which can be used to upload particular credential<br>Possible values:<br>• WEB<br>• API<br>•	SDK |
@@ -1366,9 +1366,10 @@ __Dependency:__ none
 
 | Parameter              | Type   | Note         |
 |------------------------|--------|--------------|
+| id                     | string | UUID of the capability     |
 | credentials            | object |              |
-| credentials.id         | string |              |
-| credentials.category   | string | ID           |
+| credentials.id         | string | UUID of the credentials             |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE           |
 | decision               | object |              |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |              |
@@ -1380,16 +1381,17 @@ __Dependency:__ [usability](#capabilitiesusability)
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability     |
 | credentials            | object |                            |
-| credentials.id         | string |                            |
-| credentials.category   | string | ID                         |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
 | decision.details.label | string | if decision.type = REJECTED:<br>• LIVENESS_UNDETERMINED<br>• ID_USED_AS_SELFIE<br>• MULTIPLE_PEOPLE<br>• DIGITAL_COPY<br>• PHOTOCOPY<br>• MANIPULATED<br>• NO_FACE_PRESENT<br>• FACE_NOT_FULLY_VISIBLE<br>• BLACK_WHITE<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = WARNING:<br>• AGE_DIFFERENCE<br>• BAD_QUALITY<br><br>if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
-| validFaceMapForAuthentication   | string | href to manage facemap   |
 | data                   | object |              |
 | data.type              | object | Possible values:<br>• IPROOV_STANDARD<br>• IPROOV_PREMIUM (SDK channel only)<br>• JUMIO_STANDARD |
+| validFaceMapForAuthentication   | string | href to manage facemap   |
 
 #### capabilities.similarity
 
@@ -1397,9 +1399,10 @@ __Dependency:__ [usability](#capabilitiesusability)
 
 | Parameter              | Type   | Note         |
 |------------------------|--------|--------------|
+| id                     | string | UUID of the capability     |
 | credentials            | object |              |
-| credentials.id         | string |              |
-| credentials.category   | string | ID           |
+| credentials.id         | string | UUID of the credentials             |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE           |
 | decision               | object |              |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |              |
@@ -1413,13 +1416,16 @@ __Dependency:__ [usability](#capabilitiesusability)
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability     |
 | credentials            | object |                            |
-| credentials.id         | string |                            |
-| credentials.category   | string | ID                         |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED    |
 | decision.details       | object |                            |
 | decision.details.label | string | if decision.type = PASSED:<br>• OK<br><br>if decision.type =REJECTED:<br>• FAILED<br><br>if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
+| data                   | object |              |
+| data.type              | object | Possible values:<br>• IPROOV_STANDARD<br>• IPROOV_PREMIUM (SDK channel only) |
 | validFaceMapForAuthentication   | string | href to manage facemap                                 |
 
 #### capabilities.imageChecks
@@ -1428,13 +1434,23 @@ __Dependency:__ [usability](#capabilitiesusability)
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability     |
 | credentials            | object |                            |
-| credentials.id         | string |                            |
-| credentials.category   | string | ID                         |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
 | decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DIGITAL_COPY<br>• WATERMARK<br>• MANIPULATED_DOCUMENT<br>• OTHER_REJECTION<br>• GHOST_IMAGE_DIFFERENT<br>• PUNCHED<br>• SAMPLE<br>• CHIP_MISSING<br>• FAKE<br><br>if decision.type = WARNING:<br>• DIFFERENT_PERSON<br>• REPEATED_FACE |
+| data                   | object | See [imageChecks.data](#capabilitiesimageChecksdata)             |
+
+#### capabilities.imageChecks.data
+| Parameter                         | Type   | Note                                                                                                        |
+|-----------------------------------|--------|-------------------------------------------------------------------------------------------------------------|
+| data.faceSearchFindings     | object | Result of 1:n face search on previous transactions |
+| data.faceSearchFindings.status     | string | Possible values:<br>• DONE<br>• PENDING<br>• ERROR |
+| data.faceSearchFindings.findings     | array (string) | A face (on the ID or Selfie) is matching with another face (on the ID or Selfie) from a previous transaction|
+| data.faceSearchFindings.findings.items    | string | UUID of the workflow |
 
 #### capabilities.extraction
 
@@ -1442,12 +1458,13 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability        |
 | credentials            | object | Possible values:<br>• credentials.decision <br>• credentials.data        |
 | decision               | object | Possible values:<br>• decision.type<br>• decision.details                |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED <br>• PASSED                          |
 | decision.details       | object | Possible values:<br>• decision.details.label                             |
 | decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK |
-| data                   | string | See [extraction.data](#capabilitiesextractiondata)                       |
+| data                   | object | See [extraction.data](#capabilitiesextractiondata)                       |
 
 #### capabilities.extraction.data
 
@@ -1511,9 +1528,10 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability     |
 | credentials            | object |                            |
-| credentials.id         | string |                            |
-| credentials.category   | string | ID                         |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED |
 | decision.details       | object |                            |
@@ -1526,6 +1544,9 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
 | id                     | string | UUID of the capability     |
+| credentials            | object |                            |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
@@ -1550,6 +1571,9 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
 | id                     | string | UUID of the capability     |
+| credentials            | object |                            |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
@@ -1562,6 +1586,9 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
 | id                     | string | UUID of the capability     |
+| credentials            | object |                            |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
@@ -1574,6 +1601,9 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
 | id                     | string | UUID of the capability     |
+| credentials            | object |                            |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
@@ -1596,7 +1626,7 @@ Authorization: Bearer xxx
     "workflow": {
         "id": "22222222-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         "status": "PROCESSED",
-        "definitionKey": "2"
+        "definitionKey": "10003"
     },
     "account": {
         "id": "11111111-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
@@ -1619,6 +1649,7 @@ Authorization: Bearer xxx
     "capabilities": {
         "extraction": [
             {
+                "id": "1a11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
                 "credentials": [
                     {
                         "id": "33333333-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
@@ -1650,6 +1681,7 @@ Authorization: Bearer xxx
         ],
         "dataChecks": [
             {
+                "id": "1b11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
                 "credentials": [
                     {
                         "id": "33333333-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
@@ -1666,6 +1698,7 @@ Authorization: Bearer xxx
         ],
         "imageChecks": [
             {
+                "id": "1c11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
                 "credentials": [
                     {
                         "id": "33333333-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
@@ -1682,10 +1715,41 @@ Authorization: Bearer xxx
         ],
         "usability": [
             {
+                "id": "1d11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
                 "credentials": [
                     {
                         "id": "33333333-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
                         "category": "ID"
+                    }
+                ],
+                "decision": {
+                    "type": "PASSED",
+                    "details": {
+                        "label": "OK"
+                    }
+                }
+            }
+            {
+                "id": "1f11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                "credentials": [
+                    {
+                        "id": "44444444-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                        "category": "SELFIE"
+                    }
+                ],
+                "decision": {
+                    "type": "PASSED",
+                    "details": {
+                        "label": "OK"
+                    }
+                }
+            },
+            {
+                "id": "1g11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                "credentials": [
+                    {
+                        "id": "55555555-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                        "category": "FACEMAP"
                     }
                 ],
                 "decision": {
