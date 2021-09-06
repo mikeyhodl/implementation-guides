@@ -4,7 +4,7 @@
 
 This is a reference manual and configuration guide for Jumio Authentication for Web. It describes how to initiate a transaction, how to customize your settings and branding, and how to display Authentication to your users.
 <br><br>
-Biometric-based Jumio Authentication establishes the digital identities of your users through the simple act of taking a selfie. Advanced 3D facemap technology quickly and securely authenticates users and unlocks their digital identities.<br>
+Biometric-based Jumio Authentication establishes the digital identities of your users through the simple act of taking a selfie. Our liveness technology quickly and securely authenticates users and unlocks their digital identities.<br>
 
 ### Revision history
 

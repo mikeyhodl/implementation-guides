@@ -6,7 +6,7 @@ This is a reference manual and configuration guide for Jumio Authentication with
 
 This feature allows you to use Authentication with needing to store the ID Verification PII data in the Jumio infrastructure.
 
-You will retrieve the facemap (which represents the face identity of the user) using the ID Verification Retrieval API or ID Verification Callback. This facemap needs to be stored in your system. When you want to authenticate this user, you will send us the facemap using our server to server API to create a new Authentication transaction. You can start the user journey in your mobile app or web journey. Once the user completes the face capture process we will perform our 3D liveness checks on the face and compare it with the facemap identity you provide in the API call. Results of this transaction will let you know if the person is live and is the same person that was onboarded on your system.
+You will retrieve the facemap (which represents the face identity of the user) using the ID Verification Retrieval API or ID Verification Callback. This facemap needs to be stored in your system. When you want to authenticate this user, you will send us the facemap using our server to server API to create a new Authentication transaction. You can start the user journey in your mobile app or web journey. Once the user completes the face capture process we will perform our liveness checks on the face and compare it with the facemap identity you provide in the API call. Results of this transaction will let you know if the person is live and is the same person that was onboarded on your system.
 <br>
 
 ### Revision history
