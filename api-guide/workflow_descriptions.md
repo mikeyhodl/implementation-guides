@@ -690,7 +690,7 @@ __Response:__
 ## Workflow 9: Authentication
 This workflow compares the facemap of a user to an already existing facemap that has already been captured.
 
-The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](workflow_descriptions.md#workflow-3-id-and-identity-verification) or [Workflow 5](workflow_descriptions.md#workflow-5-similarity-to-existing-id).
+The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](#workflow-3-id-and-identity-verification) or [Workflow 6](#workflow-6-standalone-liveness).
 
 ![Workflow 9 Overview](images/workflow_9.png)
 
@@ -784,7 +784,7 @@ __Response:__
 ## Workflow 16: Authentication on Premise
 This workflow compares the facemap of a user to an existing facemap that was previously captured and is stored on the customer side.
 
-The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](#workflow-3-id-and-identity-verification) or [Workflow 5](#workflow-5-similarity-to-existing-id), and can be retrieved with the [Retrieval API](#workflow-details) using the [`validFaceMapForAuthentication`](#capabilitiesliveness) parameter.
+The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](#workflow-3-id-and-identity-verification) or [Workflow 6](#workflow-6-standalone-liveness), and can be retrieved with the [Retrieval API](#workflow-details) using the [`validFaceMapForAuthentication`](#capabilitiesliveness) parameter.
 
 ![Workflow 16 Overview](images/workflow_16.png)
 
