@@ -1,6 +1,7 @@
 # Workflow Descriptions
 
 ## Table of Contents
+- [Workflow 1: ID Capture and Storage](#workflow-1-id-capture-and-storage)
 - [Workflow 2: ID Verification](#workflow-2-id-verification)
 - [Workflow 3: ID and Identity Verification](#workflow-3-id-and-identity-verification)
 - [Workflow 5: Similarity to existing ID](#workflow-5-similarity-to-existing-id)
@@ -16,6 +17,164 @@ Workflows are specified using the `key` attribute in the `workflowDefinition` ob
 "workflowDefinition": {
     "key": DEFINITION_KEY,
     "credentials": []
+}
+```
+
+## Workflow 1: ID Capture and Storage
+This workflow captures a government-issued ID document and stores the extracted data.
+
+### Required Credentials
+* ID
+
+### Stored credentials
+* ID
+
+### Prerequisites
+* Allowed channels: API, SDK, WEB
+
+### Capabilities
+In order of dependency:
+* [usability](api_guide.md#capabilitiesusability) --> [extraction](api_guide.md#capabilitiesextraction)
+
+### Example
+
+#### Initiate Account Creation
+
+HTTP Request Method: __POST__
+* US: `https://account.amer-1.jumio.ai/api/v1/accounts`
+* EU: `https://account.emea-1.jumio.ai/api/v1/accounts`
+* SG: `https://account.apac-1.jumio.ai/api/v1/accounts`
+
+__Request:__
+```
+curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts' \
+    --header 'Content-Type: application/json' \
+    --header 'User-Agent: User Demo' \
+    --header 'Authorization: Bearer
+    YOUR_ACCESS_TOKEN' \
+    --data-raw '{
+        "customerInternalReference": "CUSTOMER_REFERENCE",
+        "workflowDefinition": {
+            "key": 1,
+            "credentials": [
+                {
+                    "category": "ID",
+                    "type": {
+                        "values": ["DRIVING_LICENSE", "ID_CARD", "PASSPORT"]
+                    }
+                }
+            ]
+        },
+        "callbackUrl": "YOUR_CALLBACK_URL",
+        "userReference": "YOUR_USER_REFERENCE",
+    }'
+```
+
+__Response:__
+```
+{
+    "timestamp": "2021-09-21T12:39:12.131Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "web": {
+        "href": "https://mycompany.web.amer-1.jumio.ai/web/v4/app?authorizationTokenxxx&locale=es"
+    },
+    "sdk": {
+        "token": "xxx"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa",
+        "credentials": [
+            {
+                "id": "33333333-3333-3333-aaaaaaaaaaaa",
+                "category": "ID",
+                "allowedChannels": [
+                    "WEB",
+                    "API",
+                    "SDK"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "front": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/FRONT",
+                        "back": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/BACK"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
+            }
+        ]
+    }
+}
+```
+
+#### Initiate Account Update
+
+HTTP Request Method: __PUT__
+* US: `https://account.amer-1.jumio.ai/api/v1/accounts/<accountId>`
+* EU: `https://account.emea-1.jumio.ai/api/v1/accounts/<accountId>`
+* SG: `https://account.apac-1.jumio.ai/api/v1/accounts/<accountId>`
+
+__Request:__
+```
+curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa' \
+    --header 'Content-Type: application/json' \
+    --header 'User-Agent: User Demo' \
+    --header 'Authorization: Bearer
+    YOUR_ACCESS_TOKEN' \
+    --data-raw '{
+        "customerInternalReference": "CUSTOMER_REFERENCE",
+        "workflowDefinition": {
+            "key": 2,
+            "credentials": [
+                {
+                    "category": "ID",
+                    "type": {
+                        "values": ["DRIVING_LICENSE", "ID_CARD", "PASSPORT"]
+                    }
+                }
+            ]
+        },
+        "callbackUrl": "YOUR_CALLBACK_URL",
+        "userReference": "YOUR_USER_REFERENCE",
+    }'
+```
+
+__Response:__
+```
+{
+    "timestamp": "2021-09-21T12:39:12.131Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "web": {
+        "href": "https://mycompany.web.amer-1.jumio.ai/web/v4/app?authorizationTokenxxx&locale=es"
+    },
+    "sdk": {
+        "token": "xxx"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa",
+        "credentials": [
+            {
+                "id": "33333333-3333-3333-aaaaaaaaaaaa",
+                "category": "ID",
+                "allowedChannels": [
+                    "WEB",
+                    "API",
+                    "SDK"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "front": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/FRONT",
+                        "back": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/BACK"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
+            }
+        ]
+    }
 }
 ```
 

@@ -341,6 +341,7 @@ YOUR_ACCESS_TOKEN' \
 ### Workflow Definition Keys
 | definitionKey | Name                         | Description  |
 |---------------|------------------------------|--------------|
+| 1             | [ID Capture and Storage](workflow_descriptions.md#workflow-1-id-capture-and-storage)  | Captures a government-issued ID document and stores the extracted data. |  
 | 2             | [ID Verification](workflow_descriptions.md#workflow-2-id-verification)  | Verifies a government-issued ID document and returns a) whether that document is valid, and b) data extracted from that document. |  
 | 3             | [ID and Identity Verification](workflow_descriptions.md#workflow-3-id-and-identity-verification) | Verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user's face with the photo on the ID and performs a liveness check to ensure the person is physically present. |
 | 5             | [Similarity to existing ID](workflow_descriptions.md#workflow-5-similarity-to-existing-id) | Matches a selfie of a user to the face of a document holder of a stored ID document that has already been verified. |  
