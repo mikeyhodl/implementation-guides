@@ -393,7 +393,7 @@ No change to embed the generated `web.href` from the new architecture. See the c
 No change for recommended responsive breaking points. See the current [ID Verification Implementation Guide](/netverify/netverify-web-v4.md#width-and-height) for further information.
 
 ### Biometric Face Capture
-No change for Biometric Face Capture and Web. See the current [ID Verification Implementation Guide](/netverify/netverify-web-v4.md#3d-liveness) for further information.
+No change for Biometric Face Capture and Web. See the current [ID Verification Implementation Guide](/netverify/netverify-web-v4.md#liveness) for further information.
 
 | ⚠️&nbsp;&nbsp; The `allow="camera;fullscreen;accelerometer;gyroscope;magnetometer" allowfullscreen` iFrame attributes must be included to enable biometric face capture in supported browsers.
 |:----------|

@@ -179,7 +179,7 @@ Values set in your API request will override the corresponding settings configur
 | country.values         | array (string) | See possible values. | Define at least one ISO 3166-1 alpha-3 country code for the workflow definition.<br>Possible values: <br>•	[ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) |
 | type                   | object         |                      | Possible values:<br>• type.predefinedType <br>• type.values               |
 | type.predefinedType    | object         |                      | Possible values:<br>• DEFINED (default: end user is not able to change document type)<br>• RECOMMENDED (type is preselected, end user is still able to change it) |
-| type.values            | array (string) | See possible values. | Defined number of credential type codes. <br>Possible values:<br>If `category` = ID:<br>• ID_CARD<br>• DRIVING_LICENSE<br>• PASSPORT<br>• VISA<br>If `category` = FACEMAP:<br>• IPROOV_STANDARD<br>• IPROOV_PREMIUM<br>• JUMIO_STANDARD    |
+| type.values            | array (string) | See possible values. | Defined number of credential type codes. <br>Possible values:<br>If `category` = ID:<br>• ID_CARD<br>• DRIVING_LICENSE<br>• PASSPORT<br>• VISA<br>If `category` = FACEMAP:<br>• IPROOV_STANDARD<br>• IPROOV_PREMIUM (SDK channel only)<br>• JUMIO_STANDARD    |
 
 ## Response
 Unsuccessful requests will return HTTP status code __400 Bad Request, 401 Unauthorized, 403 Forbidden__ or __404 Not Found__ (in case of a failed update scenario) if the scan is not available.
@@ -203,7 +203,7 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 | Parameter             | Type                    | Notes                                                                                                                           |
 |-----------------------|-------------------------|-----------------------------------------------------------------------------|
 | id                    | string                  | UUID of the credentials                                                     |
-| category              | string                  | Credential category.<br>Possible values:<br>• ID<br>•	FACEMAP<br>• DOCUMENT<br>• SELFIE |
+| category              | string                  | Possible values:<br>• ID<br>•	FACEMAP<br>• DOCUMENT<br>• SELFIE |
 | country               | object                  | Defined at least one ISO 3166-1 alpha-3 country code for the workflow definition.<br>Possible values: <br>•	[ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) |
 | type                  | object                  | Defined number of credential type codes.<br>Possible values: <br>• ID_CARD<br>•	DRIVING LICENSE<br>• PASSPORT<br>• VISA |
 | allowedChannels       | array                   | Channels which can be used to upload particular credential<br>Possible values:<br>• WEB<br>• API<br>•	SDK |
@@ -341,14 +341,15 @@ YOUR_ACCESS_TOKEN' \
 ### Workflow Definition Keys
 | definitionKey | Name                         | Description  |
 |---------------|------------------------------|--------------|
+| 1             | [ID Capture and Storage](workflow_descriptions.md#workflow-1-id-capture-and-storage)  | Captures a government-issued ID document and stores the extracted data. |  
 | 2             | [ID Verification](workflow_descriptions.md#workflow-2-id-verification)  | Verifies a government-issued ID document and returns a) whether that document is valid, and b) data extracted from that document. |  
 | 3             | [ID and Identity Verification](workflow_descriptions.md#workflow-3-id-and-identity-verification) | Verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user's face with the photo on the ID and performs a liveness check to ensure the person is physically present. |
 | 5             | [Similarity to existing ID](workflow_descriptions.md#workflow-5-similarity-to-existing-id) | Matches a selfie of a user to the face of a document holder of a stored ID document that has already been verified. |  
 | 6             | [Standalone Liveness](workflow_descriptions.md#workflow-6-standalone-liveness) | Captures a user's face to verify that the person is physically present and not presenting a photo or other fake as their selfie. |   
-| 9             | [Authentication](workflow_descriptions.md#workflow-9-authentication) | Compares the facemap of a user to an existing facemap that has already been captured. The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](workflow_descriptions.md#workflow-3-id-and-identity-verification) or [Workflow 5](workflow_descriptions.md#workflow-5-similarity-to-existing-id). |   
-| 16            | [Authentication on Premise](workflow_descriptions.md#workflow-16-authentication-on-premise) | Compares the facemap of a user to an existing facemap that was previously captured and is stored on the customer side. <br><br>  The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](#workflow-3-id-and-identity-verification) or [Workflow 5](workflow_descriptions.md#workflow-5-similarity-to-existing-id), and can be retrieved with the [Retrieval API](#retrieval) using the [`validFaceMapForAuthentication`](#capabilitiesliveness) parameter. |
-| 20            | [Similarity of Two Images](workflow_descriptions.md#workflow-20-similarity-of-two-images) | Matches the user's selfie with the photo on the ID to verify they are the same person. |
-| 32            | [ID Verification, Identity Verification, Screening](workflow_descriptions.md#workflow-32-id-verification-identity-verification-screening) | Verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user's face with the photo on the ID and performs a liveness check to ensure the person is physically present. Checks if user is part of any sanctions list using Comply Advantage. |
+| 9             | [Authentication](workflow_descriptions.md#workflow-9-authentication) | Compares the facemap of a user to an existing facemap that has already been captured. The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](workflow_descriptions.md#workflow-3-id-and-identity-verification) or [Workflow 6](workflow_descriptions.md#workflow-6-standalone-liveness). |   
+| 16            | [Authentication on Premise](workflow_descriptions.md#workflow-16-authentication-on-premise) | Compares the facemap of a user to an existing facemap that was previously captured and is stored on the customer side. <br><br>  The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](#workflow-3-id-and-identity-verification) or [Workflow 6](workflow_descriptions.md#workflow-6-standalone-liveness), and can be retrieved with the [Retrieval API](#retrieval) using the [`validFaceMapForAuthentication`](#capabilitiesliveness) parameter. |
+| 20            | [Similarity of Two Images](workflow_descriptions.md#workflow-20-similarity-of-two-images) | Matches the user photos on two IDs, two user selfies or a user's selfie with the photo on the ID to verify they are the same person. |
+| 32            | [ID Verification, Identity Verification, Screening](workflow_descriptions.md#workflow-32-id-verification-identity-verification-screening) | Verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user's face with the photo on the ID and performs a liveness check to ensure the person is physically present. Checks if user is part of any sanctions list. |
 
 Workflows are specified using the `key` attribute in the `workflowDefinition` object:
 ```
@@ -1143,7 +1144,7 @@ A callback URL can also be specified per account, see instructions in sections [
 ## Best Practices
 * Use callbacks to check if a workflow has finished processing.
 * Once Jumio has sent the callback, save it on your side and send back a __200 OK__ response.
-* Afterwards, to retrieve transaction details or images, use the Retrieval API(#get-workflow-details).
+* Afterwards, to retrieve transaction details or images, use the [Retrieval API](#get-workflow-details).
 
 ## Jumio Callback IP Addresses
 Allowlist the following IP addresses for callbacks, and use them to verify that the callback originated from Jumio.
@@ -1176,7 +1177,7 @@ __SGP Data Center:__
 Use the hostname `callback.core-sgp.jumio.com` to look up the most current IP addresses.
 
 ## Callback Parameters
-An HTTP __POST__ request is sent to your specified callback URL containing an `application/x-www-form-urlencoded` formatted string with the transaction result.
+An HTTP __POST__ request is sent to your specified callback URL containing an `application/json` formatted string with the transaction result.
 
 | Parameter                       | Type   | Notes                                                                   |
 |---------------------------------|--------|-------------------------------------------------------------------------|
@@ -1313,13 +1314,13 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 | completedAt                        | string | Timestamp (UTC) of the completion.<br>Format: YYYY-MM-DDThh:mm:ss.SSSZ |
 | account                            | object | Possible values:<br>•	account.id                                       |
 | account.id                         | string | UUID of the account                                                    |
-| workflow                           | object | Possible values:<br>• workflow.id <br>• workflow.status <br>• workflow.definitionKey |
+| workflow                           | object | Possible values:<br>• workflow.id <br>• workflow.status <br>• workflow.definitionKey<br>• workflow.userReference<br>• workflow.customerInternalReference |
 | workflow.id                        | string | UUID of the workflow                                                   |
 | workflow.status                    | string | Possible values:<br>• INITIATED<br>• ACQUIRED<br>• PROCESSED<br>• SESSION_EXPIRED<br>•	TOKEN_EXPIRED   |
 | workflow.definitionKey             | string | See [supported keys](#workflow-definition-keys)                        |
 | workflow.userReference             | string | Customer internal reference for a request to link it in the customer backend (must not contain any PII) |
 | workflow.customerInternalReference | string | Reference for the end user in the customer backend (must not contain any PII) |
-| credentials                        | array (object)  | See [workflow.steps](#workflowsteps)                               |
+| credentials                        | array (object)  | See [credentials](#credentials)                               |
 | capabilities                       | object | See [capabilities](#capabilities)                                      |
 
 #### credentials
@@ -1337,20 +1338,28 @@ Since workflow execution consists of a chain of multiple capability executions (
 This means that some capabilities should not be executed if any of the previous capabilities were not successful because they were REJECTED or NOT_EXECUTED. If, for example, __usability__ has passed, but __imageChecks__ got rejected with the reason DIGITAL_COPY, the consequent __extraction__ and __dataChecks__ cannot be executed because of PRECONDITION_NOT_FULFILLED. The precondition in this case would be to successfully pass __imageChecks__.
 
 __Capability execution dependencies:__
- * usability (PASSED) --> imageChecks (PASSED) --> extraction (PASSED) --> dataChecks
- * usability (PASSED) --> liveness
- * usability (PASSED) --> similarity
- * usability (PASSED) --> authentication
+ * usability --> imageChecks --> extraction --> dataChecks
+ * usability --> liveness
+ * usability --> similarity
+ * usability --> authentication
+ * usability --> imageChecks --> extraction --> watchlistScreening
+ * usability --> imageChecks --> extraction --> addressValidation
+ * usability --> imageChecks --> extraction --> proofOfResidency
+ * usability --> imageChecks --> extraction --> drivingLicenseVerification
 
-| Parameter       | Type  | Note            | Dependency     |
-|-----------------|-------|-----------------|----------------|
-| usability       | array (object) | See [usability](#capabilitiesusability)     | none      |
-| liveness        | array (object) | See [liveness](#capabilitiesliveness)       | usability |
-| similarity      | array (object) | See [similarity](#capabilitiessimilarity)   | usability |
-| authentication  | array (object) | See [authentication](#capabilitiesauthentication)   | usability |
-| imageChecks     | array (object) | See [imageChecks](#capabilitiesimageChecks) | usability |
-| extraction      | array (object) | See [extraction](#capabilitiesextraction)   | usability, imageChecks |
-| dataChecks      | array (object) | See [dataChecks](#capabilitiesdataChecks)   | usability, imageChecks, extraction |
+| Parameter              | Type  | Note            | Dependency     |
+|------------------------|-------|-----------------|----------------|
+| usability              | array (object) | See [usability](#capabilitiesusability)     | none      |
+| liveness               | array (object) | See [liveness](#capabilitiesliveness)       | usability |
+| similarity             | array (object) | See [similarity](#capabilitiessimilarity)   | usability |
+| authentication         | array (object) | See [authentication](#capabilitiesauthentication)   | usability |
+| imageChecks            | array (object) | See [imageChecks](#capabilitiesimageChecks) | usability |
+| extraction             | array (object) | See [extraction](#capabilitiesextraction)   | usability, imageChecks |
+| dataChecks             | array (object) | See [dataChecks](#capabilitiesdataChecks)   | usability, imageChecks, extraction |
+| watchlistScreening     | array (object) | See [watchlistScreening](#capabilitieswatchlistScreening)   | usability, imageChecks, extraction |
+| addressValidation      | array (object) | See [addressValidation](#capabilitiesaddressValidation)     | usability, imageChecks, extraction |
+| proofOfResidency       | array (object) | See [proofOfResidency](#capabilitiesproofOfResidency)       | usability, imageChecks, extraction |
+| drivingLicenseVerification | array (object) | See [drivingLicenseVerification](#capabilitiesdrivingLicenseVerification)   | usability, imageChecks, extraction |
 
 #### capabilities.usability
 
@@ -1358,13 +1367,14 @@ __Dependency:__ none
 
 | Parameter              | Type   | Note         |
 |------------------------|--------|--------------|
+| id                     | string | UUID of the capability     |
 | credentials            | object |              |
-| credentials.id         | string |              |
-| credentials.category   | string | ID           |
+| credentials.id         | string | UUID of the credentials             |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE           |
 | decision               | object |              |
-| decision.type          | string | Possible values:<br>• PASSED<br>• REJECTED<br>• WARNING<br>• NOT_EXECUTED |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |              |
-| decision.details.label | string | Possible values:<br>• OK<br>• BLACK_WHITE<br>• MISSING_PAGE<br>• MISSING_SIGNATURE<br>• NOT_A_DOCUMENT<br>• BAD_QUALITY<br>• PHOTOCOPY<br>• UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_DOCUMENT_TYPE<br>• NOT_UPLOADED<br>• TECHNICAL_ERROR<br>• LIVENESS_UNDETERMINED |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• BAD_QUALITY<br>• BLACK_WHITE<br>• MISSING_PAGE<br>• MISSING_SIGNATURE<br>• NOT_A_DOCUMENT<br>• PHOTOCOPY<br><br>if decision.type = WARNING:<br>• LIVENESS_UNDETERMINED<br>•  UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_DOCUMENT_TYPE |
 
 #### capabilities.liveness
 
@@ -1372,16 +1382,17 @@ __Dependency:__ [usability](#capabilitiesusability)
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability     |
 | credentials            | object |                            |
-| credentials.id         | string |                            |
-| credentials.category   | string | ID                         |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
 | decision               | object |                            |
-| decision.type          | string | Possible values:<br>• PASSED<br>• REJECTED<br>• WARNING<br>• NOT_EXECUTED |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• OK<br>• LIVENESS_UNDETERMINED<br>• ID_USED_AS_SELFIE<br>• MULTIPLE_PEOPLE<br>• DIGITAL_COPY<br>• PHOTOCOPY<br>• MANIPULATED<br>• NO_FACE_PRESENT<br>• FACE_NOT_FULLY_VISIBLE<br>• BLACK_WHITE<br>• AGE_DIFFERENCE<br>• BAD_QUALITY<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
-| validFaceMapForAuthentication   | string | href to manage facemap   |
+| decision.details.label | string | if decision.type = REJECTED:<br>• LIVENESS_UNDETERMINED<br>• ID_USED_AS_SELFIE<br>• MULTIPLE_PEOPLE<br>• DIGITAL_COPY<br>• PHOTOCOPY<br>• MANIPULATED<br>• NO_FACE_PRESENT<br>• FACE_NOT_FULLY_VISIBLE<br>• BLACK_WHITE<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = WARNING:<br>• AGE_DIFFERENCE<br>• BAD_QUALITY<br><br>if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
 | data                   | object |              |
-| data.type              | object | Possible values:<br>• IPROOV_STANDARD<br>• IPROOV_PREMIUM<br>• JUMIO_STANDARD  |
+| data.type              | object | Possible values:<br>• IPROOV_STANDARD<br>• IPROOV_PREMIUM (SDK channel only)<br>• JUMIO_STANDARD |
+| validFaceMapForAuthentication   | string | href to manage facemap   |
 
 #### capabilities.similarity
 
@@ -1389,15 +1400,16 @@ __Dependency:__ [usability](#capabilitiesusability)
 
 | Parameter              | Type   | Note         |
 |------------------------|--------|--------------|
+| id                     | string | UUID of the capability     |
 | credentials            | object |              |
-| credentials.id         | string |              |
-| credentials.category   | string | ID           |
+| credentials.id         | string | UUID of the credentials             |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE           |
 | decision               | object |              |
-| decision.type          | string | Possible values:<br>• PASSED<br>• REJECTED<br>• WARNING<br>• NOT_EXECUTED |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |              |
-| decision.details.label | string | Possible values:<br>• MATCH<br>• NO_MATCH <br>• NOT_POSSIBLE <br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
+| decision.details.label | string | if decision.type = REJECTED:<br>• NO_MATCH<br><br>if decision.type = PASSED:<br>• MATCH<br><br>if decision.type = WARNING:<br>• NOT_POSSIBLE<br><br>if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
 | data                   | object |              |
-| data.similarity        | string | Possible values:<br>• MATCH<br>• NO_MATCH<br>• NOT_POSSIBLE               |
+| data.similarity        | string | Possible values:<br>• MATCH<br>• NOT_MATCH<br>• NOT_POSSIBLE |
 
 #### capabilities.authentication
 
@@ -1405,13 +1417,16 @@ __Dependency:__ [usability](#capabilitiesusability)
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability     |
 | credentials            | object |                            |
-| credentials.id         | string |                            |
-| credentials.category   | string | ID                         |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
 | decision               | object |                            |
-| decision.type          | string | Possible values:<br>• PASSED<br>• REJECTED<br>• NOT_EXECUTED    |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED    |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• OK<br>• FAILED<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR          |
+| decision.details.label | string | if decision.type = PASSED:<br>• OK<br><br>if decision.type =REJECTED:<br>• FAILED<br><br>if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
+| data                   | object |              |
+| data.type              | object | Possible values:<br>• IPROOV_STANDARD<br>• IPROOV_PREMIUM (SDK channel only) |
 | validFaceMapForAuthentication   | string | href to manage facemap                                 |
 
 #### capabilities.imageChecks
@@ -1420,13 +1435,23 @@ __Dependency:__ [usability](#capabilitiesusability)
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability     |
 | credentials            | object |                            |
-| credentials.id         | string |                            |
-| credentials.category   | string | ID                         |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE |
 | decision               | object |                            |
-| decision.type          | string | Possible values:<br>• PASSED<br>• REJECTED<br>• WARNING<br>• NOT_EXECUTED |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• OK<br>• DIFFERENT_PERSON<br>• DIGITAL_COPY<br>• WATERMARK<br>• MANIPULATED_DOCUMENT<br>• OTHER_REJECTION<br>• GHOST_IMAGE_DIFFERENT<br>• PUNCHED<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br>• SAMPLE       |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DIGITAL_COPY<br>• WATERMARK<br>• MANIPULATED_DOCUMENT<br>• OTHER_REJECTION<br>• GHOST_IMAGE_DIFFERENT<br>• PUNCHED<br>• SAMPLE<br>• CHIP_MISSING<br>• FAKE<br><br>if decision.type = WARNING:<br>• DIFFERENT_PERSON<br>• REPEATED_FACE (same face with same data occurs multiple times --> potential opening of multiple accounts) |
+| data                   | object | See [imageChecks.data](#capabilitiesimageChecksdata) |
+
+#### capabilities.imageChecks.data
+| Parameter                         | Type   | Note                                                                                                        |
+|-----------------------------------|--------|-------------------------------------------------------------------------------------------------------------|
+| data.faceSearchFindings     | object | Result of 1:n face search on previous transactions |
+| data.faceSearchFindings.status     | string | Possible values:<br>• DONE<br>• PENDING<br>• ERROR |
+| data.faceSearchFindings.findings     | array (string) | A face (on the ID or Selfie) is matching with another face (on the ID or Selfie) from a previous transaction|
+| data.faceSearchFindings.findings.items    | string | UUID of the workflow |
 
 #### capabilities.extraction
 
@@ -1434,12 +1459,13 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability        |
 | credentials            | object | Possible values:<br>• credentials.decision <br>• credentials.data        |
 | decision               | object | Possible values:<br>• decision.type<br>• decision.details                |
-| decision.type          | string | Possible values:<br>• PASSED <br>• NOT_EXECUTED                          |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED <br>• PASSED                          |
 | decision.details       | object | Possible values:<br>• decision.details.label                             |
-| decision.details.label | string | Possible values:<br>• OK<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR       |
-| data                   | string | See [extraction.data](#capabilitiesextractiondata)                                             |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK |
+| data                   | object | See [extraction.data](#capabilitiesextractiondata)                       |
 
 #### capabilities.extraction.data
 
@@ -1503,13 +1529,86 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability     |
 | credentials            | object |                            |
-| credentials.id         | string |                            |
-| credentials.category   | string | ID                         |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
 | decision               | object |                            |
-| decision.type          | string | Possible values:<br>• PASSED<br>• REJECTED<br>• NOT_EXECUTED |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED |
 | decision.details       | object |                            |
-| decision.details.label | string | Possible values:<br>• OK<br>• NFC_CERTIFICATE<br>• MISMATCHING_DATAPOINTS<br>• MRZ_CHECKSUM<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• NFC_CERTIFICATE<br>• MISMATCHING_DATAPOINTS<br>• MRZ_CHECKSUM<br>• MISMATCHING_DATA_REPEATED_FACE (same face occurs multiple times, data is different --> high possibility of fraud attempt) |
+
+#### capabilities.watchlistScreening
+
+__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimageChecks), [extraction](#capabilitiesextraction)
+
+| Parameter              | Type   | Note                       |
+|------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability     |
+| credentials            | object |                            |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
+| decision               | object |                            |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
+| decision.details       | object |                            |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• NOT_ENOUGH_DATA<br>• VALIDATION_FAILED<br>• INVALID_MERCHANT_SETTINGS<br>• TECHNICAL_ERROR<br>• EXTRACTION_NOT_DONE<br>• NO_VALID_ID_CREDENTIAL<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = WARNING:<br>• ALERT |
+| data                   | object | See [watchlistScreening.data](#capabilitieswatchlistScreeningdata)        |
+
+#### capabilities.watchlistScreening.data
+
+| Parameter              | Type   | Note                       |
+|------------------------|--------|----------------------------|
+| searchDate             | string | Timestamp (UTC) of the response.<br>Format: YYYY-MM-DDThh:mm:ss.SSSZ    |
+| searchStatus           | string | Possible values:<br>• DONE<br>• NOT_DONE<br>• ERROR                      |
+| searchId               | string | Only if searchStatus = DONE                      |
+| searchReference        | string | Only if searchStatus = DONE                      |
+| searchResultUrl        | string | Only if searchStatus = DONE                      |
+| searchResults          | integer | Only if searchStatus = DONE                     |
+
+#### capabilities.addressValidation
+
+__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimageChecks), [extraction](#capabilitiesextraction)
+
+| Parameter              | Type   | Note                       |
+|------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability     |
+| credentials            | object |                            |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
+| decision               | object |                            |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
+| decision.details       | object |                            |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• NOT_ENOUGH_DATA<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br><br>if decision.type = PASSED<br>• OK<br><br>if decision.type = REJECTED:<br>• DENY<br><br>if decision.type = WARNING:<br>• ALERT |
+
+#### capabilities.proofOfResidency
+
+__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimageChecks), [extraction](#capabilitiesextraction)
+
+| Parameter              | Type   | Note                       |
+|------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability     |
+| credentials            | object |                            |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
+| decision               | object |                            |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
+| decision.details       | object |                            |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• NOT_ENOUGH_DATA<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DENY<br><br>if decision.type = WARNING:<br>• ALERT |
+
+#### capabilities.drivingLicenseVerification
+
+__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimageChecks), [extraction](#capabilitiesextraction)
+
+| Parameter              | Type   | Note                       |
+|------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability     |
+| credentials            | object |                            |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
+| decision               | object |                            |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
+| decision.details       | object |                            |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_STATE<br>• VALIDATION_FAILED<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DENY<br><br>if decision.type = WARNING:<br>• ALERT |
 
 ### Examples
 
@@ -1528,7 +1627,7 @@ Authorization: Bearer xxx
     "workflow": {
         "id": "22222222-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         "status": "PROCESSED",
-        "definitionKey": "2"
+        "definitionKey": "10003"
     },
     "account": {
         "id": "11111111-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
@@ -1551,6 +1650,7 @@ Authorization: Bearer xxx
     "capabilities": {
         "extraction": [
             {
+                "id": "1a11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
                 "credentials": [
                     {
                         "id": "33333333-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
@@ -1582,6 +1682,7 @@ Authorization: Bearer xxx
         ],
         "dataChecks": [
             {
+                "id": "1b11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
                 "credentials": [
                     {
                         "id": "33333333-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
@@ -1598,6 +1699,7 @@ Authorization: Bearer xxx
         ],
         "imageChecks": [
             {
+                "id": "1c11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
                 "credentials": [
                     {
                         "id": "33333333-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
@@ -1614,6 +1716,7 @@ Authorization: Bearer xxx
         ],
         "usability": [
             {
+                "id": "1d11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
                 "credentials": [
                     {
                         "id": "33333333-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
@@ -1627,9 +1730,115 @@ Authorization: Bearer xxx
                     }
                 }
             }
+            {
+                "id": "1f11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                "credentials": [
+                    {
+                        "id": "44444444-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                        "category": "SELFIE"
+                    }
+                ],
+                "decision": {
+                    "type": "PASSED",
+                    "details": {
+                        "label": "OK"
+                    }
+                }
+            },
+            {
+                "id": "1g11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                "credentials": [
+                    {
+                        "id": "55555555-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                        "category": "FACEMAP"
+                    }
+                ],
+                "decision": {
+                    "type": "PASSED",
+                    "details": {
+                        "label": "OK"
+                    }
+                }
+            }
         ]
-    }
-}
+        "watchlistScreening": [
+             {
+                     "id": "1411111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                     "credentials": [
+                         {
+                             "id": "33333333-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                             "category": "ID"
+                         }
+                     ],
+                     "decision": {
+                         "type": "PASSED",
+                         "details": {
+                             "label": "OK"
+                         }
+                     },
+                     "data": {
+                      "searchDate": "2021-07-15T10:44:11.000Z",
+                      "searchId": "12345678",
+                      "searchReference": "1626345851-xxxxxx",
+                      "searchResultUrl": "https://app.xxx.com/public/search/123456XXC-xxxx/xxxccc",
+                      "searchResults": 0,
+                      "searchStatus": "SUCCESS"
+                    }
+                 }
+             ],
+          “addressValidation”: [
+              {
+                     "id": "1511111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                     "credentials": [
+                         {
+                             "id": "33333333-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                             "category": "ID"
+                         }
+                     ],
+                     "decision": {
+                         "type": "PASSED",
+                         "details": {
+                             "label": "OK"
+                         }
+                     },
+            }
+          ],
+          “proofOfResidency”: [
+           {
+                     "id": "1611111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                     "credentials": [
+                         {
+                             "id": "33333333-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                             "category": "ID"
+                         }
+                     ],
+                     "decision": {
+                         "type": "PASSED",
+                         "details": {
+                             "label": "OK"
+                         }
+                     },
+            }
+          ],
+          "drivingLicenseVerification": [
+          {
+                     "id": "1711111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                     "credentials": [
+                         {
+                             "id": "33333333-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                             "category": "ID"
+                         }
+                     ],
+                     "decision": {
+                         "type": "PASSED",
+                         "details": {
+                             "label": "OK"
+                         }
+                     },
+            }
+         ]
+         }
+     }
 ```
 
 ## Get Images
@@ -1673,7 +1882,8 @@ The following fields are required in the header section of your request:
 `Accept: application/json`   
 `User-Agent: YourCompany YourApp/v1.0`   
 
-| ⚠️&nbsp;&nbsp; Jumio requires the `User-Agent` value to reflect your business or entity name for API troubleshooting. |:----------|
+| ⚠️&nbsp;&nbsp; Jumio requires the `User-Agent` value to reflect your business or entity name for API troubleshooting.
+|:----------|
 
 | ℹ️&nbsp;&nbsp; Calls with missing or suspicious headers, suspicious parameter values, or without OAuth2 will result in HTTP status code __403 Forbidden__
 |:----------|

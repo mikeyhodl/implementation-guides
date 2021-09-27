@@ -1,5 +1,5 @@
 # Data migration to new KYX platform
-In order to move existing user data to the new platform, a migration step is necessary to import information. This step is especially important for Authentication customers, since they need to migrate their previous Zoom users to Jumio’s new liveness provider iProov.
+In order to move existing user data to the new platform, a migration step is necessary to import information. This step is especially important for Authentication customers, since they need to migrate their previous liveness users to Jumio’s new liveness provider iProov.
 
 The old `scanReference` will be transitioned to the new `workflowExecutionId`. Optionally, the new `accountId` and `workflowExecutionId` can be returned via [callback](api_guide.md#callback), which is triggered for every migrated scan reference.
 

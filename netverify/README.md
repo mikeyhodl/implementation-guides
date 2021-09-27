@@ -52,11 +52,11 @@ The Jumio Knowledge Base also contains a wealth of information regarding our ser
 | 2019-07-11  |Added Authentication for Web (Beta)|
 | 2019-07-10  |Added value "EXPIRED" to callback parameter transactionResult|
 | 2019-07-04  |Added Bulgaria, Latvia, Lithuania and Romania to extract DL categories<br>Added new callback parameter "placeOfBirth" for ID Verification<br>Added gender extraction for Hongkong ID<br>Added place of birth extraction for Hongkong ID|
-| 2019-06-27  |Added full screen mode for 3D Liveness (Beta)|
+| 2019-06-27  |Added full screen mode for Liveness (Beta)|
 | 2019-06-13  |Added support for Samsung Internet Browser on Android for ID Verification Web|
 | 2019-05-29  |Added Callback for Authentication|
 | 2019-05-28  |Updated max. size for frontsideImage, faceImage and backsideImage to 15MB|
-| 2019-04-08  |Added 3D Liveness for Web (Beta)|
+| 2019-04-08  |Added Liveness for Web (Beta)|
 | 2019-02-15  |Added value "OTHER" to callback parameter "type" for Document Verification|
 | 2019-02-08   |Added parameter "availability" to dlCategories <br>Added extraction of motorcycle permission from Taiwan driving licenses|
 | 2019-02-06   |Updated supported document types section to list all available "types" |
