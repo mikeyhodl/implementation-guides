@@ -24,6 +24,10 @@ Jumio's ID Verification let customers easily and securely capture and submit the
 - [ID Verification Authentication](netverify/netverify-authentication.md)
 - [ID Verification Authentication w/ Facemap](/netverify/netverify-authentication-facemap.md)
 
+## Jumio Screening
+
+- [Jumio Screening Implementation Guide](/netverify/netverify-screening.md)
+
 ## Document Verification
 
 Transform the way you extract and verify data from customer documents with Jumio’s Document Verification.
