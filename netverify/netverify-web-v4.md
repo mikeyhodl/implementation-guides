@@ -171,14 +171,14 @@ Identity Verification in ID Verification allows you to make sure the person subm
 
 Identity Verification can be enabled with the Face Match step only or in conjunction with a Liveness Check.
 
-#### 3D Liveness for Web
+#### Biometric Face Capture
 
-ID Verification's new 3D face liveness detection technology creates a three-dimensional map of your user's face, providing unprecedented accuracy for the Liveness Check, and creates an enrollment transaction for the use of the Authentication feature.
+ID Verification's liveness detection technology creates a three-dimensional map of your user's face, providing unprecedented accuracy for the Liveness Check, and creates an enrollment transaction for the use of the Authentication feature.
 
-|ℹ️ To use 3D Liveness, Identity Verification and 3D Liveness must be enabled for your account by Jumio Support.
+|ℹ️ To use Biometric Face Capture, Identity Verification and Biometric Face Capture must be enabled for your account by Jumio Support.
 |:----------|
 
-3D Liveness requires that the user has access to a camera. In order to ensure that 3D Liveness is always used for the Liveness Check, your users must be restricted to using their camera either for the entire transaction, or for the Identity Verification step. This can be accomplished by:
+Biometric Face Capture requires that the user has access to a camera. In order to ensure that Biometric Face Capture is always used for the Liveness Check, your users must be restricted to using their camera either for the entire transaction, or for the Identity Verification step. This can be accomplished by:
 
 * changing your **Capture method** in the **Settings** area of the [Customer Portal](/netverify/portal-settings.md) to **Webcam only** for the entire transaction.
 * including [workflowId 201](#supported-workflowid-values) to specify "ID + Identity, camera only" in the API request when you initate a ID Verification transaction.
@@ -236,6 +236,7 @@ Hyphenated combination of [ISO 639-1:2002 alpha-2](https://en.wikipedia.org/wiki
 |ru|Russian|
 |sk|Slovak|
 |sv|Swedish|
+|swh|Swahili|
 |th|Thai|
 |tr|Turkish|
 |vi|Vietnamese|
@@ -505,7 +506,7 @@ Note: When specifying the width and height of your iFrame you may prefer to use 
 |⚠️The ID Verification Web client itself will responsively fill the iFrame that it is loaded into.
 |:----------|
 
-### 3D Liveness
+### Liveness
 
 For a better user experience when creating a three-dimensional map of your user's face, you must allow full screen mode. This will address the positioning and distance between the capture interface and the camera.
 
@@ -524,7 +525,7 @@ For a better user experience when creating a three-dimensional map of your user'
 <iframe src="https://yourcompany.netverify.com/web/v4/app?locale=en-GB&authorizationToken=xxx" width="70%" height="80%" allow="camera"></iframe>
 ```
 
-#### 3D Liveness example
+#### Biometric Face Capture example
 ```
 <iframe src="https://yourcompany.netverify.com/web/v4/app?locale=en-GB&authorizationToken=xxx" width="70%" height="80%" allow="camera;fullscreen;accelerometer;gyroscope;magnetometer" allowfullscreen></iframe>
 ```
@@ -982,7 +983,7 @@ To display relevant information on your success or error page, you can use the f
 |**transactionStatus**|Possible values:<br>• `SUCCESS` for successful submissions. <br> • `ERROR`for errors and failure after 3 attempts.|
 |**customerInternalReference**<sup>2</sup>|Your internal reference for the transaction.|
 |**transactionReference**|Jumio reference number for the transaction.|
-|errorCode|Displayed when `transactionStatus` is `ERROR`.<br>Possible values: <br>• `9100` (Error occurred on our server.)<br>• `9200` (Authorization token missing, invalid, or expired.)<br>• `9210` (Session expired after the user journey started.)<br>• `9300` (Error occurred transmitting image to our server.)<br>• `9400` (Error occurred during verification step.)<br>• `9800` (User has no network connection.)<br>• `9801` (Unexpected error occurred in the client.)<br>• `9810` (Problem while communicating with our server.)<br>• `9820` (File upload not enabled and camera unavailable.)<br>• `9821` (The 3D liveness face capture process failed, e.g. issue with iProov)<br>• `9822` (Browser does not support camera.)<br>• `9835` (No acceptable submission in 3 attempts.)|
+|errorCode|Displayed when `transactionStatus` is `ERROR`.<br>Possible values: <br>• `9100` (Error occurred on our server.)<br>• `9200` (Authorization token missing, invalid, or expired.)<br>• `9210` (Session expired after the user journey started.)<br>• `9300` (Error occurred transmitting image to our server.)<br>• `9400` (Error occurred during verification step.)<br>• `9800` (User has no network connection.)<br>• `9801` (Unexpected error occurred in the client.)<br>• `9810` (Problem while communicating with our server.)<br>• `9820` (File upload not enabled and camera unavailable.)<br>• `9821` (The Biometric Face Capture face capture process failed, e.g. issue with iProov)<br>• `9822` (Browser does not support camera.)<br>• `9835` (No acceptable submission in 3 attempts.)|
 
 <sup>1</sup> Because HTTP `GET` parameters can be manipulated on the client side, they may be used for display purposes only.<br>
 <sup>2</sup> Values **must not** contain Personally Identifiable Information (PII) or other sensitive data such as email addresses.
@@ -1009,7 +1010,7 @@ Jumio offers guaranteed support for ID Verification on the following browsers an
 
 ### Desktop browsers
 
-|Browser|Major version|Operating system |Supports<br>image upload |Supports<br>camera capture|Supports<br>3D Liveness|
+|Browser|Major version|Operating system |Supports<br>image upload |Supports<br>camera capture|Supports<br>Biometric Face Capture|
 |:---|:---|:---|:---:|:---:|:---:|
 |Google Chrome|current +<br> 1 previous|Windows + Mac|X|X|X|
 |Mozilla Firefox|current +<br>1 previous|Windows + Mac|X|X|X|
@@ -1019,7 +1020,7 @@ Jumio offers guaranteed support for ID Verification on the following browsers an
 
 ### Mobile browsers
 
-|Browser name|Major browser version|Operating system |Supports<br>image upload |Supports<br>camera capture|Supports<br>3D Liveness|
+|Browser name|Major browser version|Operating system |Supports<br>image upload |Supports<br>camera capture|Supports<br>Biometric Face Capture|
 |:---|:---|:---|:---:|:---:|:---:|
 |Google Chrome |current |Android|X|X|X|
 |Samsung Internet |current |Android|X|X|X|
@@ -1029,7 +1030,7 @@ Jumio offers guaranteed support for ID Verification on the following browsers an
 
 ### Native WebView
 
-|Operating system |Major version|Supports<br>image upload |Supports<br>camera capture|Supports<br>3D Liveness|
+|Operating system |Major version|Supports<br>image upload |Supports<br>camera capture|Supports<br>Biometric Face Capture|
 |:---|:---|:---:|:---:|:---:|
 |Native Android WebView|current +<br>1 previous|X|X|X|
 |Native iOS WebView<sup>1</sup>|current +<br>1 previous|X| | |
