@@ -236,7 +236,7 @@ Hyphenated combination of [ISO 639-1:2002 alpha-2](https://en.wikipedia.org/wiki
 |ru|Russian|
 |sk|Slovak|
 |sv|Swedish|
-|swh|Swahili|
+|sw|Swahili|
 |th|Thai|
 |tr|Turkish|
 |vi|Vietnamese|
