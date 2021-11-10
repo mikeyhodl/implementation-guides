@@ -891,16 +891,7 @@ curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts/1
 --data-raw '{
     "customerInternalReference": "CUSTOMER_REFERENCE",
     "workflowDefinition": {
-        "key": 9,
-        "credentials": [
-            {
-                "id": "33333333-3333-3333-aaaaaaaaaaaa",
-                "category": "FACEMAP"
-            },
-            {
-                "category": "FACEMAP"
-            }
-        ]
+        "key": 9
     }
 }'
 ```
