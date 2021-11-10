@@ -66,7 +66,7 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts'
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE",
+        "userReference": "YOUR_USER_REFERENCE"
     }'
 ```
 
@@ -136,7 +136,7 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts/
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE",
+        "userReference": "YOUR_USER_REFERENCE"
     }'
 ```
 
@@ -232,7 +232,7 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts'
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE",
+        "userReference": "YOUR_USER_REFERENCE"
     }'
 ```
 
@@ -305,7 +305,7 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts/
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE",
+        "userReference": "YOUR_USER_REFERENCE"
     }'
 ```
 
@@ -372,6 +372,8 @@ This workflow verifies a photo ID document and returns a) whether that document 
 In order of dependency:
 * [usability](api_guide.md#capabilitiesusability) --> [imageChecks](api_guide.md#capabilitiesimagechecks) --> [extraction](api_guide.md#capabilitiesextraction) --> [dataChecks](api_guide.md#capabilitiesdatachecks)
 * [usability](api_guide.md#capabilitiesusability) --> [liveness](api_guide.md#capabilitiesliveness)
+* [usability](api_guide.md#capabilitiesusability) --> [similarity](api_guide.md#capabilitiessimilarity)
+
 
 ### Example
 
@@ -406,7 +408,7 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts'
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE",
+        "userReference": "YOUR_USER_REFERENCE"
     }'
 ```
 
@@ -486,7 +488,7 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts/
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE",
+        "userReference": "YOUR_USER_REFERENCE"
     }'
 ```
 
@@ -893,7 +895,7 @@ curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts/1
         "credentials": [
             {
                 "id": "33333333-3333-3333-aaaaaaaaaaaa",
-                "category": "ID"
+                "category": "FACEMAP"
             },
             {
                 "category": "FACEMAP"
