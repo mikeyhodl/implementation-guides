@@ -485,6 +485,9 @@ If you want to embed ID Verification on a web page, place the iFrame tag in your
 |⚠️ In case you are nesting the iFrame in another iFrame the `allow="camera"` attribute must be added to every iFrame.
 |:----------|
 
+|⚠️ The containing page where the iFrame is added has to be in a secure context (HTTPS).
+|:----------|
+
 Note: Due to security reasons the `authorizationToken` is automatically removed from the `redirectUrl` once the client is loaded in the browser and stored in a session instead. It will look like this:
 
 ``
