@@ -9,6 +9,7 @@ This guide describes how to implement the ID Verification Retrieval API.
 
 | Date    | Description|
 |:--------|:------------|
+| 2021-11-15   |Added reject reason code 116 for SUPERIMPOSED\_TEXT<br>Added reject reason code 118 for MISMATCH\_FRONT\_BACK<br>Added reject reason description code 2007 for MISSING\_MANDATORY\_DATAPOINTS |
 | 2021-09-01   |Added reject reason code 115 for MISMATCH\_HRZ\_MRZ\_DATA |
 | 2021-06-23   |Added reject reason code 113 for MISMATCHING\_DATA\_REPEATED\_FACE |
 | 2021-05-21   |Added "personalNumberValidation" to "additionalChecks" |
@@ -504,7 +505,7 @@ Successful requests will return HTTP status code `200 OK` along with a JSON obje
 |Name| Type   | Max. Length    | Description|
 |:------------------------|:--------|:--------|:------------|
 |rejectReasonCode |string| 5  |see below |
-|rejectReasonDescription |string |255  |Possible codes and descriptions for verification status DENIED\_FRAUD:<br>100	MANIPULATED\_DOCUMENT<br/>105	FRAUDSTER<br/>106	FAKE<br/>107	PHOTO\_MISMATCH<br/>108	MRZ\_CHECK\_FAILED<br/>109	PUNCHED\_DOCUMENT<br/>110	CHIP\_DATA\_MANIPULATED (only available for ePassport)<br/>111	MISMATCH\_PRINTED\_BARCODE\_DATA<br/>113	MISMATCHING\_DATA\_REPEATED\_FACE<sup>1</sup><br/>115 MISMATCH\_HRZ\_MRZ\_DATA<br><br>Possible codes and descriptions for verificationStatus = ERROR\_NOT\_READABLE\_ID:<br/>102	PHOTOCOPY\_BLACK\_WHITE<br/>103	PHOTOCOPY\_COLOR<br/>104	DIGITAL\_COPY<br/>200	NOT\_READABLE\_DOCUMENT<br/>201	NO\_DOCUMENT<br/>202	SAMPLE\_DOCUMENT<br/>206	MISSING\_BACK<br/>207	WRONG\_DOCUMENT\_PAGE<br/>209	MISSING\_SIGNATURE<br/>210	CAMERA\_BLACK\_WHITE<br/>211	DIFFERENT\_PERSONS\_SHOWN<br/>300	MANUAL\_REJECTION|
+|rejectReasonDescription |string |255  |Possible codes and descriptions for verification status DENIED\_FRAUD:<br>100	MANIPULATED\_DOCUMENT<br/>105	FRAUDSTER<br/>106	FAKE<br/>107	PHOTO\_MISMATCH<br/>108	MRZ\_CHECK\_FAILED<br/>109	PUNCHED\_DOCUMENT<br/>110	CHIP\_DATA\_MANIPULATED (only available for ePassport)<br/>111	MISMATCH\_PRINTED\_BARCODE\_DATA<br/>113	MISMATCHING\_DATA\_REPEATED\_FACE<sup>1</sup><br/>115 MISMATCH\_HRZ\_MRZ\_DATA<br/>116 SUPERIMPOSED\_TEXT<br/>118 MISMATCH\_FRONT\_BACK<br><br>Possible codes and descriptions for verificationStatus = ERROR\_NOT\_READABLE\_ID:<br/>102	PHOTOCOPY\_BLACK\_WHITE<br/>103	PHOTOCOPY\_COLOR<br/>104	DIGITAL\_COPY<br/>200	NOT\_READABLE\_DOCUMENT<br/>201	NO\_DOCUMENT<br/>202	SAMPLE\_DOCUMENT<br/>206	MISSING\_BACK<br/>207	WRONG\_DOCUMENT\_PAGE<br/>209	MISSING\_SIGNATURE<br/>210	CAMERA\_BLACK\_WHITE<br/>211	DIFFERENT\_PERSONS\_SHOWN<br/>300	MANUAL\_REJECTION|
 |rejectReasonDetails |JSON object / JSON array  |   |Reject reason details as JSON object (if only one item is returned) or JSON array (containing JSON objects) if rejectReasonCode = 100 or 200, see table below |
 
 <br>
@@ -515,7 +516,7 @@ Successful requests will return HTTP status code `200 OK` along with a JSON obje
 |Name |  Type    | Max. Length    | Description|
 |:-------------------------------|:---------|:---------------|:------------|
 |detailsCode   |string | 5 | see below |
-|detailsDescription|string|255| Possible codes and description details for rejectReasonCode = 100:<br/>1001	PHOTO<br/>1002	DOCUMENT\_NUMBER<br>1003	EXPIRY<br/>1004	DOB<br/>1005	NAME<br/>1006	ADDRESS<br/>1007	SECURITY\_CHECKS<br/>1008	SIGNATURE<br>1009	PERSONAL\_NUMBER<br>10011	PLACE\_OF\_BIRTH<br><br>Possible codes and description details for rejectReasonCode = 200:<br/>2001	BLURRED<br/>2002	BAD\_QUALITY<br/>2003	MISSING\_PART\_DOCUMENT<br/>2004	HIDDEN\_PART\_DOCUMENT<br/>2005	DAMAGED\_DOCUMENT<br/>2006 GLARE |
+|detailsDescription|string|255| Possible codes and description details for rejectReasonCode = 100:<br/>1001	PHOTO<br/>1002	DOCUMENT\_NUMBER<br>1003	EXPIRY<br/>1004	DOB<br/>1005	NAME<br/>1006	ADDRESS<br/>1007	SECURITY\_CHECKS<br/>1008	SIGNATURE<br>1009	PERSONAL\_NUMBER<br>10011	PLACE\_OF\_BIRTH<br><br>Possible codes and description details for rejectReasonCode = 200:<br/>2001	BLURRED<br/>2002	BAD\_QUALITY<br/>2003	MISSING\_PART\_DOCUMENT<br/>2004	HIDDEN\_PART\_DOCUMENT<br/>2005	DAMAGED\_DOCUMENT<br/>2006 GLARE<br/>2007	MISSING\_MANDATORY\_DATAPOINTS |
 
 <br>
 

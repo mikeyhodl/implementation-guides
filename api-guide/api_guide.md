@@ -1536,7 +1536,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED |
 | decision.details       | object |                            |
-| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• NFC_CERTIFICATE<br>• MISMATCHING_DATAPOINTS<br>• MRZ_CHECKSUM<br>• MISMATCHING_DATA_REPEATED_FACE (same face occurs multiple times, data is different --> high possibility of fraud attempt) |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• NFC_CERTIFICATE<br>• MISMATCHING_DATAPOINTS<br>• MRZ_CHECKSUM<br>• MISMATCHING_DATA_REPEATED_FACE (same face occurs multiple times, data is different --> high possibility of fraud attempt)<br>• MISMATCH_FRONT_BACK<br>• SUPERIMPOSED_TEXT |
 
 #### capabilities.watchlistScreening
 
