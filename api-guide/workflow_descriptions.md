@@ -722,7 +722,7 @@ This workflow captures a user's face to verify that the person is physically pre
 
 ### Prerequisites
 * Identity Verification must be enabled for your account. (Contact your Jumio account manager for activation.)
-* Allowed channels: SDK, WEB
+* Allowed channels: SDK
 
 ### Capabilities
 In order of dependency:
