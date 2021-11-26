@@ -196,7 +196,7 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 | workflowExecution             | object         | Possible values:<br>• workflowExecution.id<br>• workflowExecution.credentials                        |
 | workflowExecution.id          | string         | UUID of the workflow                                                      |
 | workflowExecution.credentials | array (object) | Credential response<br>See [workflowExecution.credentials](#response-workflowdefinition.credentials) |
-| web                           | object         | Possible values:<br>• web.href <br><br> _Web parameters are only relevant for the WEB channel._ |
+| web                           | object         | Possible values:<br>• web.href<br>• web.successUrl<br>• web.errorUrl <br><br> _Web parameters are only relevant for the WEB channel._ |
 | web.href                      | string         | _Web parameters are only relevant for the WEB channel._ |
 | web.successUrl                | string          | URL to which the browser will send the end user at the end of a successful web acquisition user journey (defined either in the Customer Portal or overwritten in the initiate) |
 | web.errorUrl                  | string          | URL to which the browser will send the end user at the end of a failed web acquisition user journey(defined either in the Customer Portal or overwritten in the initiate) |
