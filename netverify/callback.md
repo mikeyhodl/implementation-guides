@@ -404,7 +404,7 @@ The following parameters are posted to your callback URL for Document Verificati
 |**scanReference**| String  |36 |Jumio's reference number for each transaction|
 |**timestamp**| String  |  |Timestamp (UTC) of the response <br>format: [YYYY-MM-DDThh:mm:ss.SSSZ](#timestamp-format-2)|
 |**transaction**| JSON object  |  |Transaction related data, see table below|
-|document   | JSON object  |       |Document related data if transaction status = DONE, see table |
+|**document**   | JSON object  |       |Document related data, see table below|
 
 ### Transaction
 
