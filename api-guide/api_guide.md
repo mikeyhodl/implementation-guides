@@ -179,7 +179,7 @@ Values set in your API request will override the corresponding settings configur
 | country.values         | array (string) | See possible values. | Define at least one ISO 3166-1 alpha-3 country code for the workflow definition.<br>Possible values: <br>•	[ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) |
 | type                   | object         |                      | Possible values:<br>• type.predefinedType <br>• type.values               |
 | type.predefinedType    | object         |                      | Possible values:<br>• DEFINED (default: end user is not able to change document type)<br>• RECOMMENDED (type is preselected, end user is still able to change it) |
-| type.values            | array (string) | See possible values. | Defined number of credential type codes. <br>Possible values:<br>If `category` = ID:<br>• ID_CARD<br>• DRIVING_LICENSE<br>• PASSPORT<br>• VISA<br>If `category` = FACEMAP:<br>• IPROOV_STANDARD<br>• IPROOV_PREMIUM (SDK channel only)<br>• JUMIO_STANDARD    |
+| type.values            | array (string) | See possible values. | Defined number of credential type codes. <br>Possible values:<br>If `category` = ID:<br>• ID_CARD<br>• DRIVING_LICENSE<br>• PASSPORT<br>• VISA<br>If `category` = FACEMAP:<br>• IPROOV_STANDARD (Web + SDK channel only)<br>• IPROOV_PREMIUM (Workflow 3: ID and Identity Verification (Web + SDK channel only) / Workflow 9: Authentication (SDK only) / Workflow 16: Authentication on Premise (SDK only))<br>• JUMIO_STANDARD|
 
 ## Response
 Unsuccessful requests will return HTTP status code __400 Bad Request, 401 Unauthorized, 403 Forbidden__ or __404 Not Found__ (in case of a failed update scenario) if the scan is not available.
@@ -198,6 +198,8 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 | workflowExecution.credentials | array (object) | Credential response<br>See [workflowExecution.credentials](#response-workflowdefinition.credentials) |
 | web                           | object         | Possible values:<br>• web.href <br><br> _Web parameters are only relevant for the WEB channel._ |
 | web.href                      | string         | _Web parameters are only relevant for the WEB channel._ |
+| web.successUrl                | string          | URL to which the browser will send the end user at the end of a successful web acquisition user journey (defined either in the Customer Portal or overwritten in the initiate) |
+| web.errorUrl                  | string          | URL to which the browser will send the end user at the end of a failed web acquisition user journey(defined either in the Customer Portal or overwritten in the initiate) |
 
 ### Response workflowExecution.credentials
 | Parameter             | Type                    | Notes                                                                                                                           |
@@ -304,7 +306,9 @@ YOUR_ACCESS_TOKEN' \
         "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
     },
     "web": {
-        "href": "https://mycompany.web.amer-1.jumio.ai/web/v4/app?authorizationTokenxxx&locale=es"
+        "href": "https://mycompany.web.amer-1.jumio.ai/web/v4/app?authorizationTokenxxx&locale=es",
+        "successUrl": "https://www.yourcompany.com/success",
+        "errorUrl": "https://www.yourcompany.com/error"
     },
     "sdk": {
         "token": "xxx"
@@ -1391,7 +1395,7 @@ __Dependency:__ [usability](#capabilitiesusability)
 | decision.details       | object |                            |
 | decision.details.label | string | if decision.type = REJECTED:<br>• LIVENESS_UNDETERMINED<br>• ID_USED_AS_SELFIE<br>• MULTIPLE_PEOPLE<br>• DIGITAL_COPY<br>• PHOTOCOPY<br>• MANIPULATED<br>• NO_FACE_PRESENT<br>• FACE_NOT_FULLY_VISIBLE<br>• BLACK_WHITE<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = WARNING:<br>• AGE_DIFFERENCE<br>• BAD_QUALITY<br><br>if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
 | data                   | object |              |
-| data.type              | object | Possible values:<br>• IPROOV_STANDARD<br>• IPROOV_PREMIUM (SDK channel only)<br>• JUMIO_STANDARD |
+| data.type              | object | Possible values:<br>• IPROOV_STANDARD (Web + SDK channel only)<br>• IPROOV_PREMIUM (Workflow 3: ID and Identity Verification (Web + SDK channel only) / Workflow 9: Authentication (SDK only) / Workflow 16: Authentication on Premise (SDK only))<br>• JUMIO_STANDARD |
 | validFaceMapForAuthentication   | string | href to manage facemap   |
 
 #### capabilities.similarity
@@ -1426,7 +1430,7 @@ __Dependency:__ [usability](#capabilitiesusability)
 | decision.details       | object |                            |
 | decision.details.label | string | if decision.type = PASSED:<br>• OK<br><br>if decision.type =REJECTED:<br>• FAILED<br><br>if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
 | data                   | object |              |
-| data.type              | object | Possible values:<br>• IPROOV_STANDARD<br>• IPROOV_PREMIUM (SDK channel only) |
+| data.type              | object | Possible values:<br>• IPROOV_STANDARD (Web + SDK channel only)<br>• IPROOV_PREMIUM (Workflow 3: ID and Identity Verification (Web + SDK channel only) / Workflow 9: Authentication (SDK only) / Workflow 16: Authentication on Premise (SDK only)) |
 | validFaceMapForAuthentication   | string | href to manage facemap                                 |
 
 #### capabilities.imageChecks
