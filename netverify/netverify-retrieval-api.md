@@ -339,7 +339,7 @@ Successful requests will return HTTP status code `200 OK` along with a JSON obje
 |issuingPlace|string|50|Issuing place of the document (if issuing place extraction is enabled)|
 |curp|string|18|CURP (if CURP extraction is enabled)|
 |gender|string|1|Possible values: M, F|
-|nationality|string|3|Nationality of the document holder in [ISO 3166-1 alpha-3](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) country code|
+|nationality|string|3|Nationality of the document holder in [ISO 3166-1 alpha-3](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) country code (if extraction is enabled)|
 |placeOfBirth|string|255|Place of birth of document holder|
 |taxNumber|string|255|Tax number of the document<br>• if idCountry = ITA and idType = HEALTH\_ID or TAX\_ID <br> (if Tax number extraction is enabled)|
 |cpf|string|255|CPF number of the document<br> (if CPF number extraction is enabled)|
