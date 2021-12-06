@@ -288,11 +288,12 @@ To display relevant information on your success or error page, you can use the f
 
 **Required items appear in bold type.**
 
-Name|Description|
+|Name|Description|
 |:---|:---|
 |**idScanStatus**|Possible values:<br>• `SUCCESS` <br> • `ERROR`|
 |**jumioIdScanReference**|Jumio reference number for the transaction.|
-|errorCode|Displayed when `transactionStatus` is `ERROR`.<br>Possible values: <br>• `211` (authorization token invalid)<br>• `310` (upload session has expired)<br>• `311` (document upload was already completed for provided scan reference)<br>• `320` (browser session has been started multiple times)<br>• `338` (third party cookies are disabled)<br>|
+|errorCode|Displayed when `transactionStatus` is `ERROR`.<br>Possible values: <br>• `211` (authorization token invalid)<br>• `310` (upload session has expired)<br>|
+
 <sup>1</sup> Because HTTP `GET` parameters can be manipulated on the client side, they may be used for display purposes only.
 <br>
 <br>
