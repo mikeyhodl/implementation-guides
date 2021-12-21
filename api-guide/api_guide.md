@@ -444,7 +444,7 @@ HTTP Request Method: __POST__
 
 | Key  | Value                                                          |
 |------|----------------------------------------------------------------|
-| file | JPEG, PNG  (max. size 10 MB and max resolution of 8000 x 8000) |
+| file | JPEG, PNG  (max. size 5 MB and max resolution of 8000 x 8000) |
 
 ### Response
 Unsuccessful requests will return HTTP status code __401 Unauthorized, 403 Forbidden__ or __404 Not Found__ if the scan is not available.
