@@ -96,7 +96,7 @@ The [TLS Protocol](https://tools.ietf.org/html/rfc5246) is required to securely 
 
 ### Request Access Token
 ```
-curl --request POST --location 'https://auth.amer-1.jumio.ai/oauth2/token' \
+curl --location --request POST 'https://auth.amer-1.jumio.ai/oauth2/token' \
     --header 'Accept: application/json' \
     --header 'Content-Type: application/x-www-form-urlencoded' \
     --data-raw 'grant_type=client_credentials' \
@@ -218,7 +218,7 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 
 ### Initiate Account
 ```
-curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts' \
+curl --location --request POST 'https://account.amer-1.jumio.ai/api/v1/accounts' \
     --header 'Content-Type: application/json' \
     --header 'User-Agent: User Demo' \
     --header 'Authorization: Bearer
@@ -240,7 +240,7 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts'
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE",
+        "userReference": "YOUR_USER_REFERENCE"
     }'
 ```
 
@@ -354,6 +354,8 @@ YOUR_ACCESS_TOKEN' \
 | 16            | [Authentication on Premise](workflow_descriptions.md#workflow-16-authentication-on-premise) | Compares the facemap of a user to an existing facemap that was previously captured and is stored on the customer side. <br><br>  The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](#workflow-3-id-and-identity-verification) or [Workflow 6](workflow_descriptions.md#workflow-6-standalone-liveness), and can be retrieved with the [Retrieval API](#retrieval) using the [`validFaceMapForAuthentication`](#capabilitiesliveness) parameter. |
 | 20            | [Similarity of Two Images](workflow_descriptions.md#workflow-20-similarity-of-two-images) | Matches the user photos on two IDs, two user selfies or a user's selfie with the photo on the ID to verify they are the same person. |
 | 32            | [ID Verification, Identity Verification, Screening](workflow_descriptions.md#workflow-32-id-verification-identity-verification-screening) | Verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user's face with the photo on the ID and performs a liveness check to ensure the person is physically present. Checks if user is part of any sanctions list. |
+| 10011         | [Standalone ID and Identity Verification](workflow-descriptions-kyx.md#workflow-11-standalone-id-and-identity-verification) | This workflow verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user’s face with the photo on the ID and performs a liveness check to ensure the person is physically present. |
+| 10013         | [ID and Identity Verification + Screening + Proof Of Residency + Address Validation + US DL Verification](workflow-descriptions-kyx.md#workflow-10013-id-and-identity-verification--screening--proof-of-residency--address-validation--us-dl-verification)  | This workflow verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user's face with the photo on the ID and performs a liveness check to ensure the person is physically present. Performs a proof of residency on the users address, as well as address validation. Checks if user is part of any sanctions list and also performs US Driving License Verification. |  
 
 Workflows are specified using the `key` attribute in the `workflowDefinition` object:
 ```
@@ -1511,6 +1513,11 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | data.visaCategory                 | string | Visa category <br>if idType = VISA <br>(activation required)     |
 | data.dni                          | string | DNI ("Documento nacional de identidad") number as available on the ID <br>if idCountry = ESP and idSubType = NATIONA_ID <br>(activation required) |
 | data.pesel                        | string | PESEL ("Powszechny Elektroniczny System Ewidencji Ludności") number as available on the ID <br>if idCountry = POL  <br>(activation required) |
+| data.expiryDateParts              | object | Expiry date information (year, month, day) from the corresponding fields on the document <sup>1</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"} |
+| data.dateOfBirthParts             | object | Date of birth information (year, month, day) from the corresponding fields on the document <sup>1</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"} |
+| data.issuingDateParts             | object | Issuing date information (year, month, day) from the corresponding fields on the document <sup>1</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"} |
+
+<sup>1</sup> If one of the values such as "day" is not included in the document it will also not be returned in the object. For examples and additional details, refer to our [Knowledge Base](https://support.jumio.com/hc/en-us/articles/4412166539803-New-Parameters-in-Callback-and-Retrieval-API-dateOfBirthParts-issuingDateParts-expiryDateParts-).
 
 #### capabilities.extraction.data.address
 
@@ -1540,7 +1547,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED |
 | decision.details       | object |                            |
-| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• NFC_CERTIFICATE<br>• MISMATCHING_DATAPOINTS<br>• MRZ_CHECKSUM<br>• MISMATCHING_DATA_REPEATED_FACE (same face occurs multiple times, data is different --> high possibility of fraud attempt)<br>• MISMATCH_FRONT_BACK<br>• SUPERIMPOSED_TEXT |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• NFC_CERTIFICATE<br>• MISMATCHING_DATAPOINTS<br>• MRZ_CHECKSUM<br>• MISMATCHING_DATA_REPEATED_FACE (same face occurs multiple times, data is different --> high possibility of fraud attempt)<br>• MISMATCH_FRONT_BACK<br>• SUPERIMPOSED_TEXT<br>• CHIP_MISSING<br>• DIGITAL_MANIPULATION|
 
 #### capabilities.watchlistScreening
 
