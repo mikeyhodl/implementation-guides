@@ -160,7 +160,7 @@ Values set in your API request will override the corresponding settings configur
 | __workflowDefinition__         | object         |                       | Definition of the specific documents necessary to execute for the particular capabilities on them.                   |
 | __workflowDefinition.key__     | object         |                       | Key of the workflow definition which you want to execute<br>See [Workflow Definition Keys](#workflow-definition-keys)                                      |
 | workflowDefinition.credentials | array (object) |                       | Optional workflow definition object part to customize acquiring process and workflow process.<br>Possible values: <br>See [workflowDefinition.credentials](#request-workflowdefinitioncredentials)       |
-| userReference                  | string         | 100                   | Reference for the end user in the customer backend (must not contain any PII)                |
+| userReference<sup>1</sup>          | string         | 100                   | Reference for the end user in the customer backend (must not contain any PII)                |
 | reportingCriteria              | string         | 255                   | Additional information provided by a customer for searching and aggregation purposes         |
 | callbackUrl                    | string         | 255                   | Definition of the callback URL for this particular request. [Overrides callback URL](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#callback-error-and-success-urls) in the Customer Portal.                  |
 | tokenLifetime                  | string         | minimum: 5m, maximum: 60d,<br>default: 30m | Should be a valid date period unit definition:<br>s - seconds<br>m - minutes<br>h - hours<br>d - days<br>Example: '1d' / '30m' / '600s'<br>[Overrides Authorization token lifetime](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#authorization-token-lifetime) in the Customer Portal. |
@@ -168,6 +168,8 @@ Values set in your API request will override the corresponding settings configur
 | web.successUrl | string | 255 | URL to which the browser will send the end user at the end of a successful web acquisition user journey. [Overrides success URL](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#callback-error-and-success-urls) in the Customer Portal. |
 | web.errorUrl | string | 255 | URL to which the browser will send the end user at the end of a failed web acquisition user journey. [Overrides error URL](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#callback-error-and-success-urls) in the Customer Portal. |
 | web.locale | string | 5 | Renders content in the specified language.<br>Overrides [Default locale](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#default-locale) in the Customer Portal.<br>See [supported locale values](#supported-locale-values). |
+
+<sup>1</sup> Mandatory request parameter for Workflow 32: ID Verification, Identity Verification, Screening.
 
 #### Request workflowDefinition.credentials
 
