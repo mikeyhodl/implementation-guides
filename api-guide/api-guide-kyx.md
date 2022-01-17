@@ -1324,14 +1324,14 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 | workflow.id                        | string | UUID of the workflow                                                   |
 | workflow.status                    | string | Possible values:<br>• INITIATED<br>• ACQUIRED<br>• PROCESSED<br>• SESSION_EXPIRED<br>•	TOKEN_EXPIRED   |
 | workflow.definitionKey             | string | See [supported keys](#workflow-definition-keys)                        |
-| workflow.decision                  | object | See [workflow.decision](#workflowdecision)                                                  |
-| workflow.steps                     | object |See [workflow.steps](#workflowsteps)                        |
 | workflow.userReference             | string | Customer internal reference for a request to link it in the customer backend (must not contain any PII) |
 | workflow.customerInternalReference | string | Reference for the end user in the customer backend (must not contain any PII) |
+| decision                            | object | See [decision](#decision)                                                  |
+| steps                               | object |See [workflow.steps](#steps)                        |
 | credentials                        | array (object)  | See [credentials](#credentials)                               |
 | capabilities                       | object | See [capabilities](#capabilities)                                      |
 
-#### workflow.decision
+#### decision
 | Parameter        | Type   | Note                    |
 |------------------|--------|-------------------------|
 | risk               | object | Possible values:<br>• risk.score |
@@ -1340,7 +1340,7 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 | details                 | object | Possible values:<br>• details.label        |
 | details.label           | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED <br>• TECHNICAL_ERROR<br>• WARNING       |
 
-#### workflow.step
+#### step
 | Parameter                 | Type   | Note                    |
 |---------------------------|--------|-------------------------|
 | href                      | string | href to manage steps for the workflow<br>see [Get Workflow Steps](#get-workflow-steps) |
@@ -1674,6 +1674,18 @@ Authorization: Bearer xxx
             ]
         }
     ],
+    "decision": {
+        "type": "PASSED",
+        "details": {
+            "label": "PASSED"
+        },
+        "risk": {
+            "score": 0.0
+        }
+    },
+    "steps": {
+        "href": "https://retrieval.amer-1.jumio.ai/api/v1/accounts/accounts/11111111-xxxx-xxxx-xxxx-xxxxxxxxxxxx/workflow-executions/22222222-xxxx-xxxx-xxxx-xxxxxxxxxxxx/steps"
+    },
     "capabilities": {
         "extraction": [
             {
