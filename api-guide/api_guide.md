@@ -1450,7 +1450,7 @@ __Dependency:__ [usability](#capabilitiesusability)
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DIGITAL_COPY<br>• WATERMARK<br>• MANIPULATED_DOCUMENT<br>• OTHER_REJECTION<br>• GHOST_IMAGE_DIFFERENT<br>• PUNCHED<br>• SAMPLE<br>• CHIP_MISSING<br>• FAKE<br><br>if decision.type = WARNING:<br>• DIFFERENT_PERSON<br>• REPEATED_FACE (same face with same data occurs multiple times --> potential opening of multiple accounts) |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DIGITAL_COPY<br>• WATERMARK<br>• MANIPULATED_DOCUMENT<br>• OTHER_REJECTION<br>• GHOST_IMAGE_DIFFERENT<br>• PUNCHED<br>• SAMPLE<br>• FAKE<br>• CHIP_MISSING<br>• DIGITAL_MANIPULATION<br><br>if decision.type = WARNING:<br>• DIFFERENT_PERSON<br>• REPEATED_FACE (same face with same data occurs multiple times --> potential opening of multiple accounts) |
 | data                   | object | See [imageChecks.data](#capabilitiesimageChecksdata) |
 
 #### capabilities.imageChecks.data
@@ -1549,7 +1549,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED |
 | decision.details       | object |                            |
-| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• NFC_CERTIFICATE<br>• MISMATCHING_DATAPOINTS<br>• MRZ_CHECKSUM<br>• MISMATCHING_DATA_REPEATED_FACE (same face occurs multiple times, data is different --> high possibility of fraud attempt)<br>• MISMATCH_FRONT_BACK<br>• SUPERIMPOSED_TEXT<br>• CHIP_MISSING<br>• DIGITAL_MANIPULATION|
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• NFC_CERTIFICATE<br>• MISMATCHING_DATAPOINTS<br>• MRZ_CHECKSUM<br>• MISMATCHING_DATA_REPEATED_FACE (same face occurs multiple times, data is different --> high possibility of fraud attempt)<br>• MISMATCH_FRONT_BACK<br>• SUPERIMPOSED_TEXT|
 
 #### capabilities.watchlistScreening
 
