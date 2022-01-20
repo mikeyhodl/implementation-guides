@@ -645,6 +645,9 @@ If you want to embed ID Verification on your web page, place the iFrame tag in y
 | ⚠️&nbsp;&nbsp; If you are nesting the iFrame in another iFrame, the `allow="camera"` attribute must be added to every iFrame.
 |:----------|
 
+|⚠️ Do not add the iFrame element and its attributes with javascript dynamically at runtime. The iFrame must be present when the page loads.
+|:----------|
+
 | ⚠️&nbsp;&nbsp; Camera capture is only possible within an iFrame when the containing page is served securely over https.
 |:----------|
 
