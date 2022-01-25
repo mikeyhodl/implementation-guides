@@ -197,9 +197,9 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 | workflowExecution.id          | string         | UUID of the workflow                                                      |
 | workflowExecution.credentials | array (object) | Credential response<br>See [workflowExecution.credentials](#response-workflowdefinition.credentials) |
 | web                           | object         | Possible values:<br>• web.href<br>• web.successUrl<br>• web.errorUrl <br><br> _Web parameters are only relevant for the WEB channel._ |
-| web.href                      | string         | _Web parameters are only relevant for the WEB channel._ |
-| web.successUrl                | string          | URL to which the browser will send the end user at the end of a successful web acquisition user journey (defined either in the Customer Portal or overwritten in the initiate) |
-| web.errorUrl                  | string          | URL to which the browser will send the end user at the end of a failed web acquisition user journey(defined either in the Customer Portal or overwritten in the initiate) |
+| web.href                      | string         | URL used to load the ID Verification client.<br><br>_Web parameters are only relevant for the WEB channel._ |
+| web.successUrl                | string          | URL to which the browser will send the end user at the end of a successful web acquisition user journey (defined either in the Customer Portal or overwritten in the initiate)<br><br> _SDK parameters are only relevant for the SDK channel._ |
+| web.errorUrl                  | string          | URL to which the browser will send the end user at the end of a failed web acquisition user journey(defined either in the Customer Portal or overwritten in the initiate)<br><br> _SDK parameters are only relevant for the SDK channel._ |
 
 ### Response workflowExecution.credentials
 | Parameter             | Type                    | Notes                                                                                                                           |
@@ -221,12 +221,11 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 curl --location --request POST 'https://account.amer-1.jumio.ai/api/v1/accounts' \
     --header 'Content-Type: application/json' \
     --header 'User-Agent: User Demo' \
-    --header 'Authorization: Bearer
-    YOUR_ACCESS_TOKEN' \
+    --header 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
     --data-raw '{
         "customerInternalReference": "CUSTOMER_REFERENCE",
         "workflowDefinition": {
-            "key": 2,
+            "key": 10013,
             "credentials": [
                 {
                     "category": "ID",
@@ -240,7 +239,13 @@ curl --location --request POST 'https://account.amer-1.jumio.ai/api/v1/accounts'
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE"
+        "userReference": "YOUR_USER_REFERENCE",
+        "tokenLifetime": "5m",
+        "web":{
+            "successUrl":"https://www.yourcompany.com/success",
+            "errorUrl":"https://www.yourcompany.com/error",
+            "locale":"es"
+        }
     }'
 ```
 
@@ -269,33 +274,33 @@ Please refer to [Account Create section.](#response)
 ### Request
 ```
 curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts/<accountId>' \
---header 'Content-Type: application/json' \
---header 'User-Agent: User Demo' \
---header 'Authorization: Bearer
-YOUR_ACCESS_TOKEN' \
---data-raw '{
-    "customerInternalReference": "CUSTOMER_INTERNAL_REFERENCE",
-    "workflowDefinition": {
-        "key": 2,
-        "credentials": [
-            {
-                "category": "FACEMAP",
-                "type": {
-                    "values": ["IPROOV_STANDARD", "JUMIO_STANDARD"]
-                }
-            },
-            {
-                "category": "ID",
-                "type": {
-                    "values": ["DRIVING_LICENSE", "ID_CARD", "PASSPORT"]
-                },
-                "country": {
-                    "values": ["USA", "CAN", "AUT"]
-                }
-            }
-        ]
-    }
-}
+  --header 'Content-Type: application/json' \
+  --header 'User-Agent: User Demo' \
+  --header 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
+  --data-raw '{
+      "customerInternalReference": "CUSTOMER_REFERENCE",
+      "workflowDefinition": {
+          "key": 10013,
+          "credentials": [
+              {
+                  "category": "ID",
+                  "type": {
+                      "values": ["DRIVING_LICENSE", "ID_CARD", "PASSPORT"]
+                  },
+                  "country": {
+                      "values": ["USA", "CAN", "AUT", "GBR"]
+                  }
+              }
+          ]
+      },
+      "callbackUrl": "YOUR_CALLBACK_URL",
+      "userReference": "YOUR_USER_REFERENCE",
+      "web":{
+          "successUrl":"https://www.yourcompany.com/success",
+          "errorUrl":"https://www.yourcompany.com/error",
+          "locale":"es"
+      }
+  }'
 ```
 
 ### Response
@@ -332,6 +337,30 @@ YOUR_ACCESS_TOKEN' \
                     },
                     "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
                 }
+            },
+            {
+                "id": "33333333-3333-3333-bbbbbbbbbbbb",
+                "category": "SELFIE",
+                "allowedChannels": [
+                    "WEB",
+                    "API",
+                    "SDK"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "face": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/FACE"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
+            },
+            {
+                "id": "33333333-3333-3333-cccccccccccc",
+                "category": "FACEMAP",
+                "allowedChannels": [
+                    "WEB",
+                    "SDK"
+                ]
             }
         ]
     }
@@ -412,7 +441,7 @@ After creating/updating a new account, you receive one or more specific redirect
 
 #### Request Headers
 
-The following fields are required in the header section of your Request
+The following fields are required in the header section of your request
 
 `Accept: application/json`    
 `Content-Type: multipart/form-data`   
@@ -1343,7 +1372,7 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 | details                 | object | Possible values:<br>• details.label        |
 | details.label           | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED <br>• TECHNICAL_ERROR<br>• WARNING       |
 
-#### step
+#### steps
 | Parameter                 | Type   | Note                    |
 |---------------------------|--------|-------------------------|
 | href                      | string | href to manage steps for the workflow<br>see [Get Workflow Steps](#get-workflow-steps) |

@@ -46,17 +46,34 @@ HTTP Request Method: __POST__
 __Request:__
 ```
 curl --location --request POST 'https://account.amer-1.jumiopp.link/api/v1/accounts' \
---header 'Content-Type: application/json' \
---header 'Authorization: Basic YOUR_ACCESS_TOKEN' \
---data-raw '{
-    "customerInternalReference":"CUSTOMER_REFERENCE",
-    "workflowDefinition":{
-        "key": 10011
-    },
-    "userReference": "YOUR_USER_REFERENCE",
-    "callbackUrl":"YOUR_CALLBACK_URL",
-    "tokenLifetime": "5m"
-}'
+  --header 'Content-Type: application/json' \
+  --header 'User-Agent: User Demo' \
+  --header 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
+  --data-raw '{
+      "customerInternalReference": "CUSTOMER_REFERENCE",
+      "workflowDefinition": {
+          "key": 10011,
+          "credentials": [
+              {
+                  "category": "ID",
+                  "type": {
+                      "values": ["DRIVING_LICENSE", "ID_CARD", "PASSPORT"]
+                  },
+                  "country": {
+                      "values": ["USA", "CAN", "AUT", "GBR"]
+                  }
+              }
+          ]
+      },
+      "callbackUrl": "YOUR_CALLBACK_URL",
+      "userReference": "YOUR_USER_REFERENCE",
+      "tokenLifetime": "5m",
+      "web":{
+          "successUrl":"https://www.yourcompany.com/success",
+          "errorUrl":"https://www.yourcompany.com/error",
+          "locale":"es"
+      }
+  }'
 ```
 
 __Response:__
@@ -65,6 +82,11 @@ __Response:__
     "timestamp": "2022-01-06T13:41:20.769Z",
     "account": {
         "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "web": {
+        "href": "https://mycompany.web.amer-1.jumio.ai/web/v4/app?authorizationTokenxxx&locale=es",
+        "successUrl": "https://www.yourcompany.com/success",
+        "errorUrl": "https://www.yourcompany.com/error"
     },
     "sdk": {
         "token": "XXXX"
@@ -120,12 +142,31 @@ __Response:__
 
 #### Upload
 
+__Request Headers__
+
+The following fields are required in the header section of your request:
+
+`Accept: application/json`    
+`Content-Type: multipart/form-data`   
+`Content-Length:` see [RFC-7230](https://tools.ietf.org/html/rfc7230#section-3.3.2)    
+`Authorization:` see [RFC6749](https://tools.ietf.org/html/rfc6749)   
+`User-Agent: YourCompany YourApp/v1.0`   
+
+| ⚠️&nbsp;&nbsp; Jumio requires the __User-Agent__ value to reflect your business or entity name for API troubleshooting.
+|:----------|
+
+| ℹ️&nbsp;&nbsp; Calls with missing or suspicious headers, suspicious parameter values, or without OAuth2 will result in HTTP status code __403 Forbidden__
+|:----------|
+
+__Request URL__
+
 HTTP Request Method: __POST__
 * US: `https://api.amer-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>/credentials/<credentialsId>/parts/<classifier>`
 * EU: `https://api.emea-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>/credentials/<credentialsId>/parts/<classifier>`
 * SG: `https://api.apac-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>/credentials/<credentialsId>/parts/<classifier>`
 
 __Request Path Parameters:__
+
 | Parameter           | Type   | Note                                      |
 |---------------------|--------|-------------------------------------------|
 | accountId           | string | UUID of the account                       |
@@ -134,30 +175,97 @@ __Request Path Parameters:__
 | classifier          | string | FRONT, BACK                               |
 
 __Request Body:__
+
 | Key  | Value                                                          |
 |------|----------------------------------------------------------------|
 | file | JPEG, PNG  (max. size 10 MB and max resolution of 8000 x 8000) |
+
+__Response__
+Unsuccessful requests will return HTTP status code __401 Unauthorized, 403 Forbidden__ or __404 Not Found__ if the scan is not available.
+
+Successful requests will return HTTP status code __200 OK__ along with a JSON object containing the information described below.
 
 ##### Upload Document FRONT
 __Request:__
 ```
 curl --location --request POST 'https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/FRONT' \
+--header 'User-Agent: User Demo' \
 --header 'Authorization: Bearer xxx' \
 --form 'file=@"/J:/User/2020-03-01/faces/front.jpg"'
 ```
 
+__Response:__
+```
+{
+    "timestamp": "2021-05-24T08:20:31.344Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa"
+    },
+    "api": {
+        "parts": {
+            "front": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/FRONT",
+            "back": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/BACK"
+        },
+        "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+}
+```
+
 ##### Upload Document BACK
+__Request:__
 ```
 curl --location --request POST 'https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/BACK' \
+--header 'User-Agent: User Demo' \
 --header 'Authorization: Bearer xxx' \
 --form 'file=@"/J:/User/2020-03-01/faces/back.jpg"'
 ```
 
+__Response:__
+```
+{
+    "timestamp": "2021-05-24T08:20:31.344Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa"
+    },
+    "api": {
+        "parts": {
+            "front": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/FRONT",
+            "back": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/BACK"
+        },
+        "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+}
+```
+
 ##### Upload Document FACE
+__Request:__
 ```
 curl --location --request POST 'https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/FACE' \
+--header 'User-Agent: User Demo' \
 --header 'Authorization: Bearer xxx' \
 --form 'file=@"/J:/User/2020-03-01/faces/face.jpg"'
+```
+__Response:__
+```
+{
+    "timestamp": "2021-05-24T08:20:31.344Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa"
+    },
+    "api": {
+        "parts": {
+            "front": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/FRONT",
+            "back": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/BACK"
+        },
+        "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+}
 ```
 
 #### Finalize
@@ -169,6 +277,7 @@ HTTP Request Method: __PUT__
 __Request:__
 ```
 curl --location --request PUT 'https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa' \
+--header 'User-Agent: User Demo' \
 --header 'Authorization: Bearer xxx'
 ```
 
@@ -247,19 +356,27 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts'
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE"
+        "userReference": "YOUR_USER_REFERENCE",
+        "tokenLifetime": "5m",
+        "web":{
+            "successUrl":"https://www.yourcompany.com/success",
+            "errorUrl":"https://www.yourcompany.com/error",
+            "locale":"es"
+        }
     }'
 ```
 
 __Response:__
 ```
 {
-    "timestamp": "2021-05-19T14:55:08.187Z",
+    "timestamp": "2021-05-28T09:17:50.240Z",
     "account": {
         "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
     },
     "web": {
-        "href": "https://mycompany.web.amer-1.jumio.ai/web/v4/app?authorizationToken=xxx&locale=es"
+        "href": "https://mycompany.web.amer-1.jumio.ai/web/v4/app?authorizationTokenxxx&locale=es",
+        "successUrl": "https://www.yourcompany.com/success",
+        "errorUrl": "https://www.yourcompany.com/error"
     },
     "sdk": {
         "token": "xxx"
@@ -272,26 +389,198 @@ __Response:__
                 "category": "ID",
                 "allowedChannels": [
                     "WEB",
+                    "API",
                     "SDK"
-                ]
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "front": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/FRONT",
+                        "back": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/BACK"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
             },
             {
                 "id": "33333333-3333-3333-bbbbbbbbbbbb",
-                "category": "FACEMAP",
+                "category": "SELFIE",
                 "allowedChannels": [
                     "WEB",
+                    "API",
                     "SDK"
-                ]
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "face": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/FACE"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
             },
             {
                 "id": "33333333-3333-3333-cccccccccccc",
-                "category": "SELFIE",
+                "category": "FACEMAP",
                 "allowedChannels": [
                     "WEB",
                     "SDK"
                 ]
             }
         ]
+    }
+}
+```
+
+#### Upload
+
+__Request Headers__
+
+The following fields are required in the header section of your request:
+
+`Accept: application/json`    
+`Content-Type: multipart/form-data`   
+`Content-Length:` see [RFC-7230](https://tools.ietf.org/html/rfc7230#section-3.3.2)    
+`Authorization:` see [RFC6749](https://tools.ietf.org/html/rfc6749)   
+`User-Agent: YourCompany YourApp/v1.0`   
+
+| ⚠️&nbsp;&nbsp; Jumio requires the __User-Agent__ value to reflect your business or entity name for API troubleshooting.
+|:----------|
+
+| ℹ️&nbsp;&nbsp; Calls with missing or suspicious headers, suspicious parameter values, or without OAuth2 will result in HTTP status code __403 Forbidden__
+|:----------|
+
+__Request URL__
+
+HTTP Request Method: __POST__
+* US: `https://api.amer-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>/credentials/<credentialsId>/parts/<classifier>`
+* EU: `https://api.emea-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>/credentials/<credentialsId>/parts/<classifier>`
+* SG: `https://api.apac-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>/credentials/<credentialsId>/parts/<classifier>`
+
+__Request Path Parameters:__
+
+| Parameter           | Type   | Note                                      |
+|---------------------|--------|-------------------------------------------|
+| accountId           | string | UUID of the account                       |
+| workflowExecutionId | string | UUID of the workflow                      |
+| credentialsId       | string | UUID of the credentials                   |
+| classifier          | string | FRONT, BACK                               |
+
+__Request Body:__
+
+| Key  | Value                                                          |
+|------|----------------------------------------------------------------|
+| file | JPEG, PNG  (max. size 10 MB and max resolution of 8000 x 8000) |
+
+__Response__
+Unsuccessful requests will return HTTP status code __401 Unauthorized, 403 Forbidden__ or __404 Not Found__ if the scan is not available.
+
+Successful requests will return HTTP status code __200 OK__ along with a JSON object containing the information described below.
+
+
+##### Upload Document FRONT
+__Request:__
+```
+curl --location --request POST 'https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/FRONT' \
+--header 'User-Agent: User Demo' \
+--header 'Authorization: Bearer xxx' \
+--form 'file=@"/J:/User/2020-03-01/faces/front.jpg"'
+```
+
+__Response:__
+```
+{
+    "timestamp": "2021-05-24T08:20:31.344Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa"
+    },
+    "api": {
+        "parts": {
+            "front": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/FRONT",
+            "back": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/BACK"
+        },
+        "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+}
+```
+
+##### Upload Document BACK
+__Request:__
+```
+curl --location --request POST 'https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/BACK' \
+--header 'User-Agent: User Demo' \
+--header 'Authorization: Bearer xxx' \
+--form 'file=@"/J:/User/2020-03-01/faces/back.jpg"'
+```
+
+__Response:__
+```
+{
+    "timestamp": "2021-05-24T08:20:31.344Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa"
+    },
+    "api": {
+        "parts": {
+            "front": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/FRONT",
+            "back": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/BACK"
+        },
+        "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+}
+```
+
+##### Upload Document FACE
+__Request:__
+```
+curl --location --request POST 'https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/FACE' \
+--header 'User-Agent: User Demo' \
+--header 'Authorization: Bearer xxx' \
+--form 'file=@"/J:/User/2020-03-01/faces/face.jpg"'
+```
+__Response:__
+```
+{
+    "timestamp": "2021-05-24T08:20:31.344Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa"
+    },
+    "api": {
+        "parts": {
+            "front": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/FRONT",
+            "back": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/BACK"
+        },
+        "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+}
+```
+
+#### Finalize
+HTTP Request Method: __PUT__
+* US: `https://api.amer-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>`
+* EU: `https://api.emea-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>`
+* SG: `https://api.apac-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>`
+
+__Request:__
+```
+curl --location --request PUT 'https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa' \
+--header 'User-Agent: User Demo' \
+--header 'Authorization: Bearer xxx'
+```
+
+__Response:__
+```
+{
+    "timestamp": "2021-05-24T08:20:31.344Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa"
     }
 }
 ```
