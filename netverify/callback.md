@@ -142,7 +142,7 @@ The following parameters are posted to your callback URL for ID Verification Web
 |presetIdType   |    |Possible ID types: PASSPORT, DRIVING\_LICENSE, ID\_CARD| |
 |dlCarPermission|255 |Only available if:<br/> •Extraction supported for specific country<br/>•verificationStatus = APPROVED\_VERIFIED<br/><br/>Possible values:<br /> • YES<br /> • NO<br /> • NOT\_READABLE <br /><br />Currently, we support car permission extraction for the following countries:<br />• Austria<br />•Belarus<br />•Belgium<br />•Bulgaria<br />•Croatia<br />•Czech Republic<br />•Denmark<br />•Estonia<br />•Finland<br />•France<br />•Germany<br />•Gibraltar<br />•Guernsey<br />•Greece<br />•Hungary<br />•Iceland<br />•Ireland<br />•Isle of Man<br />•Italy<br />•Jersey<br />•Latvia<br />•Liechtenstein<br />•Lithuania<br />•Luxembourg<br />•Macedonia <br />•Malta<br />•Moldova<br />•Republic of Montenegro<br />•Netherlands <br />•Norway<br />•Poland<br />•Portugal<br />•Romania<br />•Russian Federation<br />•Serbia<br />•Slovakia<br />•Slovenia<br />•Spain<br />•Sweden<br />•Switzerland<br />•Ukraine<br />•United Kingdom<br />•Taiwan (For Taiwan date is not extracted however it is given as mentioned below) DL categories:<br /> - category:大型重型機車 <br /> - availability:no <br /> - category:普通重型機車 <br /> - availability:yes|activation required|
 |dlCategories   | JSON object  |Driver license categories as JSON object, see table below <br /><br />Supported countries:<br />• Austria<br />• Belgium<br />• Bulgaria<br />• France<br />• Germany<br />• Great Britain<br />• Italy<br />• Latvia<br />• Lithuania<br />• Netherlands<br />• Romania<br />• Spain<br />• Taiwan|activation required |
-|nationality |3| • if idCountry = BEL, BHR, CHL, FRA, HKG, MYS, PHL, SGP |activation required |
+|nationality |3| Possible values:<br>• [ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) (if MRZ contains nationality) |activation required |
 |passportNumber|255|Passport number if idType = VISA and additional extraction for Visa enabled|activation required |
 |durationOfStay|255|Duration of stay if idType = VISA and additional extraction for Visa enabled|activation required |
 |numberOfEntries|255|Number of entries if idType = VISA and additional extraction for Visa enabled|activation required |
@@ -163,12 +163,18 @@ The following parameters are posted to your callback URL for ID Verification Web
 |rgNumber|255|"General Registration" number for idCountry = BRA |activation required|
 |voterIdNumber|255|"Clave de elector" number for idCountry = MEX |activation required|
 |issuingNumber|255|"Numero de emission" number for idCountry = MEX |activation required|
+|expiryDateParts| |Object containing the expiry date information (year, month, day) from the corresponding fields on the document <sup>6</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"}| |
+|dateOfBirthParts| |Object containing the date of birth information (year, month, day) from the corresponding fields on the document <sup>6</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"} | |
+|issuingDateParts| |Object containing the issuing date information (year, month, day) from the corresponding fields on the document <sup>6</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"} | |
+
+object containing the date information (year, month, day) from the corresponding fields on the document.
 
 <sup>1</sup> Transaction is declined as unsupported if the ID is not supported by Jumio, or not marked as accepted in your customer portal settings.<br/>
 <sup>2</sup> For ID types that are configured to support a separate scan of the front side and back side, there is a separate image of the front side (idScanImage) and the back side (idScanImageBackside). If Identity Verification is enabled, there is also a picture of the face (idScanImageFace).<br>
 <sup>3</sup> Address recognition is performed for supported IDs, if enabled. Please check [Supported documents for Address Extraction](#supported-documents-for-address-extraction) to see which supported documents. The address parameters are a part of the JSON object, if they are available on the ID.<br>
 <sup>4</sup> Fields containing certain kinds of personally identifying information are not returned if NV masking is enabled for the Netherlands, Germany, or South Korea. See [ID Verification masking](#id-verification-masking) for more information.<br>
-<sup>5</sup> Liveness images are returned only for transactions containing Identity Verification submitted via the Android and iOS SDKs. The number of images can vary and may not be returned in chronological order.
+<sup>5</sup> Liveness images are returned only for transactions containing Identity Verification submitted via the Android and iOS SDKs. The number of images can vary and may not be returned in chronological order.<br>
+<sup>6</sup> If one of the values such as "day" is not included in the document it will also not be returned in the object. For examples and additional details, refer to our [Knowledge Base](https://support.jumio.com/hc/en-us/articles/4412166539803-New-Parameters-in-Callback-and-Retrieval-API-dateOfBirthParts-issuingDateParts-expiryDateParts-).
 
 #### Retrieving images
 Use HTTP **GET** with **Basic Authorization** using your API token and secret as userid and password.<br>
@@ -211,6 +217,7 @@ We encourage to use a standard library to convert the timestamp received from Ju
 |Spain|Yes|No|No|RAW|
 |United Kingdom|No|Yes|No|RAW|
 |United States|Yes|Yes|No|RAW|
+|Italy|Yes|Yes|Yes|RAW|
 
 #### RAW address format
 
@@ -233,7 +240,7 @@ We encourage to use a standard library to convert the timestamp received from Ju
 |Parameter `rejectReason` | Type   | Max. Length    | Description|
 |:------------------------|:--------|:--------|:------------|
 |rejectReasonCode |String| 5  |see below |
-|rejectReasonDescription |String |64  |Possible codes and descriptions for verification status DENIED\_FRAUD:<br>100	MANIPULATED\_DOCUMENT<br/>105	FRAUDSTER<br/>106	FAKE<br/>107	PHOTO\_MISMATCH<br/>108	MRZ\_CHECK\_FAILED<br/>109	PUNCHED\_DOCUMENT<br/>110	CHIP\_DATA\_MANIPULATED (only available for ePassport)<br/>111	MISMATCH\_PRINTED\_BARCODE\_DATA<br/>113 MISMATCHING\_DATA\_REPEATED\_FACE<sup>1</sup><br/>115 MISMATCH\_HRZ\_MRZ\_DATA<br><br>Possible codes and descriptions for verificationStatus = ERROR\_NOT\_READABLE\_ID:<br/>102	PHOTOCOPY\_BLACK\_WHITE<br/>103	PHOTOCOPY\_COLOR (for sources WEB\_CAM and REDIRECT\_CAM)<br/>104	DIGITAL\_COPY<br/>200	NOT\_READABLE\_DOCUMENT<br/>201	NO\_DOCUMENT<br/>202	SAMPLE\_DOCUMENT<br/>206	MISSING\_BACK<br/>207	WRONG\_DOCUMENT\_PAGE<br/>209	MISSING\_SIGNATURE<br/>210	CAMERA\_BLACK\_WHITE<br/>211	DIFFERENT\_PERSONS\_SHOWN (documents of multiple people in one image)<br/>213 INVALID\_WATERMARK<br/>300	MANUAL\_REJECTION|
+|rejectReasonDescription |String |64  |Possible codes and descriptions for verification status DENIED\_FRAUD:<br>100	MANIPULATED\_DOCUMENT<br/>105	FRAUDSTER<br/>106	FAKE<br/>107	PHOTO\_MISMATCH<br/>108	MRZ\_CHECK\_FAILED<br/>109	PUNCHED\_DOCUMENT<br/>110	CHIP\_DATA\_MANIPULATED (only available for ePassport)<br/>111	MISMATCH\_PRINTED\_BARCODE\_DATA<br/>112 CHIP\_MISSING<br/>113	MISMATCHING\_DATA\_REPEATED\_FACE<sup>1</sup><br/>114 DIGITAL\_MANIPULATION<br/>115 MISMATCH\_HRZ\_MRZ\_DATA<br/>116 SUPERIMPOSED\_TEXT<br/>118 MISMATCH\_FRONT\_BACK<br><br>Possible codes and descriptions for verificationStatus = ERROR\_NOT\_READABLE\_ID:<br/>102	PHOTOCOPY\_BLACK\_WHITE<br/>103	PHOTOCOPY\_COLOR (for sources WEB\_CAM and REDIRECT\_CAM)<br/>104	DIGITAL\_COPY<br/>200	NOT\_READABLE\_DOCUMENT<br/>201	NO\_DOCUMENT<br/>202	SAMPLE\_DOCUMENT<br/>206	MISSING\_BACK<br/>207	WRONG\_DOCUMENT\_PAGE<br/>209	MISSING\_SIGNATURE<br/>210	CAMERA\_BLACK\_WHITE<br/>211	DIFFERENT\_PERSONS\_SHOWN (documents of multiple people in one image)<br/>213 INVALID\_WATERMARK<br/>214	MISSING\_FRONT<br/>300	MANUAL\_REJECTION|
 |rejectReasonDetails |JSON object / JSON array  |   |Reject reason details as JSON object (if only one item is returned) or JSON array (containing JSON objects) if rejectReasonCode = 100 or 200, see table below |
 
 <br>
@@ -245,7 +252,7 @@ We encourage to use a standard library to convert the timestamp received from Ju
 |Parameter `rejectReasonDetails` |  Type    | Max. Length    | Description|
 |:-------------------------------|:---------|:---------------|:------------|
 |detailsCode   |String | 5 | see below |
-|detailsDescription|String|32| Possible codes and descriptions for rejectReasonCode = 100:<br/>1001	PHOTO<br/>1002	DOCUMENT\_NUMBER<br>1003	EXPIRY<br/>1004	DOB<br/>1005	NAME<br/>1006	ADDRESS<br/>1007	SECURITY\_CHECKS<br/>1008	SIGNATURE<br>1009	PERSONAL\_NUMBER<br>10011 PLACE_OF_BIRTH<br><br>Possible codes and descriptions for rejectReasonCode = 200:<br/>2001	BLURRED<br/>2002	BAD\_QUALITY<br/>2003	MISSING\_PART\_DOCUMENT<br/>2004	HIDDEN\_PART\_DOCUMENT<br/>2005	DAMAGED\_DOCUMENT<br/>2006 GLARE |
+|detailsDescription|String|32| Possible codes and descriptions for rejectReasonCode = 100:<br/>1001	PHOTO<br/>1002	DOCUMENT\_NUMBER<br>1003	EXPIRY<br/>1004	DOB<br/>1005	NAME<br/>1006	ADDRESS<br/>1007	SECURITY\_CHECKS<br/>1008	SIGNATURE<br>1009	PERSONAL\_NUMBER<br>10011 PLACE_OF_BIRTH<br><br>Possible codes and descriptions for rejectReasonCode = 200:<br/>2001	BLURRED<br/>2002	BAD\_QUALITY<br/>2003	MISSING\_PART\_DOCUMENT<br/>2004	HIDDEN\_PART\_DOCUMENT<br/>2005	DAMAGED\_DOCUMENT<br/>2006 GLARE<br/>2007	MISSING\_MANDATORY\_DATAPOINTS |
 
 
 ### Identity Verification
@@ -404,7 +411,7 @@ The following parameters are posted to your callback URL for Document Verificati
 |**scanReference**| String  |36 |Jumio's reference number for each transaction|
 |**timestamp**| String  |  |Timestamp (UTC) of the response <br>format: [YYYY-MM-DDThh:mm:ss.SSSZ](#timestamp-format-2)|
 |**transaction**| JSON object  |  |Transaction related data, see table below|
-|document   | JSON object  |       |Document related data if transaction status = DONE, see table |
+|**document**   | JSON object  |       |Document related data, see table below|
 
 ### Transaction
 
