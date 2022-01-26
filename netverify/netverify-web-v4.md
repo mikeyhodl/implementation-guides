@@ -236,7 +236,7 @@ Hyphenated combination of [ISO 639-1:2002 alpha-2](https://en.wikipedia.org/wiki
 |ru|Russian|
 |sk|Slovak|
 |sv|Swedish|
-|swh|Swahili|
+|sw|Swahili|
 |th|Thai|
 |tr|Turkish|
 |vi|Vietnamese|
@@ -485,6 +485,12 @@ If you want to embed ID Verification on a web page, place the iFrame tag in your
 |⚠️ In case you are nesting the iFrame in another iFrame the `allow="camera"` attribute must be added to every iFrame.
 |:----------|
 
+|⚠️ Do not add the iFrame element and its attributes with javascript dynamically at runtime. The iFrame must be present when the page loads.
+|:----------|
+
+|⚠️ The containing page where the iFrame is added has to be in a secure context (HTTPS).
+|:----------|
+
 Note: Due to security reasons the `authorizationToken` is automatically removed from the `redirectUrl` once the client is loaded in the browser and stored in a session instead. It will look like this:
 
 ``
@@ -511,6 +517,9 @@ Note: When specifying the width and height of your iFrame you may prefer to use 
 For a better user experience when creating a three-dimensional map of your user's face, you must allow full screen mode. This will address the positioning and distance between the capture interface and the camera.
 
 |⚠️ The `allow="camera;fullscreen;accelerometer;gyroscope;magnetometer" allowfullscreen` attributes must be included to enable the camera for image capture in [supported browsers](#supported-browsers) in full screen mode.
+|:----------|
+
+|⚠️ Do not add the iFrame element and its attributes with javascript dynamically at runtime. The iFrame must be present when the page loads.
 |:----------|
 
 ### Example HTML

@@ -66,7 +66,7 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts'
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE",
+        "userReference": "YOUR_USER_REFERENCE"
     }'
 ```
 
@@ -136,7 +136,7 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts/
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE",
+        "userReference": "YOUR_USER_REFERENCE"
     }'
 ```
 
@@ -232,7 +232,7 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts'
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE",
+        "userReference": "YOUR_USER_REFERENCE"
     }'
 ```
 
@@ -305,7 +305,7 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts/
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE",
+        "userReference": "YOUR_USER_REFERENCE"
     }'
 ```
 
@@ -366,12 +366,14 @@ This workflow verifies a photo ID document and returns a) whether that document 
 
 ### Prerequisites
 * Identity Verification must be enabled for your account. (Contact your Jumio account manager for activation.)
-* Allowed channels: SDK, WEB
+* Allowed channels: SDK, WEB, API
 
 ### Capabilities
 In order of dependency:
 * [usability](api_guide.md#capabilitiesusability) --> [imageChecks](api_guide.md#capabilitiesimagechecks) --> [extraction](api_guide.md#capabilitiesextraction) --> [dataChecks](api_guide.md#capabilitiesdatachecks)
 * [usability](api_guide.md#capabilitiesusability) --> [liveness](api_guide.md#capabilitiesliveness)
+* [usability](api_guide.md#capabilitiesusability) --> [similarity](api_guide.md#capabilitiessimilarity)
+
 
 ### Example
 
@@ -406,7 +408,7 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts'
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE",
+        "userReference": "YOUR_USER_REFERENCE"
     }'
 ```
 
@@ -431,7 +433,8 @@ __Response:__
                 "category": "ID",
                 "allowedChannels": [
                     "WEB",
-                    "SDK"
+                    "SDK",
+                    "API"
                 ]
             },
             {
@@ -447,8 +450,16 @@ __Response:__
                 "category": "SELFIE",
                 "allowedChannels": [
                     "WEB",
-                    "SDK"
-                ]
+                    "SDK",
+                    "API"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "face": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/FACE"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
             }
         ]
     }
@@ -486,7 +497,7 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts/
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE",
+        "userReference": "YOUR_USER_REFERENCE"
     }'
 ```
 
@@ -511,7 +522,8 @@ __Response:__
                 "category": "ID",
                 "allowedChannels": [
                     "WEB",
-                    "SDK"
+                    "SDK",
+                    "API"
                 ]
             },
             {
@@ -527,8 +539,16 @@ __Response:__
                 "category": "SELFIE",
                 "allowedChannels": [
                     "WEB",
-                    "SDK"
-                ]
+                    "SDK",
+                    "API"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "face": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/FACE"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
             }
         ]
     }
@@ -720,7 +740,7 @@ This workflow captures a user's face to verify that the person is physically pre
 
 ### Prerequisites
 * Identity Verification must be enabled for your account. (Contact your Jumio account manager for activation.)
-* Allowed channels: SDK, WEB
+* Allowed channels: SDK, API
 
 ### Capabilities
 In order of dependency:
@@ -779,8 +799,16 @@ __Response:__
                 "category": "SELFIE",
                 "allowedChannels": [
                     "WEB",
-                    "SDK"
-                ]
+                    "SDK",
+                    "API"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "face": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/FACE"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
             }
         ]
     }
@@ -838,8 +866,16 @@ __Response:__
                 "category": "SELFIE",
                 "allowedChannels": [
                     "WEB",
-                    "SDK"
-                ]
+                    "SDK",
+                    "API"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "face": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/FACE"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
             }
         ]
     }
@@ -889,16 +925,7 @@ curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts/1
 --data-raw '{
     "customerInternalReference": "CUSTOMER_REFERENCE",
     "workflowDefinition": {
-        "key": 9,
-        "credentials": [
-            {
-                "id": "33333333-3333-3333-aaaaaaaaaaaa",
-                "category": "ID"
-            },
-            {
-                "category": "FACEMAP"
-            }
-        ]
+        "key": 9
     }
 }'
 ```

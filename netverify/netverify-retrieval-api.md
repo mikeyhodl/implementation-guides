@@ -9,6 +9,10 @@ This guide describes how to implement the ID Verification Retrieval API.
 
 | Date    | Description|
 |:--------|:------------|
+| 2022-01-26   |Added reject reason code 112 for CHIP\_MISSING<br>Added reject reason code 114 for DIGITAL\_MANIPULATION |
+| 2022-01-23   |Added response parameter "expiryDateParts", "dateOfBirthParts", "issuingDateParts" |
+| 2021-12-07   |Added reject reason code 214 for MISSING\_FRONT |
+| 2021-11-15   |Added reject reason code 116 for SUPERIMPOSED\_TEXT<br>Added reject reason code 118 for MISMATCH\_FRONT\_BACK<br>Added reject reason description code 2007 for MISSING\_MANDATORY\_DATAPOINTS |
 | 2021-09-01   |Added reject reason code 115 for MISMATCH\_HRZ\_MRZ\_DATA |
 | 2021-06-23   |Added reject reason code 113 for MISMATCHING\_DATA\_REPEATED\_FACE |
 | 2021-05-21   |Added "personalNumberValidation" to "additionalChecks" |
@@ -338,7 +342,7 @@ Successful requests will return HTTP status code `200 OK` along with a JSON obje
 |issuingPlace|string|50|Issuing place of the document (if issuing place extraction is enabled)|
 |curp|string|18|CURP (if CURP extraction is enabled)|
 |gender|string|1|Possible values: M, F|
-|nationality|string|3|Nationality of the document holder in [ISO 3166-1 alpha-3](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) country code|
+|nationality|string|3|Nationality of the document holder in [ISO 3166-1 alpha-3](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) country code (if extraction is enabled)|
 |placeOfBirth|string|255|Place of birth of document holder|
 |taxNumber|string|255|Tax number of the document<br>• if idCountry = ITA and idType = HEALTH\_ID or TAX\_ID <br> (if Tax number extraction is enabled)|
 |cpf|string|255|CPF number of the document<br> (if CPF number extraction is enabled)|
@@ -349,7 +353,11 @@ Successful requests will return HTTP status code `200 OK` along with a JSON obje
 |rgNumber|string|255|"General Registration" number of Brazilian documents <br> (if extraction is enabled) |
 |voterIdNumber|string|255|"Clave de elector" number for idCountry = MEX <br> (if extraction is enabled)|
 |issuingNumber|string|255|"Numero de emission" number for idCountry = MEX <br> (if extraction is enabled)|
+|expiryDateParts|object| |Object containing the expiry date information (year, month, day) from the corresponding fields on the document <sup>1</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"}|
+|dateOfBirthParts|object| |Object containing the date of birth information (year, month, day) from the corresponding fields on the document <sup>1</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"} |
+|issuingDateParts|object| |Object containing the issuing date information (year, month, day) from the corresponding fields on the document <sup>1</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"} |
 
+<sup>1</sup> If one of the values such as "day" is not included in the document it will also not be returned in the object. For examples and additional details, refer to our [Knowledge Base](https://support.jumio.com/hc/en-us/articles/4412166539803-New-Parameters-in-Callback-and-Retrieval-API-dateOfBirthParts-issuingDateParts-expiryDateParts-).
 
 #### RAW address format
 
@@ -504,7 +512,7 @@ Successful requests will return HTTP status code `200 OK` along with a JSON obje
 |Name| Type   | Max. Length    | Description|
 |:------------------------|:--------|:--------|:------------|
 |rejectReasonCode |string| 5  |see below |
-|rejectReasonDescription |string |255  |Possible codes and descriptions for verification status DENIED\_FRAUD:<br>100	MANIPULATED\_DOCUMENT<br/>105	FRAUDSTER<br/>106	FAKE<br/>107	PHOTO\_MISMATCH<br/>108	MRZ\_CHECK\_FAILED<br/>109	PUNCHED\_DOCUMENT<br/>110	CHIP\_DATA\_MANIPULATED (only available for ePassport)<br/>111	MISMATCH\_PRINTED\_BARCODE\_DATA<br/>113	MISMATCHING\_DATA\_REPEATED\_FACE<sup>1</sup><br/>115 MISMATCH\_HRZ\_MRZ\_DATA<br><br>Possible codes and descriptions for verificationStatus = ERROR\_NOT\_READABLE\_ID:<br/>102	PHOTOCOPY\_BLACK\_WHITE<br/>103	PHOTOCOPY\_COLOR<br/>104	DIGITAL\_COPY<br/>200	NOT\_READABLE\_DOCUMENT<br/>201	NO\_DOCUMENT<br/>202	SAMPLE\_DOCUMENT<br/>206	MISSING\_BACK<br/>207	WRONG\_DOCUMENT\_PAGE<br/>209	MISSING\_SIGNATURE<br/>210	CAMERA\_BLACK\_WHITE<br/>211	DIFFERENT\_PERSONS\_SHOWN<br/>300	MANUAL\_REJECTION|
+|rejectReasonDescription |string |255  |Possible codes and descriptions for verification status DENIED\_FRAUD:<br>100	MANIPULATED\_DOCUMENT<br/>105	FRAUDSTER<br/>106	FAKE<br/>107	PHOTO\_MISMATCH<br/>108	MRZ\_CHECK\_FAILED<br/>109	PUNCHED\_DOCUMENT<br/>110	CHIP\_DATA\_MANIPULATED (only available for ePassport)<br/>111	MISMATCH\_PRINTED\_BARCODE\_DATA<br/>112 CHIP\_MISSING<br/>113	MISMATCHING\_DATA\_REPEATED\_FACE<sup>1</sup><br/>114 DIGITAL\_MANIPULATION<br/>115 MISMATCH\_HRZ\_MRZ\_DATA<br/>116 SUPERIMPOSED\_TEXT<br/>118 MISMATCH\_FRONT\_BACK<br><br>Possible codes and descriptions for verificationStatus = ERROR\_NOT\_READABLE\_ID:<br/>102	PHOTOCOPY\_BLACK\_WHITE<br/>103	PHOTOCOPY\_COLOR<br/>104	DIGITAL\_COPY<br/>200	NOT\_READABLE\_DOCUMENT<br/>201	NO\_DOCUMENT<br/>202	SAMPLE\_DOCUMENT<br/>206	MISSING\_BACK<br/>207	WRONG\_DOCUMENT\_PAGE<br/>209	MISSING\_SIGNATURE<br/>210	CAMERA\_BLACK\_WHITE<br/>211	DIFFERENT\_PERSONS\_SHOWN<br/>213 INVALID\_WATERMARK<br/>214	MISSING\_FRONT<br/>300	MANUAL\_REJECTION|
 |rejectReasonDetails |JSON object / JSON array  |   |Reject reason details as JSON object (if only one item is returned) or JSON array (containing JSON objects) if rejectReasonCode = 100 or 200, see table below |
 
 <br>
@@ -515,7 +523,7 @@ Successful requests will return HTTP status code `200 OK` along with a JSON obje
 |Name |  Type    | Max. Length    | Description|
 |:-------------------------------|:---------|:---------------|:------------|
 |detailsCode   |string | 5 | see below |
-|detailsDescription|string|255| Possible codes and description details for rejectReasonCode = 100:<br/>1001	PHOTO<br/>1002	DOCUMENT\_NUMBER<br>1003	EXPIRY<br/>1004	DOB<br/>1005	NAME<br/>1006	ADDRESS<br/>1007	SECURITY\_CHECKS<br/>1008	SIGNATURE<br>1009	PERSONAL\_NUMBER<br>10011	PLACE\_OF\_BIRTH<br><br>Possible codes and description details for rejectReasonCode = 200:<br/>2001	BLURRED<br/>2002	BAD\_QUALITY<br/>2003	MISSING\_PART\_DOCUMENT<br/>2004	HIDDEN\_PART\_DOCUMENT<br/>2005	DAMAGED\_DOCUMENT<br/>2006 GLARE |
+|detailsDescription|string|255| Possible codes and description details for rejectReasonCode = 100:<br/>1001	PHOTO<br/>1002	DOCUMENT\_NUMBER<br>1003	EXPIRY<br/>1004	DOB<br/>1005	NAME<br/>1006	ADDRESS<br/>1007	SECURITY\_CHECKS<br/>1008	SIGNATURE<br>1009	PERSONAL\_NUMBER<br>10011	PLACE\_OF\_BIRTH<br><br>Possible codes and description details for rejectReasonCode = 200:<br/>2001	BLURRED<br/>2002	BAD\_QUALITY<br/>2003	MISSING\_PART\_DOCUMENT<br/>2004	HIDDEN\_PART\_DOCUMENT<br/>2005	DAMAGED\_DOCUMENT<br/>2006 GLARE<br/>2007	MISSING\_MANDATORY\_DATAPOINTS |
 
 <br>
 

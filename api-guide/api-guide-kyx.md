@@ -160,7 +160,7 @@ Values set in your API request will override the corresponding settings configur
 | __workflowDefinition__         | object         |                       | Definition of the specific documents necessary to execute for the particular capabilities on them.                   |
 | __workflowDefinition.key__     | object         |                       | Key of the workflow definition which you want to execute<br>See [Workflow Definition Keys](#workflow-definition-keys)                                      |
 | workflowDefinition.credentials | array (object) |                       | Optional workflow definition object part to customize acquiring process and workflow process.<br>Possible values: <br>See [workflowDefinition.credentials](#request-workflowdefinitioncredentials)       |
-| userReference<sup>1</sup>          | string         | 100                   | Reference for the end user in the customer backend (must not contain any PII)                |
+| userReference                  | string         | 100                   | Reference for the end user in the customer backend (must not contain any PII)                |
 | reportingCriteria              | string         | 255                   | Additional information provided by a customer for searching and aggregation purposes         |
 | callbackUrl                    | string         | 255                   | Definition of the callback URL for this particular request. [Overrides callback URL](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#callback-error-and-success-urls) in the Customer Portal.                  |
 | tokenLifetime                  | string         | minimum: 5m, maximum: 60d,<br>default: 30m | Should be a valid date period unit definition:<br>s - seconds<br>m - minutes<br>h - hours<br>d - days<br>Example: '1d' / '30m' / '600s'<br>[Overrides Authorization token lifetime](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#authorization-token-lifetime) in the Customer Portal. |
@@ -168,8 +168,6 @@ Values set in your API request will override the corresponding settings configur
 | web.successUrl | string | 255 | URL to which the browser will send the end user at the end of a successful web acquisition user journey. [Overrides success URL](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#callback-error-and-success-urls) in the Customer Portal. |
 | web.errorUrl | string | 255 | URL to which the browser will send the end user at the end of a failed web acquisition user journey. [Overrides error URL](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#callback-error-and-success-urls) in the Customer Portal. |
 | web.locale | string | 5 | Renders content in the specified language.<br>Overrides [Default locale](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#default-locale) in the Customer Portal.<br>See [supported locale values](#supported-locale-values). |
-
-<sup>1</sup> Mandatory request parameter for Workflow 32: ID Verification, Identity Verification, Screening.
 
 #### Request workflowDefinition.credentials
 
@@ -181,7 +179,7 @@ Values set in your API request will override the corresponding settings configur
 | country.values         | array (string) | See possible values. | Define at least one ISO 3166-1 alpha-3 country code for the workflow definition.<br>Possible values: <br>•	[ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) |
 | type                   | object         |                      | Possible values:<br>• type.predefinedType <br>• type.values               |
 | type.predefinedType    | object         |                      | Possible values:<br>• DEFINED (default: end user is not able to change document type)<br>• RECOMMENDED (type is preselected, end user is still able to change it) |
-| type.values            | array (string) | See possible values. | Defined number of credential type codes. <br>Possible values:<br>If `category` = ID:<br>• ID_CARD<br>• DRIVING_LICENSE<br>• PASSPORT<br>• VISA<br>If `category` = FACEMAP:<br>• IPROOV_STANDARD (Web + SDK channel only)<br>• IPROOV_PREMIUM (Workflow 3: ID and Identity Verification (Web + SDK channel only) / Workflow 9: Authentication (SDK only) / Workflow 16: Authentication on Premise (SDK only))<br>• JUMIO_STANDARD|
+| type.values            | array (string) | See possible values. | Defined number of credential type codes. <br>Possible values:<br>If `category` = ID:<br>• ID_CARD<br>• DRIVING_LICENSE<br>• PASSPORT<br>• VISA<br>If `category` = FACEMAP:<br>• IPROOV_STANDARD (Web + SDK channel only)<br>• IPROOV_PREMIUM (Workflow 3: ID and Identity Verification (Web + SDK channel only) / Workflow 9: Authentication (SDK only) / Workflow 16: Authentication on Premise (SDK only))<br>• JUMIO_STANDARD    |
 
 ## Response
 Unsuccessful requests will return HTTP status code __400 Bad Request, 401 Unauthorized, 403 Forbidden__ or __404 Not Found__ (in case of a failed update scenario) if the scan is not available.
@@ -199,15 +197,15 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 | workflowExecution.id          | string         | UUID of the workflow                                                      |
 | workflowExecution.credentials | array (object) | Credential response<br>See [workflowExecution.credentials](#response-workflowdefinition.credentials) |
 | web                           | object         | Possible values:<br>• web.href<br>• web.successUrl<br>• web.errorUrl <br><br> _Web parameters are only relevant for the WEB channel._ |
-| web.href                      | string         | _Web parameters are only relevant for the WEB channel._ |
-| web.successUrl                | string          | URL to which the browser will send the end user at the end of a successful web acquisition user journey (defined either in the Customer Portal or overwritten in the initiate) |
-| web.errorUrl                  | string          | URL to which the browser will send the end user at the end of a failed web acquisition user journey(defined either in the Customer Portal or overwritten in the initiate) |
+| web.href                      | string         | URL used to load the ID Verification client.<br><br>_Web parameters are only relevant for the WEB channel._ |
+| web.successUrl                | string          | URL to which the browser will send the end user at the end of a successful web acquisition user journey (defined either in the Customer Portal or overwritten in the initiate)<br><br> _SDK parameters are only relevant for the SDK channel._ |
+| web.errorUrl                  | string          | URL to which the browser will send the end user at the end of a failed web acquisition user journey(defined either in the Customer Portal or overwritten in the initiate)<br><br> _SDK parameters are only relevant for the SDK channel._ |
 
 ### Response workflowExecution.credentials
 | Parameter             | Type                    | Notes                                                                                                                           |
 |-----------------------|-------------------------|-----------------------------------------------------------------------------|
 | id                    | string                  | UUID of the credentials                                                     |
-| category              | string                  | Possible values:<br>• ID<br>•	FACEMAP<br>• DOCUMENT<br>• SELFIE |
+| category              | string                  | Credential category.<br>Possible values:<br>• ID<br>•	FACEMAP<br>• DOCUMENT<br>• SELFIE |
 | country               | object                  | Defined at least one ISO 3166-1 alpha-3 country code for the workflow definition.<br>Possible values: <br>•	[ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) |
 | type                  | object                  | Defined number of credential type codes.<br>Possible values: <br>• ID_CARD<br>•	DRIVING LICENSE<br>• PASSPORT<br>• VISA |
 | allowedChannels       | array                   | Channels which can be used to upload particular credential<br>Possible values:<br>• WEB<br>• API<br>•	SDK |
@@ -223,12 +221,11 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 curl --location --request POST 'https://account.amer-1.jumio.ai/api/v1/accounts' \
     --header 'Content-Type: application/json' \
     --header 'User-Agent: User Demo' \
-    --header 'Authorization: Bearer
-    YOUR_ACCESS_TOKEN' \
+    --header 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
     --data-raw '{
         "customerInternalReference": "CUSTOMER_REFERENCE",
         "workflowDefinition": {
-            "key": 2,
+            "key": 10013,
             "credentials": [
                 {
                     "category": "ID",
@@ -242,7 +239,13 @@ curl --location --request POST 'https://account.amer-1.jumio.ai/api/v1/accounts'
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE"
+        "userReference": "YOUR_USER_REFERENCE",
+        "tokenLifetime": "5m",
+        "web":{
+            "successUrl":"https://www.yourcompany.com/success",
+            "errorUrl":"https://www.yourcompany.com/error",
+            "locale":"es"
+        }
     }'
 ```
 
@@ -271,33 +274,33 @@ Please refer to [Account Create section.](#response)
 ### Request
 ```
 curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts/<accountId>' \
---header 'Content-Type: application/json' \
---header 'User-Agent: User Demo' \
---header 'Authorization: Bearer
-YOUR_ACCESS_TOKEN' \
---data-raw '{
-    "customerInternalReference": "CUSTOMER_INTERNAL_REFERENCE",
-    "workflowDefinition": {
-        "key": 2,
-        "credentials": [
-            {
-                "category": "FACEMAP",
-                "type": {
-                    "values": ["IPROOV_STANDARD", "JUMIO_STANDARD"]
-                }
-            },
-            {
-                "category": "ID",
-                "type": {
-                    "values": ["DRIVING_LICENSE", "ID_CARD", "PASSPORT"]
-                },
-                "country": {
-                    "values": ["USA", "CAN", "AUT"]
-                }
-            }
-        ]
-    }
-}
+  --header 'Content-Type: application/json' \
+  --header 'User-Agent: User Demo' \
+  --header 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
+  --data-raw '{
+      "customerInternalReference": "CUSTOMER_REFERENCE",
+      "workflowDefinition": {
+          "key": 10013,
+          "credentials": [
+              {
+                  "category": "ID",
+                  "type": {
+                      "values": ["DRIVING_LICENSE", "ID_CARD", "PASSPORT"]
+                  },
+                  "country": {
+                      "values": ["USA", "CAN", "AUT", "GBR"]
+                  }
+              }
+          ]
+      },
+      "callbackUrl": "YOUR_CALLBACK_URL",
+      "userReference": "YOUR_USER_REFERENCE",
+      "web":{
+          "successUrl":"https://www.yourcompany.com/success",
+          "errorUrl":"https://www.yourcompany.com/error",
+          "locale":"es"
+      }
+  }'
 ```
 
 ### Response
@@ -334,6 +337,30 @@ YOUR_ACCESS_TOKEN' \
                     },
                     "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
                 }
+            },
+            {
+                "id": "33333333-3333-3333-bbbbbbbbbbbb",
+                "category": "SELFIE",
+                "allowedChannels": [
+                    "WEB",
+                    "API",
+                    "SDK"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                        "face": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/FACE"
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
+            },
+            {
+                "id": "33333333-3333-3333-cccccccccccc",
+                "category": "FACEMAP",
+                "allowedChannels": [
+                    "WEB",
+                    "SDK"
+                ]
             }
         ]
     }
@@ -348,14 +375,14 @@ YOUR_ACCESS_TOKEN' \
 | definitionKey | Name                         | Description  |
 |---------------|------------------------------|--------------|
 | 1             | [ID Capture and Storage](workflow_descriptions.md#workflow-1-id-capture-and-storage)  | Captures a government-issued ID document and stores the extracted data. |  
-| 2             | [ID Verification](workflow_descriptions.md#workflow-2-id-verification)  | Verifies a government-issued ID document and returns a) whether that document is valid, and b) data extracted from that document. |  
-| 3             | [ID and Identity Verification](workflow_descriptions.md#workflow-3-id-and-identity-verification) | Verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user's face with the photo on the ID and performs a liveness check to ensure the person is physically present. |
-| 5             | [Similarity to existing ID](workflow_descriptions.md#workflow-5-similarity-to-existing-id) | Matches a selfie of a user to the face of a document holder of a stored ID document that has already been verified. |  
-| 6             | [Standalone Liveness](workflow_descriptions.md#workflow-6-standalone-liveness) | Captures a user's face to verify that the person is physically present and not presenting a photo or other fake as their selfie. |   
-| 9             | [Authentication](workflow_descriptions.md#workflow-9-authentication) | Compares the facemap of a user to an existing facemap that has already been captured. The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](workflow_descriptions.md#workflow-3-id-and-identity-verification) or [Workflow 6](workflow_descriptions.md#workflow-6-standalone-liveness). |   
-| 16            | [Authentication on Premise](workflow_descriptions.md#workflow-16-authentication-on-premise) | Compares the facemap of a user to an existing facemap that was previously captured and is stored on the customer side. <br><br>  The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](#workflow-3-id-and-identity-verification) or [Workflow 6](workflow_descriptions.md#workflow-6-standalone-liveness), and can be retrieved with the [Retrieval API](#retrieval) using the [`validFaceMapForAuthentication`](#capabilitiesliveness) parameter. |
-| 20            | [Similarity of Two Images](workflow_descriptions.md#workflow-20-similarity-of-two-images) | Matches the user photos on two IDs, two user selfies or a user's selfie with the photo on the ID to verify they are the same person. |
-| 32            | [ID Verification, Identity Verification, Screening](workflow_descriptions.md#workflow-32-id-verification-identity-verification-screening) | Verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user's face with the photo on the ID and performs a liveness check to ensure the person is physically present. Checks if user is part of any sanctions list. |
+| 2             | [ID Verification](kyx%2Bworkflow_descriptions.md#workflow-2-id-verification)  | Verifies a government-issued ID document and returns a) whether that document is valid, and b) data extracted from that document. |  
+| 3             | [ID and Identity Verification](kyx%2Bworkflow_descriptions.md#workflow-3-id-and-identity-verification) | Verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user's face with the photo on the ID and performs a liveness check to ensure the person is physically present. |
+| 5             | [Similarity to existing ID](kyx%2Bworkflow_descriptions.md#workflow-5-similarity-to-existing-id) | Matches a selfie of a user to the face of a document holder of a stored ID document that has already been verified. |  
+| 6             | [Standalone Liveness](kyx%2Bworkflow_descriptions.md#workflow-6-standalone-liveness) | Captures a user's face to verify that the person is physically present and not presenting a photo or other fake as their selfie. |   
+| 9             | [Authentication](kyx%2Bworkflow_descriptions.md#workflow-9-authentication) | Compares the facemap of a user to an existing facemap that has already been captured. The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](kyx%2Bworkflow_descriptions.md#workflow-3-id-and-identity-verification) or [Workflow 6](kyx%2Bworkflow_descriptions.md#workflow-6-standalone-liveness). |   
+| 16            | [Authentication on Premise](kyx%2Bworkflow_descriptions.md#workflow-16-authentication-on-premise) | Compares the facemap of a user to an existing facemap that was previously captured and is stored on the customer side. <br><br>  The existing facemap must have been acquired during a previous workflow, e.g. [Workflow 3](#workflow-3-id-and-identity-verification) or [Workflow 6](kyx%2workflow_descriptions.md#workflow-6-standalone-liveness), and can be retrieved with the [Retrieval API](#retrieval) using the [`validFaceMapForAuthentication`](#capabilitiesliveness) parameter. |
+| 20            | [Similarity of Two Images](kyx%2Bworkflow_descriptions.md#workflow-20-similarity-of-two-images) | Matches the user photos on two IDs, two user selfies or a user's selfie with the photo on the ID to verify they are the same person. |
+| 32            | [ID Verification, Identity Verification, Screening](kyx%2Bworkflow_descriptions.md#workflow-32-id-verification-identity-verification-screening) | Verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user's face with the photo on the ID and performs a liveness check to ensure the person is physically present. Checks if user is part of any sanctions list. |
 | 10011         | [Standalone ID and Identity Verification](workflow-descriptions-kyx.md#workflow-11-standalone-id-and-identity-verification) | This workflow verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user’s face with the photo on the ID and performs a liveness check to ensure the person is physically present. |
 | 10013         | [ID and Identity Verification + Screening + Proof Of Residency + Address Validation + US DL Verification](workflow-descriptions-kyx.md#workflow-10013-id-and-identity-verification--screening--proof-of-residency--address-validation--us-dl-verification)  | This workflow verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user's face with the photo on the ID and performs a liveness check to ensure the person is physically present. Performs a proof of residency on the users address, as well as address validation. Checks if user is part of any sanctions list and also performs US Driving License Verification. |  
 
@@ -414,7 +441,7 @@ After creating/updating a new account, you receive one or more specific redirect
 
 #### Request Headers
 
-The following fields are required in the header section of your Request
+The following fields are required in the header section of your request
 
 `Accept: application/json`    
 `Content-Type: multipart/form-data`   
@@ -1331,8 +1358,24 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 | workflow.definitionKey             | string | See [supported keys](#workflow-definition-keys)                        |
 | workflow.userReference             | string | Customer internal reference for a request to link it in the customer backend (must not contain any PII) |
 | workflow.customerInternalReference | string | Reference for the end user in the customer backend (must not contain any PII) |
+| decision                            | object | See [decision](#decision)                                                  |
+| steps                               | object |See [workflow.steps](#steps)                        |
 | credentials                        | array (object)  | See [credentials](#credentials)                               |
 | capabilities                       | object | See [capabilities](#capabilities)                                      |
+
+#### decision
+| Parameter        | Type   | Note                    |
+|------------------|--------|-------------------------|
+| risk               | object | Possible values:<br>• risk.score |
+| risk.score         | double | Possible values:<br>• 0.00 - 100.00 (at max 2 decimal places) |
+| type                    | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING  |
+| details                 | object | Possible values:<br>• details.label        |
+| details.label           | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED <br>• TECHNICAL_ERROR<br>• WARNING       |
+
+#### steps
+| Parameter                 | Type   | Note                    |
+|---------------------------|--------|-------------------------|
+| href                      | string | href to manage steps for the workflow<br>see [Get Workflow Steps](#get-workflow-steps) |
 
 #### credentials
 | Parameter        | Type   | Note                    |
@@ -1449,12 +1492,12 @@ __Dependency:__ [usability](#capabilitiesusability)
 | id                     | string | UUID of the capability     |
 | credentials            | object |                            |
 | credentials.id         | string | UUID of the credentials                           |
-| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
 | decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DIGITAL_COPY<br>• WATERMARK<br>• MANIPULATED_DOCUMENT<br>• OTHER_REJECTION<br>• GHOST_IMAGE_DIFFERENT<br>• PUNCHED<br>• SAMPLE<br>• FAKE<br>• CHIP_MISSING<br>• DIGITAL_MANIPULATION<br><br>if decision.type = WARNING:<br>• DIFFERENT_PERSON<br>• REPEATED_FACE (same face with same data occurs multiple times --> potential opening of multiple accounts) |
-| data                   | object | See [imageChecks.data](#capabilitiesimageChecksdata) |
+| data                   | object | See [imageChecks.data](#capabilitiesimageChecksdata)             |
 
 #### capabilities.imageChecks.data
 | Parameter                         | Type   | Note                                                                                                        |
@@ -1470,7 +1513,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
-| id                     | string | UUID of the capability        |
+| id                     | string | UUID of the capability     |
 | credentials            | object | Possible values:<br>• credentials.decision <br>• credentials.data        |
 | decision               | object | Possible values:<br>• decision.type<br>• decision.details                |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED <br>• PASSED                          |
@@ -1552,7 +1595,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED |
 | decision.details       | object |                            |
-| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• NFC_CERTIFICATE<br>• MISMATCHING_DATAPOINTS<br>• MRZ_CHECKSUM<br>• MISMATCHING_DATA_REPEATED_FACE (same face occurs multiple times, data is different --> high possibility of fraud attempt)<br>• MISMATCH_FRONT_BACK<br>• SUPERIMPOSED_TEXT|
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• NFC_CERTIFICATE<br>• MISMATCHING_DATAPOINTS<br>• MRZ_CHECKSUM<br>• MISMATCHING_DATA_REPEATED_FACE (same face occurs multiple times, data is different --> high possibility of fraud attempt)<br>• MISMATCH_FRONT_BACK<br>• SUPERIMPOSED_TEXT |
 
 #### capabilities.watchlistScreening
 
@@ -1643,7 +1686,7 @@ Authorization: Bearer xxx
     "workflow": {
         "id": "22222222-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         "status": "PROCESSED",
-        "definitionKey": "10003"
+        "definitionKey": "10013"
     },
     "account": {
         "id": "11111111-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
@@ -1663,6 +1706,18 @@ Authorization: Bearer xxx
             ]
         }
     ],
+    "decision": {
+        "type": "PASSED",
+        "details": {
+            "label": "PASSED"
+        },
+        "risk": {
+            "score": 0.0
+        }
+    },
+    "steps": {
+        "href": "https://retrieval.amer-1.jumio.ai/api/v1/accounts/accounts/11111111-xxxx-xxxx-xxxx-xxxxxxxxxxxx/workflow-executions/22222222-xxxx-xxxx-xxxx-xxxxxxxxxxxx/steps"
+    },
     "capabilities": {
         "extraction": [
             {
@@ -1885,6 +1940,117 @@ GET
 Host: retrieval.apac-1.jumio.ai
 User-Agent: User Demo
 Authorization: Bearer xxx
+```
+
+## Get Workflow Steps
+HTTP Request Method: __GET__
+* US: `https://retrieval.amer-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>/steps`
+* EU: `https://retrieval.emea-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>/steps`
+* SG: `https://retrieval.apac-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>/steps`
+
+
+#### Workflow Steps Request Path Parameters
+| Parameter           | Type   | Note                                               |
+|---------------------|--------|----------------------------------------------------|
+| accountId           | string | UUID of the account                                |
+| workflowExecutionId | string | UUID of the workflow                               |
+
+#### Workflow Steps Execution Response
+Unsuccessful requests will return the relevant [HTTP status code](https://tools.ietf.org/html/rfc7231#section-6) and information about the cause of the error. HTTP status code __404 Not Found__ will be returned if the transaction is not available, has been deleted, or is not a KYX workflow.
+
+Successful requests will return HTTP status code __200 OK__ along with a JSON object containing the information described below.
+
+| Parameter                 | Type   | Note                    |
+|---------------------------|--------|-------------------------|
+| steps                        | array (object) | See [steps](#steps) |
+
+#### steps
+| Parameter                 | Type   | Note                    |
+|---------------------------|--------|-------------------------|
+| id                        | string | UUID of the workflow step |
+| name                      | string | Workflow step name<br>Possible values:<br>• ADDRESS_VERIFICATION<br>• DL_VERIFICATION<br>• ID_IV<br>• SCREENING |
+| capabilityIds             | array (string) | List of the capabilityIds executed for this step |
+| decision                  | object | Possible values:<br>• decision.risk<br>• decision.risk.score<br>• decision.type<br>• decision.details<br>• decision.details.label |
+| decision.risk        | object | Possible values:<br>• decision.risk.score |
+| decision.risk.score  | double | Possible values:<br>• 0.00 - 100.00 (max 2 decimal places)                      |
+| decision.type             | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING  |
+| decision.details          | object | Possible values:<br>• decision.details.label        |
+| decision.details.label             | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING        |
+
+### Examples
+
+#### Request
+```
+GET
+/api/v1/accounts/11111111-xxxx-xxxx-xxxx-xxxxxxxxxxxx/workflow-executions/22222222-xxxx-xxxx-xxxx-xxxxxxxxxxxx/steps HTTP/1.1
+Host: retrieval.apac-1.jumio.ai
+User-Agent: User Demo
+Authorization: Bearer xxx
+```
+
+#### Response
+```
+{
+ "steps": [
+   {
+     "id": "44111111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+     "name": "ID_IV",
+     "capabilityIds": [
+       "1111111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+       "1211111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+       "1333111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+       "1311111-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+     ],
+     "decision": {
+       "type": "PASSED",
+       "details": {
+         "label": "PASSED"
+       }
+     }
+   },
+   {
+     "id": "44211111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+     "name": "SCREENING",
+     "capabilityIds": [
+       "1411111-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+     ],
+     "decision": {
+       "type": "PASSED",
+       "details": {
+         "label": "PASSED"
+       }
+     }
+   },
+   {
+     "id": "44311111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+     "name": "ADDRESS_VERIFICATION",
+     "capabilityIds": [
+       "1511111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+       “1611111-xxxx-xxxx-xxxx-xxxxxxxxxxxx”
+
+     ],
+     "decision": {
+       "type": "PASSED",
+       "details": {
+         "label": "PASSED"
+       }
+     }
+   },
+{
+     "id": "44411111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+     "name": "DL_VERIFICATION",
+     "capabilityIds": [
+       "1711111-xxxx-xxxx-xxxx-xxxxxxxxxxxx”
+     ],
+     "decision": {
+       "type": "PASSED",
+       "details": {
+         "label": "PASSED"
+       }
+     }
+   }
+ ]
+}
 ```
 
 # Health Check  
