@@ -159,7 +159,7 @@ The following parameters are posted to your callback URL for ID Verification Web
 |registrationNumber|255|Registration number of the document |activation required |
 |mothersName|255|Name of the document holder's mother |activation required |
 |fathersName|255|Name of the document holder's father |activation required |
-|personalIdentificationNumber|255|Personal identification number as available on the ID<br>• if idCountry = GEO and idSubtype = PASSPORT<br>• if idCountry = COL and idSubtype = ID\_CARD <br>• if idCountry = LTU and idSubtype = DRIVING\_LICENSE<br>• if idCountry = TUR and idSubtype = ID\_CARD, DRIVING\_LICENSE<br>• if idCountry = ROU and idSubtype = ID\_CARD, DRIVING\_LICENSE |activation required |
+|personalIdentificationNumber|255|Personal identification number as available on the ID<br>• if idCountry = GEO and idSubtype = PASSPORT<br>• if idCountry = COL and idSubtype = ID\_CARD <br>• if idCountry = LTU and idSubtype = DRIVING\_LICENSE<br>• if idCountry = TUR and idSubtype = ID\_CARD, DRIVING\_LICENSE<br>• if idCountry = ROU and idSubtype = ID\_CARD, DRIVING\_LICENSE<br>• if idCountry = ISR and idSubtype = DRIVING\_LICENSE |activation required |
 |rgNumber|255|"General Registration" number for idCountry = BRA |activation required|
 |voterIdNumber|255|"Clave de elector" number for idCountry = MEX |activation required|
 |issuingNumber|255|"Numero de emission" number for idCountry = MEX |activation required|
