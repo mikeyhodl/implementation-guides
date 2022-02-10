@@ -586,8 +586,8 @@ __Response:__
 ```
 
 ## Retrieval
-Refer to [Data Acquistion](kyx%2Bapi_guide.md#data-acquistion) section for more information on available channels (API, SDK, WEB).      
-Use our [Retrieval API](kyx%2Bapi_guide.md#retrieval) to retrieve account data and/or data acquired during a workflow.
+Refer to [Data Acquistion](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api-guide-kyx.md#data-acquisition) section for more information on available channels (API, SDK, WEB).      
+Use our [Retrieval API](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api-guide-kyx.md#retrieval) to retrieve account data and/or data acquired during a workflow.
 
 ---
 &copy; Jumio Corporation, 395 Page Mill Road, Suite 150 Palo Alto, CA 94306
