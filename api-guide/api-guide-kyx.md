@@ -196,6 +196,7 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 | workflowExecution             | object         | Possible values:<br>• workflowExecution.id<br>• workflowExecution.credentials                        |
 | workflowExecution.id          | string         | UUID of the workflow                                                      |
 | workflowExecution.credentials | array (object) | Credential response<br>See [workflowExecution.credentials](#response-workflowdefinition.credentials) |
+| workflowDefinition.capabilities | object  |                       | Optional workflow definition object part to customize acquiring process and workflow process.<br>Possible values: <br>See [workflowDefinition.capabilities](#request-workflowdefinitioncapabilities)   
 | web                           | object         | Possible values:<br>• web.href<br>• web.successUrl<br>• web.errorUrl <br><br> _Web parameters are only relevant for the WEB channel._ |
 | web.href                      | string         | URL used to load the ID Verification client.<br><br>_Web parameters are only relevant for the WEB channel._ |
 | web.successUrl                | string          | URL to which the browser will send the end user at the end of a successful web acquisition user journey (defined either in the Customer Portal or overwritten in the initiate)<br><br> _SDK parameters are only relevant for the SDK channel._ |
@@ -214,6 +215,13 @@ Successful requests will return HTTP status code __200 OK__ along with a JSON ob
 | api.parts             | object                  | href to manage parts for the account credential<br>Possible values:<br>• FRONT<br>•	BACK<br>• FACE<br>• FACEMAP <br><br> _API parameters are only relevant for the API channel._ |
 | api.workflowExecution | string                  | href to manage the acquisition and workflow processing <br><br>_API parameters are only relevant for the API channel._ |
 
+#### Request workflowDefinition.capabilities
+
+| Parameter              | Type           | Max. Length          | Notes                                                                     |
+|------------------------|----------------|----------------------|---------------------------------------------------------------------------|
+| watchlistScreening      | object         |                      | Possible values:<br>• watchlistScreening.additionalProperties      |
+| watchlistScreening.additionalProperties                | string         |                      | Provide request options for watchlistScreening capability|
+
 ## Examples
 
 ### Initiate Account
@@ -228,15 +236,22 @@ curl --location --request POST 'https://account.amer-1.jumio.ai/api/v1/accounts'
             "key": 10013,
             "credentials": [
                 {
-                    "category": "ID",
-                    "type": {
-                        "values": ["DRIVING_LICENSE", "ID_CARD", "PASSPORT"]
-                    },
-                    "country": {
-                        "values": ["USA", "CAN", "AUT", "GBR"]
-                    }
+                  "category": "ID",
+                  "country": {
+                    "predefinedType": "DEFINED",
+                    "values": ["USA", "CAN", "AUT", "GBR"]
+                  },
+                  "type": {
+                    "predefinedType": "DEFINED",
+                    "values": ["DRIVING_LICENSE", "ID_CARD"]
+                  }  
                 }
-            ]
+            ],
+            "capabilities": {
+              "watchlistScreening": {
+                "additionalProperties": "string"
+              }
+            }
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
         "userReference": "YOUR_USER_REFERENCE",

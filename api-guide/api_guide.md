@@ -160,6 +160,7 @@ Values set in your API request will override the corresponding settings configur
 | __workflowDefinition__         | object         |                       | Definition of the specific documents necessary to execute for the particular capabilities on them.                   |
 | __workflowDefinition.key__     | object         |                       | Key of the workflow definition which you want to execute<br>See [Workflow Definition Keys](#workflow-definition-keys)                                      |
 | workflowDefinition.credentials | array (object) |                       | Optional workflow definition object part to customize acquiring process and workflow process.<br>Possible values: <br>See [workflowDefinition.credentials](#request-workflowdefinitioncredentials)       |
+| workflowDefinition.capabilities | object  |                       | Optional workflow definition object part to customize acquiring process and workflow process.<br>Possible values: <br>See [workflowDefinition.capabilities](#request-workflowdefinitioncapabilities)       |
 | userReference<sup>1</sup>          | string         | 100                   | Reference for the end user in the customer backend (must not contain any PII)                |
 | reportingCriteria              | string         | 255                   | Additional information provided by a customer for searching and aggregation purposes         |
 | callbackUrl                    | string         | 255                   | Definition of the callback URL for this particular request. [Overrides callback URL](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#callback-error-and-success-urls) in the Customer Portal.                  |
@@ -182,6 +183,13 @@ Values set in your API request will override the corresponding settings configur
 | type                   | object         |                      | Possible values:<br>• type.predefinedType <br>• type.values               |
 | type.predefinedType    | object         |                      | Possible values:<br>• DEFINED (default: end user is not able to change document type)<br>• RECOMMENDED (type is preselected, end user is still able to change it) |
 | type.values            | array (string) | See possible values. | Defined number of credential type codes. <br>Possible values:<br>If `category` = ID:<br>• ID_CARD<br>• DRIVING_LICENSE<br>• PASSPORT<br>• VISA<br>If `category` = FACEMAP:<br>• IPROOV_STANDARD (Web + SDK channel only)<br>• IPROOV_PREMIUM (Workflow 3: ID and Identity Verification (Web + SDK channel only) / Workflow 9: Authentication (SDK only) / Workflow 16: Authentication on Premise (SDK only))<br>• JUMIO_STANDARD|
+
+#### Request workflowDefinition.capabilities
+
+| Parameter              | Type           | Max. Length          | Notes                                                                     |
+|------------------------|----------------|----------------------|---------------------------------------------------------------------------|
+| watchlistScreening      | object         |                      | Possible values:<br>• watchlistScreening.additionalProperties      |
+| watchlistScreening.additionalProperties                | string         |                      | Provide request options for watchlistScreening capability|
 
 ## Response
 Unsuccessful requests will return HTTP status code __400 Bad Request, 401 Unauthorized, 403 Forbidden__ or __404 Not Found__ (in case of a failed update scenario) if the scan is not available.
@@ -231,15 +239,22 @@ curl --location --request POST 'https://account.amer-1.jumio.ai/api/v1/accounts'
             "key": 2,
             "credentials": [
                 {
-                    "category": "ID",
-                    "type": {
-                        "values": ["DRIVING_LICENSE", "ID_CARD", "PASSPORT"]
-                    },
-                    "country": {
-                        "values": ["USA", "CAN", "AUT", "GBR"]
-                    }
+                  "category": "ID",
+                  "country": {
+                    "predefinedType": "DEFINED",
+                    "values": ["USA", "CAN", "AUT", "GBR"]
+                  },
+                  "type": {
+                    "predefinedType": "DEFINED",
+                    "values": ["DRIVING_LICENSE", "ID_CARD"]
+                  }  
                 }
-            ]
+            ],
+            "capabilities": {
+              "watchlistScreening": {
+                "additionalProperties": "string"
+              }
+            }
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
         "userReference": "YOUR_USER_REFERENCE"

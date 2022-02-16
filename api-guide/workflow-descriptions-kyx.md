@@ -1,7 +1,8 @@
 # Workflow Descriptions
 
 ## Table of Contents
-- [Workflow 10011: Standalone ID and Identity Verification](#workflow-11-standalone-id-and-identity-verification)
+- [Workflow 10010: Standalone Watchlist Screening](#workflow-10010-standalone-watchlist-screening)
+- [Workflow 10011: Standalone ID and Identity Verification](#workflow-10011-standalone-id-and-identity-verification)
 - [Workflow 10013: ID and Identity Verification + Screening + Proof Of Residency + Address Validation + US DL Verification](#workflow-10013-id-and-identity-verification--screening--proof-of-residency--address-validation--us-dl-verification)
 - [Retrieval](#retrieval-2)
 
@@ -12,6 +13,217 @@ Workflows are specified using the `key` attribute in the `workflowDefinition` ob
     "credentials": []
 }
 ```
+
+## Workflow 10010: Standalone Watchlist Screening
+This workflow checks if the user is part of any sanctions list using Comply Advantage.
+
+### Required Credentials
+* Data
+
+### Stored Credentials
+* Data
+
+### Prerequisites
+* Screening must be enabled for your account. (Contact your Jumio account manager for activation.)
+* Screening must be set up for your Customer Portal (see [Comply Advantantage Portal Setup](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-screening.md))
+* Allowed channels: API
+
+### Example
+
+#### Initiate Account Creation
+HTTP Request Method: __POST__
+* US: `https://account.amer-1.jumio.ai/api/v1/accounts`
+* EU: `https://account.emea-1.jumio.ai/api/v1/accounts`
+* SG: `https://account.apac-1.jumio.ai/api/v1/accounts`
+
+| ⚠️&nbsp;&nbsp; `userReference` is required to be defined in the initiate for WF10010 in order for Screening to work.
+|:----------|
+
+__Request:__
+```
+curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts' \
+    --header 'Content-Type: application/json' \
+    --header 'User-Agent: User Demo' \
+    --header 'Authorization: Bearer
+    YOUR_ACCESS_TOKEN' \
+    --data-raw '{
+        "customerInternalReference": "CUSTOMER_REFERENCE",
+        "workflowDefinition": {
+            "key": 10010
+        },
+        "callbackUrl": "YOUR_CALLBACK_URL",
+        "userReference": "YOUR_USER_REFERENCE"
+    }'
+```
+
+__Response:__
+```
+{
+    "timestamp": "2021-08-20T11:36:34.005Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa",
+        "credentials": [
+            {
+                "id": "33333333-3333-3333-aaaaaaaaaaaa",
+                "category": "DATA",
+                "allowedChannels": [
+                    "API"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                      "prepared_data": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/PREPARED_DATA",
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
+            }
+        ]
+    }
+}
+```
+
+#### Upload Data
+HTTP Request Method: __POST__
+* US: `https://account.amer-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>/credentials/<credentialsId>/parts/PREPARED_DATA`
+* EU: `https://account.emea-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>/credentials/<credentialsId>/parts/PREPARED_DATA`
+* SG: `https://account.apac-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>/credentials/<credentialsId>/parts/PREPARED_DATA`
+
+__Request Path Parameters:__
+
+| Parameter           | Type   | Note          |
+|---------------------|--------|---------------|
+| accountId           | string | UUID of the account        |
+| workflowExecutionId | string | UUID of the workflow       |
+| credentialsId       | string | UUID of the credentials    |
+
+__Request Body:__
+
+| Parameter                      | Type           |  Notes          |
+|--------------------------------|----------------|----------------|
+| suffix  | string         | Name suffix of the user             |
+| firstName  | string         | First name of the user              |
+| middleName  | string         | Middle name of the user              |
+| lastName  | string         | Last name of the user              |
+| sex  | string         | Sex of the user              |
+| dateOfBirth  | string         | Date of birth of the user<br>Format: YYYY-MM-DD              |
+| socialSecurityNumber  | string         | Social security number              |
+| nationality  | string         | Nationality of the user              |
+| email  | string         | Email of the user<br>Format: abc@test.com              |
+| phoneNumber  | string         | Phone number of the user              |
+| phoneNumber2  | string         | Additional phone number of the user              |
+| personalNumber  | string         | Personal number of the user              |
+| address  | object         |               |
+| address.line1  | string         | Line item 1              |
+| address.line2  | string         | Line item 2              |
+| address.line3  | string         | Line item 3              |
+| address.line4  | string         | Line item 4              |
+| address.line5  | string         | Line item 5              |
+| address.postalCode  | string         | Postal code              |
+| address.city  | string         | City              |
+| address.subdivision  | string         | Subdivision (Region, State, Province, Emirate, Department, ...)              |
+| address.country  | string         | Country              |
+| id  | object         |               |
+| id.issuingDate  | string         | Issuing date of the document<br>Format: YYYY-MM-DD              |
+| id.expiryDate  | string         | Expiry date of the document<br>Format: YYYY-MM-DD              |
+| id.idNumber  | string         | ID number of the document              |
+| id.type  | string         | ID type of the document<br>Possible values:<br>• PASSPORT<br>• DRIVING_LICENSE<br>• ID_CARD              |
+
+<!--
+| kyc  | string         | TBD              |
+-->
+
+
+
+__Request:__
+```
+curl --request POST --location 'https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/PREPARED_DATA' \
+    --header 'Content-Type: application/json' \
+    --header 'User-Agent: User Demo' \
+    --header 'Authorization: Bearer
+    YOUR_ACCESS_TOKEN' \
+    --data-raw '{
+        "suffix": "Mr.",
+        "firstName": "FIRSTNAME",
+        "middleName": "MIDDLENAME",
+        "lastName": "LASTNAME",
+        "sex": "M",
+        "dateOfBirth": "1985-01-01",
+        "socialSecurityNumber": "111-11-1120",
+        "email": "tmp@tmp.com",
+        "phoneNumber": "+231-375-9663",
+        "personalNumber": "1234567890123456",
+        "address": {
+            "line1": "123 HIGHLAND DRIVE",
+            "line2": "Line 2",
+            "line3": "Line 3",
+            "line4": "Line 4",
+            "line5": "Line 5",
+            "postalCode": "12345",
+            "city": "CITY",
+            "subdivision": "Indiana",
+            "country": "BRA"
+        },
+        "id": {
+            "idNumber": "ABCD12345",  
+            "issuingDate": "2014-02-20",
+            "expiryDate": "2034-11-30",
+            "type": "DRIVING_LICENSE"
+      }
+  }'
+```
+
+__Response:__
+```
+{
+    "timestamp": "2021-08-20T11:36:34.005Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa"
+    },
+    "api": {
+        "parts": {
+            "prepared_data": "https://api.amer-1.jumio.ai/api/v1/account/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/PREPARED_DATA"
+        },
+        "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+    }
+}
+```
+
+#### Finalize
+HTTP Request Method: __PUT__
+* US: `https://api.amer-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>`
+* EU: `https://api.emea-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>`
+* SG: `https://api.apac-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>`
+
+__Request:__
+```
+curl --location --request PUT 'https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa' \
+--header 'User-Agent: User Demo' \
+--header 'Authorization: Bearer xxx'
+```
+
+__Response:__
+```
+{
+    "timestamp": "2021-05-24T08:20:31.344Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa"
+    }
+}
+```
+
+
+
+
+
 
 ## Workflow 10011: Standalone ID and Identity Verification
 This workflow verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user’s face with the photo on the ID and performs a liveness check to ensure the person is physically present.
@@ -345,15 +557,22 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts'
             "key": 10013,
             "credentials": [
                 {
-                    "category": "ID",
-                    "type": {
-                        "values": ["DRIVING_LICENSE", "ID_CARD", "PASSPORT"]
-                    },
-                    "country": {
-                        "values": ["USA", "CAN", "AUT", "GBR"]
-                    }
+                  "category": "ID",
+                  "country": {
+                    "predefinedType": "DEFINED",
+                    "values": ["USA", "CAN", "AUT", "GBR"]
+                  },
+                  "type": {
+                    "predefinedType": "DEFINED",
+                    "values": ["DRIVING_LICENSE", "ID_CARD"]
+                  }  
                 }
-            ]
+            ],
+            "capabilities": {
+              "watchlistScreening": {
+                "additionalProperties": "string"
+              }
+            }
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
         "userReference": "YOUR_USER_REFERENCE",
@@ -586,7 +805,7 @@ __Response:__
 ```
 
 ## Retrieval
-Refer to [Data Acquistion](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api-guide-kyx.md#data-acquisition) section for more information on available channels (API, SDK, WEB).      
+Refer to [Data Acquistion](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api-guide-kyx.md#data-acquisition) section for more information on available channels (API, SDK, WEB).     
 Use our [Retrieval API](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api-guide-kyx.md#retrieval) to retrieve account data and/or data acquired during a workflow.
 
 ---
