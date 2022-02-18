@@ -1429,6 +1429,8 @@ __Capability execution dependencies:__
 | addressValidation      | array (object) | See [addressValidation](#capabilitiesaddressValidation)     | usability, imageChecks, extraction |
 | proofOfResidency       | array (object) | See [proofOfResidency](#capabilitiesproofOfResidency)       | usability, imageChecks, extraction |
 | drivingLicenseVerification | array (object) | See [drivingLicenseVerification](#capabilitiesdrivingLicenseVerification)   | usability, imageChecks, extraction |
+| braCpfValidation | array (object) | See [braCpfValidation](#capabilitiesbraCpfValidation)   |  |
+| biometricVerification | array (object) | See [biometricVerification](#capabilitiesbiometricVerification)   |  |
 
 #### capabilities.usability
 
@@ -1678,11 +1680,41 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | id                     | string | UUID of the capability     |
 | credentials            | object |                            |
 | credentials.id         | string | UUID of the credentials                           |
-| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
+| credentials.category   | string | Possible values:<br>• DATA                        |
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
 | decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_STATE<br>• VALIDATION_FAILED<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DENY<br><br>if decision.type = WARNING:<br>• ALERT |
+
+#### capabilities.braCpfValidation
+
+| Parameter              | Type   | Note                       |
+|------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability     |
+| credentials            | object |                            |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE                         |
+| decision               | object |                            |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
+| decision.details       | object |                            |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• NOT_ENOUGH_DATA<br>• TECHNICAL_ERROR<br>• INVALID_MERCHANT_SETTINGS<br>• VALIDATION_FAILED<br>• PRECONDITION_NOT_FULFILLED<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DENY<br><br>if decision.type = WARNING:<br>• UNSUPPORTED_COUNTRY |
+
+<!-- TODO: double-check label -->
+
+#### capabilities.biometricVerification
+
+| Parameter              | Type   | Note                       |
+|------------------------|--------|----------------------------|
+| id                     | string | UUID of the capability     |
+| credentials            | object |                            |
+| credentials.id         | string | UUID of the credentials                           |
+| credentials.category   | string | Possible values:<br>• DATA<br>• SELFIE             |
+| decision               | object |                            |
+| decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
+| decision.details       | object |                            |
+| decision.details.label | string | Possible values:<br>• LOW_RISK<br>• MEDIUM_RISK<br>• HIGH_RISK<br>• TECHNICAL_ERROR<br>• PERMISSION_DENIED<br>• BAD_REQUEST<br>• PRECONDITION_NOT_FULFILLED |
+
+<!-- TODO: double-check label - type/label-->
 
 ### Examples
 
