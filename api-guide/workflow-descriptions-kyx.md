@@ -20,10 +20,10 @@ Workflows are specified using the `key` attribute in the `workflowDefinition` ob
 ## Workflow 10005: Standalone CPF Validation
 This workflow validates the details provided by end-user against the Brazilian CPF database.
 
-### Required Credentials XXX
+### Required Credentials
 * Data
 
-### Stored Credentials XXX
+### Stored Credentials 
 * Data
 
 ### Prerequisites
