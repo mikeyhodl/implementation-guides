@@ -2,7 +2,8 @@
 
 ## Table of Contents
 - [Workflow 10005: Standalone CPF Validation](#workflow-10005-standalone-cpf-validation)
-- [Workflow 10006: Standalone Serpro Biometric](#workflow-1000-standalone-serpro-biometric)
+- [Workflow 10006: Standalone Serpro Biometric](#workflow-10006-standalone-serpro-biometric)
+- [Workflow 10008: Standalone DL Verification (AAMVA-USA)](#workflow-10008-standalone-dl-verification-aamva-usa)
 - [Workflow 10010: Standalone Watchlist Screening](#workflow-10010-standalone-watchlist-screening)
 - [Workflow 10011: Standalone ID and Identity Verification](#workflow-10011-standalone-id-and-identity-verification)
 - [Workflow 10013: ID and Identity Verification + Screening + Proof Of Residency + Address Validation + US DL Verification](#workflow-10013-id-and-identity-verification--screening--proof-of-residency--address-validation--us-dl-verification)
@@ -23,7 +24,7 @@ This workflow validates the details provided by end-user against the Brazilian C
 ### Required Credentials
 * Data
 
-### Stored Credentials 
+### Stored Credentials
 * Data
 
 ### Prerequisites
@@ -220,9 +221,54 @@ __Response:__
 
 Use our [Retrieval API](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api-guide-kyx.md#retrieval) to retrieve account data and/or data acquired during a workflow.
 
+
+
 <!--
 
 TBD
+https://retrieval.{{platform}}/api/v1/accounts/fa73cbf3-7f97-4227-b623-acc841bf38c3/workflow-executions/2b2fb7b5-63db-451d-9421-42789a643559
+
+```
+{
+    "workflow": {
+        "id": "2b2fb7b5-63db-451d-9421-42789a643559",
+        "status": "PROCESSED",
+        "definitionKey": "10005",
+        "customerInternalReference": "Pass"
+    },
+    "account": {
+        "id": "fa73cbf3-7f97-4227-b623-acc841bf38c3"
+    },
+    "createdAt": "2022-02-17T13:19:18.858Z",
+    "startedAt": "2022-02-17T13:24:22.425Z",
+    "completedAt": "2022-02-17T13:24:23.070Z",
+    "credentials": [
+        {
+            "id": "1e25fc61-8432-4889-b5ea-8f668e34f45c",
+            "category": "DATA",
+            "parts": [
+                {
+                    "classifier": "PREPARED_DATA",
+                    "href": "https://retrieval.amer-1.jumio.ai/api/v1/accounts/fa73cbf3-7f97-4227-b623-acc841bf38c3/credentials/1e25fc61-8432-4889-b5ea-8f668e34f45c/parts/PREPARED_DATA"
+                }
+            ]
+        }
+    ],
+    "decision": {
+        "type": "REJECTED",
+        "details": {
+            "label": "REJECTED"
+        },
+        "risk": {
+            "score": 100.0
+        }
+    },
+    "steps": {
+        "href": "https://retrieval.amer-1.jumio.ai/api/v1/accounts/fa73cbf3-7f97-4227-b623-acc841bf38c3/workflow-executions/2b2fb7b5-63db-451d-9421-42789a643559/steps"
+    },
+    "capabilities": {}
+}
+```
 
 https://retrieval.amer-1.jumio.ai/api/v1/accounts/14bc528c-f858-4029-87a1-d2ffdff2fa32/credentials/5f35a0e4-1719-491b-aeb0-169cbec56f89/parts/PREPARED_DATA
 
@@ -257,11 +303,11 @@ https://retrieval.amer-1.jumio.ai/api/v1/accounts/14bc528c-f858-4029-87a1-d2ffdf
 ## Workflow 10006: Standalone Serpro Biometric
 This workflow uses the provided Selfie and the CPF ID of end-user and validates both against the database.
 
-### Required Credentials XXX
+### Required Credentials
 * Selfie
 * Data
 
-### Stored Credentials XXX
+### Stored Credentials
 * Selfie
 * Data
 
@@ -523,7 +569,352 @@ __Response:__
 
 Use our [Retrieval API](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api-guide-kyx.md#retrieval) to retrieve account data and/or data acquired during a workflow.
 
+Check out [capabilities.biometricVerification](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api-guide-kyx.md#capabilitiesbiometricverification) for possible response parameters and values.
 
+__Example Response:__
+```
+{
+    "workflow": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa",
+        "status": "PROCESSED",
+        "definitionKey": "10006",
+        "userReference": "YOUR_USER_REFERENCE",
+        "customerInternalReference": "CUSTOMER_REFERENCE"
+    },
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "createdAt": "2022-01-06T10:16:18.540Z",
+    "startedAt": "2022-01-06T10:17:41.237Z",
+    "completedAt": "2022-01-06T10:17:49.016Z",
+    "credentials": [
+        {
+            "id": "33333333-3333-3333-aaaaaaaaaaaa",
+            "category": "DATA",
+            "parts": [
+                {
+                    "classifier": "PREPARED_DATA",
+                    "href": "https://retrieval.amer-1.jumiopp.link/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/PREPARED_DATA"
+                }
+            ]
+        },
+        {
+            "id": "33333333-3333-3333-bbbbbbbbbbbb",
+            "category": "SELFIE",
+            "parts": [
+                {
+                    "classifier": "FACE",
+                    "href": "https://retrieval.amer-1.jumiopp.link/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/FACE"
+                }
+            ]
+        }
+    ],
+    "decision": {
+        "type": "REJECTED",
+        "details": {
+            "label": "REJECTED"
+        },
+        "risk": {
+            "score": 100.0
+        }
+    },
+    "steps": {
+        "href": "https://retrieval.amer-1.jumiopp.link/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/steps"
+    },
+    "capabilities": {
+        "usability": [
+            {
+                "id": "1a11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                "credentials": [
+                    {
+                        "id": "33333333-3333-3333-bbbbbbbbbbbb",
+                        "category": "SELFIE"
+                    }
+                ],
+                "decision": {
+                    "type": "PASSED",
+                    "details": {
+                        "label": "OK"
+                    }
+                }
+            }
+        ],
+        "biometricVerification": [
+            {
+                "id": "1b11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                "decision": {
+                    "type": "REJECTED",
+                    "details": {
+                        "label": "HIGH_RISK"
+                    }
+                }
+            }
+        ]
+    }
+}
+```
+
+
+
+## Workflow 10008: Standalone DL Verification (AAMVA-USA)
+This workflow verifies the provided data of an USA drivers license against the American Association of Motor Vehicle Administrators data.
+
+### Required Credentials
+* Data
+
+### Stored Credentials
+* Data
+
+### Prerequisites
+* AAMVA must be enabled for your account. (Contact your Jumio account manager for activation.)
+<!-- * Prepared data: personalNumber > TBD **************************************************************************-->
+* Allowed channels: API
+
+### Example
+
+#### Initiate Account Creation
+HTTP Request Method: __POST__
+* US: `https://account.amer-1.jumio.ai/api/v1/accounts`
+* EU: `https://account.emea-1.jumio.ai/api/v1/accounts`
+* SG: `https://account.apac-1.jumio.ai/api/v1/accounts`
+
+__Request:__
+```
+curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts' \
+    --header 'Content-Type: application/json' \
+    --header 'User-Agent: User Demo' \
+    --header 'Authorization: Bearer
+    YOUR_ACCESS_TOKEN' \
+    --data-raw '{
+        "customerInternalReference": "CUSTOMER_REFERENCE",
+        "workflowDefinition": {
+            "key": 10008
+        }
+    }'
+```
+
+__Response:__
+```
+{
+    "timestamp": "2021-08-20T11:36:34.005Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa",
+        "credentials": [
+            {
+                "id": "33333333-3333-3333-aaaaaaaaaaaa",
+                "category": "DATA",
+                "allowedChannels": [
+                    "API"
+                ],
+                "api": {
+                    "token": "xxx",
+                    "parts": {
+                      "prepared_data": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/PREPARED_DATA",
+                    },
+                    "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+                }
+            }
+        ]
+    }
+}
+```
+
+#### Upload Data
+HTTP Request Method: __POST__
+* US: `https://account.amer-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>/credentials/<credentialsId>/parts/PREPARED_DATA`
+* EU: `https://account.emea-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>/credentials/<credentialsId>/parts/PREPARED_DATA`
+* SG: `https://account.apac-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>/credentials/<credentialsId>/parts/PREPARED_DATA`
+
+__Request Path Parameters:__
+
+| Parameter           | Type   | Note          |
+|---------------------|--------|---------------|
+| accountId           | string | UUID of the account        |
+| workflowExecutionId | string | UUID of the workflow       |
+| credentialsId       | string | UUID of the credentials    |
+
+__Request Body:__
+
+| Parameter                      | Type           |  Notes          |
+|--------------------------------|----------------|----------------|
+| suffix  | string         | Name suffix of the user             |
+| firstName  | string         | First name of the user              |
+| middleName  | string         | Middle name of the user              |
+| lastName  | string         | Last name of the user              |
+| sex  | string         | Sex of the user              |
+| dateOfBirth  | string         | Date of birth of the user<br>Format: YYYY-MM-DD              |
+| socialSecurityNumber  | string         | Social security number              |
+| nationality  | string         | Nationality of the user              |
+| email  | string         | Email of the user<br>Format: abc@test.com              |
+| phoneNumber  | string         | Phone number of the user              |
+| phoneNumber2  | string         | Additional phone number of the user              |
+| personalNumber  | string         | Personal number of the user              |
+| address  | object         |               |
+| address.line1  | string         | Line item 1              |
+| address.line2  | string         | Line item 2              |
+| address.line3  | string         | Line item 3              |
+| address.line4  | string         | Line item 4              |
+| address.line5  | string         | Line item 5              |
+| address.postalCode  | string         | Postal code              |
+| address.city  | string         | City              |
+| address.subdivision  | string         | Subdivision (Region, State, Province, Emirate, Department, ...)              |
+| address.country  | string         | Country              |
+| id  | object         |               |
+| id.issuingDate  | string         | Issuing date of the document<br>Format: YYYY-MM-DD              |
+| id.expiryDate  | string         | Expiry date of the document<br>Format: YYYY-MM-DD              |
+| id.idNumber  | string         | ID number of the document              |
+| id.type  | string         | ID type of the document<br>Possible values:<br>• PASSPORT<br>• DRIVING_LICENSE<br>• ID_CARD              |
+
+<!--
+| kyc  | string         | TBD              |
+-->
+
+__Request:__
+```
+curl --request POST --location 'https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/PREPARED_DATA' \
+    --header 'Content-Type: application/json' \
+    --header 'User-Agent: User Demo' \
+    --header 'Authorization: Bearer
+    YOUR_ACCESS_TOKEN' \
+    --data-raw '{
+        "suffix": "Mr.",
+        "firstName": "FIRSTNAME",
+        "middleName": "MIDDLENAME",
+        "lastName": "LASTNAME",
+        "sex": "M",
+        "dateOfBirth": "1985-01-01",
+        "socialSecurityNumber": "111-11-1120",
+        "email": "tmp@tmp.com",
+        "phoneNumber": "+231-375-9663",
+        "personalNumber": "1234567890123456",
+        "address": {
+            "line1": "123 HIGHLAND DRIVE",
+            "line2": "Line 2",
+            "line3": "Line 3",
+            "line4": "Line 4",
+            "line5": "Line 5",
+            "postalCode": "12345",
+            "city": "CITY",
+            "subdivision": "Indiana",
+            "country": "BRA"
+        },
+        "id": {
+            "idNumber": "ABCD12345",  
+            "issuingDate": "2014-02-20",
+            "expiryDate": "2034-11-30",
+            "type": "DRIVING_LICENSE"
+      }
+  }'
+```
+
+__Response:__
+```
+{
+    "timestamp": "2021-08-20T11:36:34.005Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa"
+    },
+    "api": {
+        "parts": {
+            "prepared_data": "https://api.amer-1.jumio.ai/api/v1/account/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/PREPARED_DATA"
+        },
+        "workflowExecution": "https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa"
+    }
+}
+```
+
+#### Finalize
+HTTP Request Method: __PUT__
+* US: `https://api.amer-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>`
+* EU: `https://api.emea-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>`
+* SG: `https://api.apac-1.jumio.ai/api/v1/accounts/<accountId>/workflow-executions/<workflowExecutionId>`
+
+__Request:__
+```
+curl --location --request PUT 'https://api.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa' \
+--header 'User-Agent: User Demo' \
+--header 'Authorization: Bearer xxx'
+```
+
+__Response:__
+```
+{
+    "timestamp": "2021-05-24T08:20:31.344Z",
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "workflowExecution": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa"
+    }
+}
+```
+
+#### Retrieve Data
+
+Use our [Retrieval API](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api-guide-kyx.md#retrieval) to retrieve account data and/or data acquired during a workflow.
+
+Check out [capabilities.drivingLicenseVerification](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api-guide-kyx.md#capabilitiesdrivinglicenseverification) for possible response parameters and values.
+
+__Example Response:__
+```
+{
+    "workflow": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa",
+        "status": "PROCESSED",
+        "definitionKey": "10008",
+        "customerInternalReference": "CUSTOMER_REFERENCE"
+    },
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "createdAt": "2022-02-22T13:15:33.058Z",
+    "startedAt": "2022-02-22T13:16:25.922Z",
+    "completedAt": "2022-02-22T13:16:27.420Z",
+    "credentials": [
+        {
+            "id": "33333333-3333-3333-aaaaaaaaaaaa",
+            "category": "DATA",
+            "parts": [
+                {
+                    "classifier": "PREPARED_DATA",
+                    "href": "https://retrieval.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/PREPARED_DATA"
+                }
+            ]
+        }
+    ],
+    "decision": {
+        "type": "REJECTED",
+        "details": {
+            "label": "REJECTED"
+        },
+        "risk": {
+            "score": 100.0
+        }
+    },
+    "steps": {
+        "href": "https://retrieval.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/steps"
+    },
+    "capabilities": {
+        "drivingLicenseVerification": [
+            {
+                "id": "1a11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                "decision": {
+                    "type": "NOT_EXECUTED",
+                    "details": {
+                        "label": "UNSUPPORTED_COUNTRY"
+                    }
+                }
+            }
+        ]
+    }
+}
+```
 
 ## Workflow 10010: Standalone Watchlist Screening
 This workflow checks if the user is part of any sanctions list using Comply Advantage.
@@ -725,6 +1116,76 @@ __Response:__
     },
     "workflowExecution": {
         "id": "22222222-2222-2222-2222-aaaaaaaaaaaa"
+    }
+}
+```
+
+#### Retrieve Data
+
+Use our [Retrieval API](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api-guide-kyx.md#retrieval) to retrieve account data and/or data acquired during a workflow.
+
+Check out [capabilities.watchlistScreening](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api-guide-kyx.md#capabilitieswatchlistscreening) for possible response parameters and values.
+
+__Example Response:__
+```
+{
+    "workflow": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa",
+        "status": "PROCESSED",
+        "definitionKey": "10010",
+        "userReference": "USER_REFERENCE",
+        "customerInternalReference": "CUSTOMER_REFERENCE"
+    },
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "createdAt": "2022-02-22T16:35:44.303Z",
+    "startedAt": "2022-02-22T16:37:01.597Z",
+    "completedAt": "2022-02-22T16:37:03.295Z",
+    "credentials": [
+        {
+            "id": "33333333-3333-3333-aaaaaaaaaaaa",
+            "category": "DATA",
+            "parts": [
+                {
+                    "classifier": "PREPARED_DATA",
+                    "href": "https://retrieval.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/PREPARED_DATA"
+                }
+            ]
+        }
+    ],
+    "decision": {
+        "type": "PASSED",
+        "details": {
+            "label": "PASSED"
+        },
+        "risk": {
+            "score": 0.0
+        }
+    },
+    "steps": {
+        "href": "https://retrieval.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/steps"
+    },
+    "capabilities": {
+        "watchlistScreening": [
+            {
+                "id": "1a11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                "decision": {
+                    "type": "PASSED",
+                    "details": {
+                        "label": "OK"
+                    }
+                },
+                "data": {
+                    "searchDate": "2022-02-22T16:37:02.000Z",
+                    "searchId": "123456789",
+                    "searchReference": "123456789-OxEvoqaR",
+                    "searchResultUrl": "https://app.complyadvantage.com/public/search/123456789-OxEvoqaR/123123123",
+                    "searchResults": 0,
+                    "searchStatus": "SUCCESS"
+                }
+            }
+        ]
     }
 }
 ```
@@ -1009,6 +1470,12 @@ __Response:__
     }
 }
 ```
+
+#### Retrieve Data
+
+Use our [Retrieval API](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api-guide-kyx.md#retrieval) to retrieve account data and/or data acquired during a workflow.
+
+<!-- TBD Example -->
 
 ## Workflow 10013: ID and Identity Verification + Screening + Proof Of Residency + Address Validation + US DL Verification
 This workflow verifies a photo ID document and returns a) whether that document is valid, and b) data extracted from that document. It also compares the user's face with the photo on the ID and performs a liveness check to ensure the person is physically present. Performs a proof of residency on the users address, as well as address validation. Checks if user is part of any sanctions list and also performs US Driving License Verification.
@@ -1308,6 +1775,12 @@ __Response:__
 }
 ```
 
+#### Retrieve Data
+
+Use our [Retrieval API](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api-guide-kyx.md#retrieval) to retrieve account data and/or data acquired during a workflow.
+
+<!-- TBD Example -->
+
 ## Workflow 10014: Standalone Authentication
 This workflow compares the facemap of a user to an already existing facemap that has already been captured.
 
@@ -1384,6 +1857,118 @@ __Response:__
                     "WEB",
                     "SDK"
                 ]
+            }
+        ]
+    }
+}
+```
+
+#### Retrieve Data
+
+Use our [Retrieval API](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api-guide-kyx.md#retrieval) to retrieve account data and/or data acquired during a workflow.
+
+Check out [capabilities.authentication](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api-guide-kyx.md#capabilitiesauthentication) for possible response parameters and values.
+
+__Example Response:__
+```
+{
+    "workflow": {
+        "id": "22222222-2222-2222-2222-aaaaaaaaaaaa",
+        "status": "PROCESSED",
+        "definitionKey": "10014",
+        "customerInternalReference": "CUSTOMER_REFERENCE"
+    },
+    "account": {
+        "id": "11111111-1111-1111-1111-aaaaaaaaaaaa"
+    },
+    "createdAt": "2022-02-22T13:15:33.058Z",
+    "startedAt": "2022-02-22T13:16:25.922Z",
+    "completedAt": "2022-02-22T13:16:27.420Z",
+    "credentials": [
+        {
+            "id": "33333333-3333-3333-aaaaaaaaaaaa",
+            "category": "FACEMAP",
+            "parts": [
+                {
+                    "classifier": "FACEMAP",
+                }
+            ]
+        },
+        {
+            "id": "33333333-3333-3333-bbbbbbbbbbbb",
+            "category": "SELFIE",
+            "parts": [
+                {
+                    "classifier": "SELFIE",
+                    "href": "https://retrieval.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/credentials/33333333-3333-3333-bbbbbbbbbbbb/parts/SELFIE"
+                }
+            ]
+        }
+    ],
+    "decision": {
+        "type": "PASSED",
+        "details": {
+            "label": "PASSED"
+        },
+        "risk": {
+            "score": 0.0
+        }
+    },
+    "steps": {
+        "href": "https://retrieval.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/workflow-executions/22222222-2222-2222-2222-aaaaaaaaaaaa/steps"
+    },
+    "capabilities": {
+        "usability": [
+            {
+                "id": "1a11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                "credentials": [
+                    {
+                        "id": "33333333-3333-3333-aaaaaaaaaaaa",
+                        "category": "FACEMAP"
+                    }
+                ],
+                "decision": {
+                    "type": "PASSED",
+                    "details": {
+                        "label": "OK"
+                    }
+                }
+            },
+            {
+                "id": "1b11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                "credentials": [
+                    {
+                        "id": "33333333-3333-3333-bbbbbbbbbbbb",
+                        "category": "SELFIE"
+                    }
+                ],
+                "decision": {
+                    "type": "PASSED",
+                    "details": {
+                        "label": "OK"
+                    }
+                }
+            }
+        ],
+        "authentication": [
+            {
+                "id": "1c11111-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                "validFaceMapForAuthentication": "https://retrieval.amer-1.jumio.ai/api/v1/accounts/11111111-1111-1111-1111-aaaaaaaaaaaa/credentials/33333333-3333-3333-aaaaaaaaaaaa/parts/FACEMAP",
+                "credentials": [
+                    {
+                        "id": "33333333-3333-3333-aaaaaaaaaaaa",
+                        "category": "FACEMAP"
+                    }
+                ],
+                "decision": {
+                    "type": "PASSED",
+                    "details": {
+                        "label": "OK"
+                    }
+                },
+                "data": {
+                    "type": "IPROOV_STANDARD"
+                }
             }
         ]
     }
