@@ -707,16 +707,25 @@ When specifying the width and height of your iFrame, you may prefer to use perce
 | ⚠️ The `allow="camera;fullscreen;accelerometer;gyroscope;magnetometer" allowfullscreen` iFrame attributes must be included to enable biometric face capture in supported browsers.
 |:----------|
 
+| ⚠️&nbsp;&nbsp; If you are nesting the iFrame in another iFrame, the `allow="camera;fullscreen;accelerometer;gyroscope;magnetometer" allowfullscreen` attribute must be added to every iFrame.
+|:----------|
+
+|⚠️ Do not add the iFrame element and its attributes with javascript dynamically at runtime. The iFrame must be present when the page loads.
+|:----------|
+
+| ⚠️&nbsp;&nbsp; Camera capture is only possible within an iFrame when the containing page is served securely over https.
+|:----------|
+
 ##### Example HTML
 
 **Absolute sizing example**
 ```
-<iframe src="https://yourcompany.netverify.com/web/v4/app?locale=en-GB&authorizationToken=xxx" width="930" height="750" allow="camera"></iframe>
+<iframe src="https://yourcompany.netverify.com/web/v4/app?locale=en-GB&authorizationToken=xxx" width="930" height="750" allow="camera;fullscreen;accelerometer;gyroscope;magnetometer" allowfullscreen></iframe>
 ```
 
 **Responsive sizing example**
 ```
-<iframe src="https://yourcompany.netverify.com/web/v4/app?locale=en-GB&authorizationToken=xxx" width="70%" height="80%" allow="camera"></iframe>
+<iframe src="https://yourcompany.netverify.com/web/v4/app?locale=en-GB&authorizationToken=xxx" width="70%" height="80%" allow="camera;fullscreen;accelerometer;gyroscope;magnetometer" allowfullscreen></iframe>
 ```
 
 **Biometric face capture example**
