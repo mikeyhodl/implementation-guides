@@ -298,6 +298,9 @@ To display relevant information on your success or error page, you can use the f
 <br>
 <br>
 
+|ℹ️ There is no guarantee that the redirect will be done before sending the callback. There might be cases where the callback is sent before the redirect is happening.
+|:----------|
+
 
 ### Sample success redirect
 ```
