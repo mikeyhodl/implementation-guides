@@ -243,6 +243,9 @@ Select a time interval for permanent purge of sensitive data (360 days by defaul
 
 If you update your data retention settings to a shorter span of time, records falling in the range of dates between your previous and new settings will be deleted automatically.
 
+|⚠️  Data retention is calculated based on the transaction date (when a transaction has been created, not when the end-user started the user journey).<br><br>Be aware that the data retention will only apply for transactions in a final state. If the token lifetime is greater than the data retention period, the transaction will receive a final state when the token expired, afterwards the deletion will be triggered (e.g. data retention: 7 days, token lifetime: 14 days).
+|:----------|
+
 ---
 ## Multi Documents
 
