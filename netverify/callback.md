@@ -307,6 +307,7 @@ When masking is enabled for these countries, certain fields cannot be extracted 
 
 |Country|Document|Affected parameters (not returned in the callback)|
 |:---|:---|:---|
+Denmark|Passport|personalNumber|
 Germany|Passport|idCheckMRZcode, idNumber|
 Germany|ID card|idCheckMRZcode, idNumber|
 Hong Kong|Passport|idCheckMRZcode, idNumber|
