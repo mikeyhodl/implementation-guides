@@ -528,11 +528,12 @@ The following data points will be extracted for all documents printed in a Latin
 |UB (utility bill) |name, issueDate, address, dueDate |
 |CCS (credit card statement) |name, issueDate, address, cardNumberLastFourDigits |
 |OTHER (Other document type) |name, issueDate, address |
-|CC (credit card) <sup>1</sup>|name, pan, expiryDate (currently returned as issueDate)|
+|CC (credit card) <sup>1,</sup><sup>3</sup>|name, pan, expiryDate (currently returned as issueDate)|
 |SSC (Social Security card) <sup>1,</sup><sup>2</sup> |firstName, lastName, ssn, signatureAvailable  |
 
 <sup>1</sup> For CC and SSC all data points need to be available for extraction.<br>
 <sup>2</sup> USA only.
+<sup>3</sup> For CC date extraction format is MM/YY
 
 
 
