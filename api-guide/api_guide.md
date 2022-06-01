@@ -1525,7 +1525,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | data.issuingAuthority             | string | Issuing authority of the document <br>(activation required)                                                  |
 | data.issuingPlace                 | string | Issuing authority of the document <br>(activation required)                                                  |
 | data.curp                         | string | CURP for Mexican documents <br>(activation required)                                                         |
-| data.gender                       | string | Possible values: <br>• M<br>• F                                                                             |
+| data.gender                       | string | Possible values: <br>• M<br>• F<br>• X |
 | data.nationality                  | string | Possible values:<br>• [ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)<br>(activation required) |
 | data.placeOfBirth                 | string | Place of birth of document holder                                                                         |
 | data.taxNumber                    | string | Tax number of the document <br>if country = ITA and type = HEALTH_ID, TAX_ID <br>(activation required)    |
