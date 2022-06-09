@@ -987,8 +987,12 @@ class WebviewFragment : Fragment() {
 </details>    
 </br>    
 
-**Sample App**
+**Use of iProov**    
+Please be aware that if iProov is included in your workflow, it is necessary to extend `WebChromeClient` class to implement a custom view, in order to handle certain iProov full screen requirements.
 
+See `WebViewFragment.kt` code sample above, specifically `WebChromeClientFullScreen` inner class.
+
+**Sample App**    
 Check out our [Sample App for the Native Android WebView](https://github.com/Jumio/mobile-webview/tree/master/android)
 
 ### iOS
