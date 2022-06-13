@@ -356,6 +356,11 @@ Successful requests will return HTTP status code `200 OK` along with a JSON obje
 |expiryDateParts|object| |Object containing the expiry date information (year, month, day) from the corresponding fields on the document <sup>1</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"}|
 |dateOfBirthParts|object| |Object containing the date of birth information (year, month, day) from the corresponding fields on the document <sup>1</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"} |
 |issuingDateParts|object| |Object containing the issuing date information (year, month, day) from the corresponding fields on the document <sup>1</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"} |
+|laborIdentificationNumber|string  ||CUIL number of the document (if CUIL number extraction is enabled) |
+|documentCopy|string  ||Ejemplar  number of the document (if Ejemplar  number extraction is enabled) |
+|residentPermitType|string  ||Permit type related to "Golden Visas"<br>• if idCountry = GBR<br> (if extraction is enabled) |
+|residentPermitRemarks|string  ||Permit type related to "Golden Visas"<br>• if idCountry = GBR<br> (if extraction is enabled)|
+|documentIdentificationNumber|string  ||Document Identification Number <br> (if extraction is enabled) |
 
 <sup>1</sup> If one of the values such as "day" is not included in the document it will also not be returned in the object. For examples and additional details, refer to our [Knowledge Base](https://support.jumio.com/hc/en-us/articles/4412166539803-New-Parameters-in-Callback-and-Retrieval-API-dateOfBirthParts-issuingDateParts-expiryDateParts-).
 

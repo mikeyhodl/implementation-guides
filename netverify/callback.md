@@ -166,8 +166,9 @@ The following parameters are posted to your callback URL for ID Verification Web
 |expiryDateParts| |Object containing the expiry date information (year, month, day) from the corresponding fields on the document <sup>6</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"}| |
 |dateOfBirthParts| |Object containing the date of birth information (year, month, day) from the corresponding fields on the document <sup>6</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"} | |
 |issuingDateParts| |Object containing the issuing date information (year, month, day) from the corresponding fields on the document <sup>6</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"} | |
-
-object containing the date information (year, month, day) from the corresponding fields on the document.
+|residentPermitType| |Permit type related to "Golden Visas"<br>• if idCountry = GBR |activation required |
+|residentPermitRemarks| |Permit type related to "Golden Visas"<br>• if idCountry = GBR|activation required |
+|documentIdentificationNumber| |Document Identification Number |activation required |
 
 <sup>1</sup> Transaction is declined as unsupported if the ID is not supported by Jumio, or not marked as accepted in your customer portal settings.<br/>
 <sup>2</sup> For ID types that are configured to support a separate scan of the front side and back side, there is a separate image of the front side (idScanImage) and the back side (idScanImageBackside). If Identity Verification is enabled, there is also a picture of the face (idScanImageFace).<br>
