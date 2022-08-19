@@ -356,6 +356,11 @@ Successful requests will return HTTP status code `200 OK` along with a JSON obje
 |expiryDateParts|object| |Object containing the expiry date information (year, month, day) from the corresponding fields on the document <sup>1</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"}|
 |dateOfBirthParts|object| |Object containing the date of birth information (year, month, day) from the corresponding fields on the document <sup>1</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"} |
 |issuingDateParts|object| |Object containing the issuing date information (year, month, day) from the corresponding fields on the document <sup>1</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"} |
+|laborIdentificationNumber|string  ||CUIL number of the document (if CUIL number extraction is enabled) |
+|documentCopy|string  ||Ejemplar  number of the document (if Ejemplar  number extraction is enabled) |
+|residentPermitType|string  ||Permit type related to "Golden Visas"<br>• if idCountry = GBR<br> (if extraction is enabled) |
+|residentPermitRemarks|string  ||Permit type related to "Golden Visas"<br>• if idCountry = GBR<br> (if extraction is enabled)|
+|documentIdentificationNumber|string  ||Document Identification Number <br> (if extraction is enabled) |
 
 <sup>1</sup> If one of the values such as "day" is not included in the document it will also not be returned in the object. For examples and additional details, refer to our [Knowledge Base](https://support.jumio.com/hc/en-us/articles/4412166539803-New-Parameters-in-Callback-and-Retrieval-API-dateOfBirthParts-issuingDateParts-expiryDateParts-).
 
@@ -512,7 +517,7 @@ Successful requests will return HTTP status code `200 OK` along with a JSON obje
 |Name| Type   | Max. Length    | Description|
 |:------------------------|:--------|:--------|:------------|
 |rejectReasonCode |string| 5  |see below |
-|rejectReasonDescription |string |255  |Possible codes and descriptions for verification status DENIED\_FRAUD:<br>100	MANIPULATED\_DOCUMENT<br/>105	FRAUDSTER<br/>106	FAKE<br/>107	PHOTO\_MISMATCH<br/>108	MRZ\_CHECK\_FAILED<br/>109	PUNCHED\_DOCUMENT<br/>110	CHIP\_DATA\_MANIPULATED (only available for ePassport)<br/>111	MISMATCH\_PRINTED\_BARCODE\_DATA<br/>112 CHIP\_MISSING<br/>113	MISMATCHING\_DATA\_REPEATED\_FACE<sup>1</sup><br/>114 DIGITAL\_MANIPULATION<br/>115 MISMATCH\_HRZ\_MRZ\_DATA<br/>116 SUPERIMPOSED\_TEXT<br/>118 MISMATCH\_FRONT\_BACK<br><br>Possible codes and descriptions for verificationStatus = ERROR\_NOT\_READABLE\_ID:<br/>102	PHOTOCOPY\_BLACK\_WHITE<br/>103	PHOTOCOPY\_COLOR<br/>104	DIGITAL\_COPY<br/>200	NOT\_READABLE\_DOCUMENT<br/>201	NO\_DOCUMENT<br/>202	SAMPLE\_DOCUMENT<br/>206	MISSING\_BACK<br/>207	WRONG\_DOCUMENT\_PAGE<br/>209	MISSING\_SIGNATURE<br/>210	CAMERA\_BLACK\_WHITE<br/>211	DIFFERENT\_PERSONS\_SHOWN<br/>213 INVALID\_WATERMARK<br/>214	MISSING\_FRONT<br/>300	MANUAL\_REJECTION|
+|rejectReasonDescription |string |255  |Possible codes and descriptions for verification status DENIED\_FRAUD:<br>100	MANIPULATED\_DOCUMENT<br/>105	FRAUDSTER<br/>106	FAKE<br/>107	PHOTO\_MISMATCH<br/>108	MRZ\_CHECK\_FAILED<br/>109	PUNCHED\_DOCUMENT<br/>110	CHIP\_DATA\_MANIPULATED (only available for ePassport)<br/>111	MISMATCH\_PRINTED\_BARCODE\_DATA<br/>112 CHIP\_MISSING<br/>113	MISMATCHING\_DATA\_REPEATED\_FACE<sup>1</sup><br/>114 DIGITAL\_MANIPULATION<br/>115 MISMATCH\_HRZ\_MRZ\_DATA<br/>118 MISMATCH\_FRONT\_BACK<br><br>Possible codes and descriptions for verificationStatus = ERROR\_NOT\_READABLE\_ID:<br/>102	PHOTOCOPY\_BLACK\_WHITE<br/>103	PHOTOCOPY\_COLOR<br/>104	DIGITAL\_COPY<br/>200	NOT\_READABLE\_DOCUMENT<br/>201	NO\_DOCUMENT<br/>202	SAMPLE\_DOCUMENT<br/>206	MISSING\_BACK<br/>207	WRONG\_DOCUMENT\_PAGE<br/>209	MISSING\_SIGNATURE<br/>210	CAMERA\_BLACK\_WHITE<br/>211	DIFFERENT\_PERSONS\_SHOWN<br/>213 INVALID\_WATERMARK<br/>214	MISSING\_FRONT<br/>300	MANUAL\_REJECTION|
 |rejectReasonDetails |JSON object / JSON array  |   |Reject reason details as JSON object (if only one item is returned) or JSON array (containing JSON objects) if rejectReasonCode = 100 or 200, see table below |
 
 <br>

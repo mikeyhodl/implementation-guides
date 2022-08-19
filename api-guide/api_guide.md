@@ -179,10 +179,12 @@ Values set in your API request will override the corresponding settings configur
 | category               | string         |                      | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>•	SELFIE           |
 | country                | object         |                      | Possible values:<br>• country.predefinedType <br>• country.values         |
 | country.predefinedType | string         |                      | Possible values:<br>• DEFINED (default: end user is not able to change country)<br>• RECOMMENDED (country is preselected, end user is still able to change it) |
-| country.values         | array (string) | See possible values. | Define at least one ISO 3166-1 alpha-3 country code for the workflow definition.<br>Possible values: <br>•	[ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) |
+| country.values         | array (string) | See possible values. | Define at least one ISO 3166-1 alpha-3 country code for the workflow definition<sup>1</sup>.<br>Possible values: <br>•	[ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) |
 | type                   | object         |                      | Possible values:<br>• type.predefinedType <br>• type.values               |
 | type.predefinedType    | object         |                      | Possible values:<br>• DEFINED (default: end user is not able to change document type)<br>• RECOMMENDED (type is preselected, end user is still able to change it) |
-| type.values            | array (string) | See possible values. | Defined number of credential type codes. <br>Possible values:<br>If `category` = ID:<br>• ID_CARD<br>• DRIVING_LICENSE<br>• PASSPORT<br>• VISA<br>If `category` = FACEMAP:<br>• IPROOV_STANDARD (Web + SDK channel only)<br>• IPROOV_PREMIUM (Workflow 3: ID and Identity Verification (Web + SDK channel only) / Workflow 9: Authentication (SDK only) / Workflow 16: Authentication on Premise (SDK only))<br>• JUMIO_STANDARD|
+| type.values            | array (string) | See possible values. | Defined number of credential type codes<sup>1</sup>. <br>Possible values:<br>If `category` = ID:<br>• ID_CARD<br>• DRIVING_LICENSE<br>• PASSPORT<br>• VISA<br>If `category` = FACEMAP:<br>• IPROOV_STANDARD (Web + SDK channel only)<br>• IPROOV_PREMIUM (Workflow 3: ID and Identity Verification (Web + SDK channel only) / Workflow 9: Authentication (SDK only) / Workflow 16: Authentication on Premise (SDK only))<br>• JUMIO_STANDARD|
+
+<sup>1</sup> Web channel: Only supports predefined `country` and `type` when both are provided. Also only a single `country` and a single `type` must be specified, a list of presets is not supported for Web. <br>
 
 #### Request workflowDefinition.capabilities
 
@@ -833,146 +835,312 @@ dependencies {
 ```
 
 **_WebViewFragment.kt_ example**
-```kotlin
-class WebViewFragment : Fragment() {
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState);
-​
-        webview.settings.javaScriptEnabled = true;
-        webview.settings.allowFileAccessFromFileURLs = true;
-        webview.settings.allowFileAccess = true;
-        webview.settings.allowContentAccess = true;
-        webview.settings.allowUniversalAccessFromFileURLs = true;
-        webview.settings.javaScriptCanOpenWindowsAutomatically = true;
-        webview.settings.mediaPlaybackRequiresUserGesture = false;
-        webview.settings.domStorageEnabled = true;
-​
-        /**
-         *  Registering handler for postMessage communication (iFrame logging equivalent - optional)
-         */
-        webview.addJavascriptInterface(new PostMessageHandler(), "__NVW_WEBVIEW_HANDLER__");
-​
-        /**
-         *  Embedding necessary script execution fragment, before NVW4 initialize (important)
-         */
-        webview.webViewClient = object : WebViewClient() {
-            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                webview.loadUrl("javascript:(function() { window['__NVW_WEBVIEW__']=true})")
+
+<details>
+<summary>
+EXPAND WebViewFragment.kt
+</summary>
+
+```kotlin    
+
+class WebviewFragment : Fragment() {
+
+    companion object {
+        var TAG: String = "NVW4"
+        var PERMISSION_REQUEST_CODE: Int = 1000
+        private var mUploadMessage: ValueCallback<Uri?>? = null
+        var uploadMessage: ValueCallback<Array<Uri>>? = null
+        const val REQUEST_SELECT_FILE = 1002
+        private const val FILECHOOSER_RESULTCODE = 1003
+
+        private var _binding: FragmentWebviewBinding? = null
+        private val binding get() = _binding!!
+
+
+        //Inject javascript code here that is executed after the page is loaded
+        val injectFunction = """
+        function () {
+            window['__NVW_WEBVIEW__'] = {
+            isAndroid: true
             }
         }
-​
-        /**
-         * Handling permissions request
-         */
-				 webview.webChromeClient = object : WebChromeClient() {
-             // Grant permissions for cam
-             @TargetApi(Build.VERSION_CODES.M)
-             override fun onPermissionRequest(request: PermissionRequest) {
-                 activity?.runOnUiThread {
-                     if ("android.webkit.resource.VIDEO_CAPTURE" == request.resources[0]) {
-                         if (ContextCompat.checkSelfPermission(
-                                 activity!!,
-                                 Manifest.permission.CAMERA
-                             ) == PackageManager.PERMISSION_GRANTED
-                         ) {
-                             Log.d(
-                                 TAG,
-                                 String.format(
-                                     "PERMISSION REQUEST %s GRANTED",
-                                     request.origin.toString()
-                                 )
-                             )
-                             request.grant(request.resources)
-                         } else {
-                             ActivityCompat.requestPermissions(
-                                 activity!!,
-                                 arrayOf(
-                                     Manifest.permission.CAMERA,
-                                     Manifest.permission.READ_EXTERNAL_STORAGE
-                                 ),
-                                 PERMISSION_REQUEST_CODE
-                             )
-                         }
-                     }
-                 }
-             }
+        """.trimIndent()
 
-		   // For Lollipop 5.0+ Devices
-             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-             override fun onShowFileChooser(
-                 mWebView: WebView?,
-                 filePathCallback: ValueCallback<Array<Uri>>?,
-                 fileChooserParams: FileChooserParams
-             )Boolean {
-                 if (uploadMessage != null) {
-                     uploadMessage!!.onReceiveValue(null)
-                     uploadMessage = null
-                 }
-                 try {
-                     uploadMessage = filePathCallback
-                     val intent = fileChooserParams.createIntent()
-                     intent.type = "image/*"
-                     try {
-                         startActivityForResult(intent, REQUEST_SELECT_FILE)
-                     } catch (e: ActivityNotFoundException) {
-                         uploadMessage = null
-                         Toast.makeText(
-                             activity?.applicationContext,
-                             "Cannot Open File Chooser",
-                             Toast.LENGTH_LONG
-                         ).show()
-                         return false
-                     }
-                     return true
-                 } catch (e: ActivityNotFoundException) {
-                     uploadMessage = null
-                     Toast.makeText(
-                         activity?.applicationContext,
-                         "Cannot Open File Chooser",
-                         Toast.LENGTH_LONG
-                     ).show()
-                     return false
-                 }
-             }
+        private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
 
-             protected fun openFileChooser(uploadMsg: ValueCallback<Uri?>) {
-                 mUploadMessage = uploadMsg
-                 val i = Intent(Intent.ACTION_GET_CONTENT)
-                 i.addCategory(Intent.CATEGORY_OPENABLE)
-                 i.type = "image/*"
-                 startActivityForResult(
-                     Intent.createChooser(i, "File Chooser"),
-                     FILECHOOSER_RESULTCODE
-                 )
-             }
+        fun newInstance(url: String): WebviewFragment {
+            val fragment = WebviewFragment()
 
-             override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
-                 Log.d(TAG, consoleMessage.message())
-                 return true
-             }
+            val args = Bundle()
+            args.putString("url", url)
+            fragment.arguments = args
 
-             override fun getDefaultVideoPoster(): Bitmap {
-                 return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
-             }
-
-	webview.loadUrl("<<NVW4 SCAN REF LINK>>")
-    }
-​
-    /**
-     *  PostMessage handler for iframe logging equivalent (optional)
-     */
-    class PostMessageHandler {
-        @JavascriptInterface
-        public boolean postMessage(String json, String transferList) {
-            /*
-				*  See iFrame logging:
-	*  https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#optional-iframe-logging
-            */
-            return true;
+            return fragment
         }
     }
-}
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentWebviewBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        WebView.setWebContentsDebuggingEnabled(true)
+
+        binding.webview.settings.javaScriptEnabled = true
+        binding.webview.settings.allowFileAccessFromFileURLs = true
+        binding.webview.settings.allowFileAccess = true
+        binding.webview.settings.allowContentAccess = true
+        binding.webview.settings.allowUniversalAccessFromFileURLs = true
+        binding.webview.settings.javaScriptCanOpenWindowsAutomatically = true
+        binding.webview.settings.mediaPlaybackRequiresUserGesture = false
+        binding.webview.settings.domStorageEnabled = true
+
+        binding.webview.addJavascriptInterface(PostMessageHandler(), "__NVW_WEBVIEW_HANDLER__")
+
+        binding.webview.webChromeClient = object : WebChromeClientFullScreen() {
+
+            // Grant permissions for cam
+            @TargetApi(Build.VERSION_CODES.M)
+            override fun onPermissionRequest(request: PermissionRequest) {
+                activity?.runOnUiThread {
+                    if ("android.webkit.resource.VIDEO_CAPTURE" == request.resources[0]) {
+                        if (ContextCompat.checkSelfPermission(
+                                activity!!,
+                                Manifest.permission.CAMERA
+                            ) == PackageManager.PERMISSION_GRANTED
+                        ) {
+                            Log.d(
+                                TAG,
+                                String.format(
+                                    "PERMISSION REQUEST %s GRANTED",
+                                    request.origin.toString()
+                                )
+                            )
+                            request.grant(request.resources)
+                        } else {
+                            ActivityCompat.requestPermissions(
+                                activity!!,
+                                arrayOf(
+                                    Manifest.permission.CAMERA,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE
+                                ),
+                                PERMISSION_REQUEST_CODE
+                            )
+                        }
+                    }
+                }
+            }
+
+            // For Lollipop 5.0+ Devices
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            override fun onShowFileChooser(
+                mWebView: WebView?,
+                filePathCallback: ValueCallback<Array<Uri>>?,
+                fileChooserParams: FileChooserParams
+            ): Boolean {
+                if (uploadMessage != null) {
+                    uploadMessage!!.onReceiveValue(null)
+                    uploadMessage = null
+                }
+                try {
+                    uploadMessage = filePathCallback
+                    val intent = fileChooserParams.createIntent()
+                    intent.type = "image/*"
+                    try {
+                        startActivityForResult(intent, REQUEST_SELECT_FILE)
+                    } catch (e: ActivityNotFoundException) {
+                        uploadMessage = null
+                        Toast.makeText(
+                            activity?.applicationContext,
+                            "Cannot Open File Chooser",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        return false
+                    }
+                    return true
+                } catch (e: ActivityNotFoundException) {
+                    uploadMessage = null
+                    Toast.makeText(
+                        activity?.applicationContext,
+                        "Cannot Open File Chooser",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return false
+                }
+            }
+
+            private fun openFileChooser(uploadMsg: ValueCallback<Uri?>) {
+                mUploadMessage = uploadMsg
+                val i = Intent(Intent.ACTION_GET_CONTENT)
+                i.addCategory(Intent.CATEGORY_OPENABLE)
+                i.type = "image/*"
+                startActivityForResult(
+                    Intent.createChooser(i, "File Chooser"),
+                    FILECHOOSER_RESULTCODE
+                )
+            }
+
+            override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
+                Log.d(TAG, consoleMessage.message())
+                return true
+            }
+
+            override fun getDefaultVideoPoster(): Bitmap {
+                return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
+            }
+        }
+
+        binding.webview.webViewClient = object : WebViewClient() {
+
+            override fun onReceivedError(
+                view: WebView?,
+                errorCode: Int,
+                description: String?,
+                failingUrl: String?
+            ) {
+                Toast.makeText(activity, description, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onReceivedSslError(
+                view: WebView?,
+                handler: SslErrorHandler?,
+                error: SslError?
+            ) {
+                handler?.proceed()
+            }
+
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                // Put your javascript function that you want to execute here
+                binding.webview.loadUrl("javascript:($injectFunction)()")
+            }
+        }
+
+        binding.webview.loadUrl(arguments?.get("url") as String)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (requestCode == REQUEST_SELECT_FILE) {
+                if (uploadMessage == null)
+                    return
+                uploadMessage!!.onReceiveValue(
+                    WebChromeClient.FileChooserParams.parseResult(
+                        resultCode,
+                        intent
+                    )
+                )
+                uploadMessage = null
+            }
+        } else if (requestCode == FILECHOOSER_RESULTCODE) {
+            if (null == mUploadMessage)
+                return
+            val result =
+                if (intent == null || resultCode != AppCompatActivity.RESULT_OK) null else intent.data
+            mUploadMessage!!.onReceiveValue(result)
+            mUploadMessage = null
+        } else {
+            Toast.makeText(
+                activity?.applicationContext,
+                "Failed to Upload Image",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+        super.onActivityResult(requestCode, resultCode, intent)
+    }
+
+    class PostMessageHandler {
+        @JavascriptInterface
+        fun postMessage(json: String?, transferList: String?): Boolean {
+            /*
+                There we're handling messages from NVW4 client, its the same as for iFrame logging;
+                More details can be found here:
+                https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#optional-iframe-logging
+            */
+            Log.d(TAG, "postMessage triggered, json: " + json.toString())
+            return true
+        }
+    }
+
+		/**
+		 * Custom WebChromClient to handle iProov full screen requirement
+		 * More details can be found here:
+		 * https://github.com/iProov/android/wiki/Java-WebView
+		 */
+    open inner class WebChromeClientFullScreen : WebChromeClient() {
+        private var customView: View? = null
+        private var customViewCallback: CustomViewCallback? = null
+        private var originalOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        private var originalVisibility = View.INVISIBLE
+
+        /**
+         * Callback will tell the host application that the current page would
+         * like to show a custom View in a particular orientation
+         */
+        override fun onShowCustomView(view: View, callback: CustomViewCallback) {
+            //If we have custom view, that means that we are already in full screen, and need to go to original state
+            if (customView != null) {
+                onHideCustomView()
+                return
+            }
+            //going full screen
+            customView = view
+            //We need to store there parameters, so we can restore app state, after we exit full screen mode
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                originalVisibility = activity?.window?.decorView?.visibility!!
+                (activity?.window?.decorView as FrameLayout).addView(
+                    customView,
+                    FrameLayout.LayoutParams(-1, -1)
+                )
+                activity?.window?.setDecorFitsSystemWindows(false)
+            } else {
+                originalVisibility = activity?.window?.decorView?.windowSystemUiVisibility!!
+                (activity?.window?.decorView as FrameLayout).addView(
+                    customView,
+                    FrameLayout.LayoutParams(-1, -1)
+                )
+                activity?.window?.decorView?.systemUiVisibility =
+                    3846 or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            }
+            originalOrientation = activity?.requestedOrientation!!
+        }
+
+        /**
+         * Callback will tell the host application that the current page exited full screen mode,
+         * and the app has to hide custom view.
+         */
+        override fun onHideCustomView() {
+            (activity?.window?.decorView as FrameLayout).removeView(
+                customView
+            )
+            customView = null
+            //Restoring app state, as it was before we go to full screen
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                activity?.window?.setDecorFitsSystemWindows(true)
+            } else {
+                activity?.window?.decorView?.systemUiVisibility = originalVisibility
+            }
+            activity?.requestedOrientation = originalOrientation
+            if (customViewCallback != null) customViewCallback!!.onCustomViewHidden()
+            customViewCallback = null
+        }
+    }
 ```
+</details>    
+</br>
+
+**Use of iProov**    
+Please be aware that if iProov is included in your workflow, it is necessary to extend `WebChromeClient` class to implement a custom view, in order to handle certain iProov full screen requirements.
+
+See `WebViewFragment.kt` code sample above, specifically `WebChromeClientFullScreen` inner class.
+
 **Sample App**
 
 Check out our [Sample App for the Native Android WebView](https://github.com/Jumio/mobile-webview/tree/master/android)
@@ -1409,7 +1577,7 @@ __Dependency:__ none
 | decision               | object |              |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |              |
-| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• BAD_QUALITY<br>• BLACK_WHITE<br>• MISSING_PAGE<br>• MISSING_SIGNATURE<br>• NOT_A_DOCUMENT<br>• PHOTOCOPY<br><br>if decision.type = WARNING:<br>• LIVENESS_UNDETERMINED<br>•  UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_DOCUMENT_TYPE |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• TECHNICAL_ERROR<br>• NOT_UPLOADED<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• BAD_QUALITY<br>• BLACK_WHITE<br>• MISSING_PAGE<br>• MISSING_SIGNATURE<br>• NOT_A_DOCUMENT<br>• PHOTOCOPY<br><br>if decision.type = WARNING:<br>• LIVENESS_UNDETERMINED<br>•  UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_DOCUMENT_TYPE |
 
 #### capabilities.liveness
 
@@ -1477,7 +1645,7 @@ __Dependency:__ [usability](#capabilitiesusability)
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DIGITAL_COPY<br>• WATERMARK<br>• MANIPULATED_DOCUMENT<br>• OTHER_REJECTION<br>• GHOST_IMAGE_DIFFERENT<br>• PUNCHED<br>• SAMPLE<br>• FAKE<br>• CHIP_MISSING<br>• DIGITAL_MANIPULATION<br><br>if decision.type = WARNING:<br>• DIFFERENT_PERSON<br>• REPEATED_FACE (same face with same data occurs multiple times --> potential opening of multiple accounts) |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DIGITAL_COPY<br>• WATERMARK<br>• MANIPULATED_DOCUMENT<br>• OTHER_REJECTION<br>• GHOST_IMAGE_DIFFERENT<br>• PUNCHED<br>• SAMPLE<br>• FAKE<br>• CHIP_MISSING<br>• DIGITAL_MANIPULATION<br>• MISMATCH_FRONT_BACK<br><br>if decision.type = WARNING:<br>• DIFFERENT_PERSON<br>• REPEATED_FACE (same face with same data occurs multiple times --> potential opening of multiple accounts) |
 | data                   | object | See [imageChecks.data](#capabilitiesimageChecksdata) |
 
 #### capabilities.imageChecks.data
@@ -1495,7 +1663,9 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
 | id                     | string | UUID of the capability        |
-| credentials            | object | Possible values:<br>• credentials.decision <br>• credentials.data        |
+| credentials            | object | Possible values:<br>• credentials.id <br>• credentials.categrory        |
+| credentials.id         | string | UUID of the credentials        |
+| credentials.categrory  | string | Possible values:<br>• ID<br>• FACEMAP<br>• DOCUMENT<br>• SELFIE        |
 | decision               | object | Possible values:<br>• decision.type<br>• decision.details                |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED <br>• PASSED                          |
 | decision.details       | object | Possible values:<br>• decision.details.label                             |
@@ -1511,10 +1681,9 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | data.issuingCountry               | string | [ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)                          |
 | data.firstName                    | string | First name of the user as available on the ID if enabled, otherwise if provided                             |
 | data.lastName                     | string | Last name of the customer as available on the ID if enabled, otherwise if provided                          |
-| data.dateOfBirth                  | string |                                                                                                             |
-| data.expiryDate                   | string |                                                                                                             |
-| data.issuingDate                  | string |                                                                                                             |
-| data.documentNumber               | string |                                                                                                             |
+| data.dateOfBirth | string | Date of birth in the format YYYY-MM-DD as available on the ID if enabled, otherwise if provided|
+| data.expiryDate  | string | Date of expiry in the format YYYY-MM-DD as available on the ID if enabled, otherwise if provided|
+| data.issuingDate | string | Date of issue in the format YYYY-MM-DD as available on the ID if enabled, otherwise if provided|
 | data.state                        | string | Possible values:<br>• Last two characters of ISO 3166-2: US state code<br>• Last 2-3 characters of ISO 3166-2: AU state code<br>• Last two characters of ISO 3166-2: CA state code<br>• ISO 3166-1 country name<br>• XKX (Kosovo)<br>• Free text if it can't be mapped to a state/country code                                         |
 | data.personalNumber               | string | Personal number of the document, if idType = PASSPORT and if data available on the document <br>(activation required)       |
 | data.optionalMrzField1            | string | Optional field of MRZ line 1                                                                                |
@@ -1523,7 +1692,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | data.issuingAuthority             | string | Issuing authority of the document <br>(activation required)                                                  |
 | data.issuingPlace                 | string | Issuing authority of the document <br>(activation required)                                                  |
 | data.curp                         | string | CURP for Mexican documents <br>(activation required)                                                         |
-| data.gender                       | string | Possible values: <br>• M<br>• F                                                                             |
+| data.gender                       | string | Possible values: <br>• M<br>• F<br>• X |
 | data.nationality                  | string | Possible values:<br>• [ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)<br>(activation required) |
 | data.placeOfBirth                 | string | Place of birth of document holder                                                                         |
 | data.taxNumber                    | string | Tax number of the document <br>if country = ITA and type = HEALTH_ID, TAX_ID <br>(activation required)    |
@@ -1545,6 +1714,11 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | data.expiryDateParts              | object | Expiry date information (year, month, day) from the corresponding fields on the document <sup>1</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"} |
 | data.dateOfBirthParts             | object | Date of birth information (year, month, day) from the corresponding fields on the document <sup>1</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"} |
 | data.issuingDateParts             | object | Issuing date information (year, month, day) from the corresponding fields on the document <sup>1</sup><br>Example:<br>{"year": "2022",<br>"month": "08",<br>"day": "31"} |
+| data.laborIdentificationNumber           | string  | CUIL ("Clave Único de Identificación Laboral") number as available on the ID <br>if idCountry = ARG  <br>(activation required) |
+| data.documentCopy           | string  | Ejemplar number as available on the ID <br>if idCountry = ARG  <br>(activation required)|
+| data.residentPermitType           | string  | Permit type related to "Golden Visas" <br>if idCountry = GBR<br>(activation required) |
+| data.residentPermitRemarks        | string  | Permit remarks related to "Golden Visas" <br>if idCountry = GBR<br>(activation required) |
+| data.documentIdentificationNumber | string  | Document Identification Number <br>(activation required) |
 
 <sup>1</sup> If one of the values such as "day" is not included in the document it will also not be returned in the object. For examples and additional details, refer to our [Knowledge Base](https://support.jumio.com/hc/en-us/articles/4412166539803-New-Parameters-in-Callback-and-Retrieval-API-dateOfBirthParts-issuingDateParts-expiryDateParts-).
 
@@ -1576,7 +1750,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED |
 | decision.details       | object |                            |
-| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• NFC_CERTIFICATE<br>• MISMATCHING_DATAPOINTS<br>• MRZ_CHECKSUM<br>• MISMATCHING_DATA_REPEATED_FACE (same face occurs multiple times, data is different --> high possibility of fraud attempt)<br>• MISMATCH_FRONT_BACK<br>• SUPERIMPOSED_TEXT|
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• NFC_CERTIFICATE<br>• MISMATCHING_DATAPOINTS<br>• MRZ_CHECKSUM<br>• MISMATCHING_DATA_REPEATED_FACE (same face occurs multiple times, data is different --> high possibility of fraud attempt)<br>• MISMATCH_HRZ_MRZ_DATA|
 
 #### capabilities.watchlistScreening
 
@@ -1591,7 +1765,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• NOT_ENOUGH_DATA<br>• VALIDATION_FAILED<br>• INVALID_MERCHANT_SETTINGS<br>• TECHNICAL_ERROR<br>• EXTRACTION_NOT_DONE<br>• NO_VALID_ID_CREDENTIAL<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = WARNING:<br>• ALERT |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• NOT_ENOUGH_DATA<br>• VALIDATION_FAILED<br>• INVALID_MERCHANT_SETTINGS<br>• TECHNICAL_ERROR<br>• EXTRACTION_NOT_DONE<br>• NO_VALID_ID_CREDENTIAL<br>• PRECONDITION_NOT_FULFILLED<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = WARNING:<br>• ALERT |
 | data                   | object | See [watchlistScreening.data](#capabilitieswatchlistScreeningdata)        |
 
 #### capabilities.watchlistScreening.data
@@ -1618,7 +1792,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• NOT_ENOUGH_DATA<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br><br>if decision.type = PASSED<br>• OK<br><br>if decision.type = REJECTED:<br>• DENY<br><br>if decision.type = WARNING:<br>• ALERT |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• NOT_ENOUGH_DATA<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br>• PRECONDITION_NOT_FULFILLED<br><br>if decision.type = PASSED<br>• OK<br><br>if decision.type = REJECTED:<br>• DENY<br><br>if decision.type = WARNING:<br>• ALERT |
 
 #### capabilities.proofOfResidency
 
@@ -1633,7 +1807,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• NOT_ENOUGH_DATA<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DENY<br><br>if decision.type = WARNING:<br>• ALERT |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• NOT_ENOUGH_DATA<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br>• PRECONDITION_NOT_FULFILLED<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DENY<br><br>if decision.type = WARNING:<br>• ALERT |
 
 #### capabilities.drivingLicenseVerification
 
@@ -1648,7 +1822,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_STATE<br>• VALIDATION_FAILED<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DENY<br><br>if decision.type = WARNING:<br>• ALERT |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• TECHNICAL_ERROR<br>• UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_STATE<br>• PRECONDITION_NOT_FULFILLED<br>• VALIDATION_FAILED<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DENY<br><br>if decision.type = WARNING:<br>• ALERT |
 
 ### Examples
 
