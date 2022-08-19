@@ -886,6 +886,7 @@ For the following specific document types, additional data will be extracted.
 |OTHER (Other document type) |name, issueDate, address |
 |CCS (credit card statement) |name, issueDate, address, cardNumberLastFourDigits |
 |SSC (Social Security card) <sup>1,</sup><sup>2</sup> |firstName, lastName, ssn, signatureAvailable  |
+|BC (Birth Certificate)|name, issueDate, address, dateOfBirth  |
 
 <sup>1</sup> For CC and SSC all data points need to be available for extraction.<br>
 <sup>2</sup> USA only.
