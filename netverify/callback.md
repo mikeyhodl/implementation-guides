@@ -169,6 +169,9 @@ The following parameters are posted to your callback URL for ID Verification Web
 |residentPermitType| |Permit type related to "Golden Visas"<br>• if idCountry = GBR |activation required |
 |residentPermitRemarks| |Permit type related to "Golden Visas"<br>• if idCountry = GBR|activation required |
 |documentIdentificationNumber| |Document Identification Number |activation required |
+|citizenship| |Citizenship<br>• if idCountry = IDN |activation required |
+|maritalStatus| |Marital Status<br>• if idCountry = IDN  |activation required |
+|religion| |Religion<br>• if idCountry = IDN, MYS |activation required |
 
 <sup>1</sup> Transaction is declined as unsupported if the ID is not supported by Jumio, or not marked as accepted in your customer portal settings.<br/>
 <sup>2</sup> For ID types that are configured to support a separate scan of the front side and back side, there is a separate image of the front side (idScanImage) and the back side (idScanImageBackside). If Identity Verification is enabled, there is also a picture of the face (idScanImageFace).<br>

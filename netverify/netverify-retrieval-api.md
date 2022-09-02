@@ -361,6 +361,9 @@ Successful requests will return HTTP status code `200 OK` along with a JSON obje
 |residentPermitType|string  ||Permit type related to "Golden Visas"<br>• if idCountry = GBR<br> (if extraction is enabled) |
 |residentPermitRemarks|string  ||Permit type related to "Golden Visas"<br>• if idCountry = GBR<br> (if extraction is enabled)|
 |documentIdentificationNumber|string  ||Document Identification Number <br> (if extraction is enabled) |
+|citizenship|string| |Citizenship<br>• if idCountry = IDN <br> (if extraction is enabled) |
+|maritalStatus|string| |Marital Status<br>• if idCountry = IDN  <br> (if extraction is enabled) |
+|religion|string| |Religion<br>• if idCountry = IDN, MYS <br> (if extraction is enabled) |
 
 <sup>1</sup> If one of the values such as "day" is not included in the document it will also not be returned in the object. For examples and additional details, refer to our [Knowledge Base](https://support.jumio.com/hc/en-us/articles/4412166539803-New-Parameters-in-Callback-and-Retrieval-API-dateOfBirthParts-issuingDateParts-expiryDateParts-).
 

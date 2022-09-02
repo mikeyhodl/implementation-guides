@@ -1719,6 +1719,9 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | data.residentPermitType           | string  | Permit type related to "Golden Visas" <br>if idCountry = GBR<br>(activation required) |
 | data.residentPermitRemarks        | string  | Permit remarks related to "Golden Visas" <br>if idCountry = GBR<br>(activation required) |
 | data.documentIdentificationNumber | string  | Document Identification Number <br>(activation required) |
+| data.citizenship|string |Citizenship<br>• if idCountry = IDN <br>(activation required) |
+| data.maritalStatus|string |Marital Status<br>• if idCountry = IDN  <br>(activation required) |
+| data.religion|string |Religion<br>• if idCountry = IDN, MYS <br>(activation required) |
 
 <sup>1</sup> If one of the values such as "day" is not included in the document it will also not be returned in the object. For examples and additional details, refer to our [Knowledge Base](https://support.jumio.com/hc/en-us/articles/4412166539803-New-Parameters-in-Callback-and-Retrieval-API-dateOfBirthParts-issuingDateParts-expiryDateParts-).
 
