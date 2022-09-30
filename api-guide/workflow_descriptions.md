@@ -368,6 +368,8 @@ This workflow verifies a photo ID document and returns a) whether that document 
 * Identity Verification must be enabled for your account. (Contact your Jumio account manager for activation.)
 * Allowed channels: SDK, WEB, API
 
+If end-user consent may apply to you, please make sure to obtain consent as mentioned on [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data).
+
 ### Capabilities
 In order of dependency:
 * [usability](api_guide.md#capabilitiesusability) --> [imageChecks](api_guide.md#capabilitiesimagechecks) --> [extraction](api_guide.md#capabilitiesextraction) --> [dataChecks](api_guide.md#capabilitiesdatachecks)
@@ -574,6 +576,8 @@ This workflow matches a selfie of a user to the face of a document holder of a s
 * Account already exists, `<accountId>` available
 * Allowed channels: API
 
+If end-user consent may apply to you, please make sure to obtain consent as mentioned on [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data).
+
 ### Capabilities
 In order of dependency:
 * [usability](api_guide.md#capabilitiesusability) --> [similarity](api_guide.md#capabilitiessimilarity)
@@ -741,6 +745,8 @@ This workflow captures a user's face to verify that the person is physically pre
 ### Prerequisites
 * Identity Verification must be enabled for your account. (Contact your Jumio account manager for activation.)
 * Allowed channels: SDK, API
+
+If end-user consent may apply to you, please make sure to obtain consent as mentioned on [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data).
 
 ### Capabilities
 In order of dependency:
@@ -931,6 +937,18 @@ curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts/1
     "customerInternalReference": "CUSTOMER_REFERENCE",
     "workflowDefinition": {
         "key": 9
+    },
+    "userConsent": {
+        "userIp": "192.168.0.1",                    
+        "userLocation": {
+            "country": "USA",                       
+            "state": "IL"                           
+        },
+         "consent": {
+          "obtained": "yes",                        
+          "obtainedAt": "2022-07-20T17:20:35.000Z"  
+
+        }
     }
 }'
 ```
@@ -1022,6 +1040,18 @@ curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts/1
     "customerInternalReference": "CUSTOMER_REFERENCE",
     "workflowDefinition": {
         "key": 16
+    },
+    "userConsent": {
+        "userIp": "192.168.0.1",                    
+        "userLocation": {
+            "country": "USA",                       
+            "state": "IL"                           
+        },
+         "consent": {
+          "obtained": "yes",                        
+          "obtainedAt": "2022-07-20T17:20:35.000Z"  
+
+        }
     }
 }'
 ```
@@ -1148,6 +1178,8 @@ This workflow either matches the user photos on two IDs, two user selfies or a u
 
 ### Prerequisites
 * Allowed channels: API
+
+If end-user consent may apply to you, please make sure to obtain consent as mentioned on [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data).
 
 ### Capabilities
 In order of dependency:
@@ -1683,6 +1715,8 @@ This workflow verifies a photo ID document and returns a) whether that document 
 * Screening must be enabled for your account. (Contact your Jumio account manager for activation.)
 * Screening must be set up for your Customer Portal (see [Comply Advantantage Portal Setup](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-screening.md))
 * Allowed channels: API, SDK, WEB
+
+If end-user consent may apply to you, please make sure to obtain consent as mentioned on [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data).
 
 ### Capabilities
 In order of dependency:
