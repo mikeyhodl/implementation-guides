@@ -29,6 +29,7 @@ The following diagram shows several possible workflows:
   - [Request](#request)
   - [Response](#response)
 - [Workflow Descriptions](#workflow-descriptions)
+- [End-User Consent for Biometric Data](#end-user-consent-for-biometric-data)
 - [Data Acquisition](#data-acquisition)
   - [SDK](#sdk)
     - [Android](#android)
@@ -169,8 +170,17 @@ Values set in your API request will override the corresponding settings configur
 | web.successUrl | string | 255 | URL to which the browser will send the end user at the end of a successful web acquisition user journey. [Overrides success URL](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#callback-error-and-success-urls) in the Customer Portal. |
 | web.errorUrl | string | 255 | URL to which the browser will send the end user at the end of a failed web acquisition user journey. [Overrides error URL](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#callback-error-and-success-urls) in the Customer Portal. |
 | web.locale | string | 5 | Renders content in the specified language.<br>Overrides [Default locale](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#default-locale) in the Customer Portal.<br>See [supported locale values](#supported-locale-values). |
+|__userIp__<sup>2</sup>|string| |Current IP address of the end-user used during the verification|
+|__userLocation__<sup>2</sup>|object| |Possible values:<br>• userLocation.country <br>• userLocation.state|
+|__userLocation.country__<sup>2</sup>|string|3|Current country as per end-user location during the verification<br>Possible values: <br>•	[ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)|
+|userLocation.state|string|100|Current State as per end-user location during the verification<br>Applicable only in countries where state exists, including USA<br>Possible values: <br>•	For [USA](https://www.iso.org/obp/ui/#iso:code:3166:US), [CAN](https://www.iso.org/obp/ui/#iso:code:3166:CA), or [AUS](https://www.iso.org/obp/ui/#iso:code:3166:AU) alpha-2 code (state only - without country & hyphen), e.g. `IL` (Illinois), `NSW` (New South Wales)<br>•	For other countries, if applicable, any string|
+|__consent__<sup>3</sup>|object| |Possible values:<br>• consent.obtained <br>• consent.obtainedAt|
+|__consent.obtained__<sup>3</sup>|String||If the end-user consent has been obtained<br>Possible values: <br>•	yes (the consent was given by the end-user)<br>•	no (the consent was not given by the end-user)<br>•	na (not applicable)<br>__Mandatory for [End-User Consent](#end-user-consent-for-biometric-data) if userLocation.country = USA__|
+|__consent.obtainedAt__<sup>3</sup>|String||Timestamp when the consent was obtained (UTC)<br>Format: YYYY-MM-DDThh:mm:ss.SSSZ<br>__Mandatory for [End-User Consent](#end-user-consent-for-biometric-data) if consent.obtained = yes__|
 
-<sup>1</sup> Mandatory request parameter for Workflow 32: ID Verification, Identity Verification, Screening.
+<sup>1</sup> Mandatory request parameter for Workflow 32: ID Verification, Identity Verification, Screening.<br>
+<sup>2</sup> Mandatory for [End-User Consent](#end-user-consent-for-biometric-data) even if the user is not based in USA<br>
+<sup>3</sup> Mandatory for [End-User Consent](#end-user-consent-for-biometric-data) if userLocation.country = USA / consent.obtained = yes
 
 #### Request workflowDefinition.credentials
 
@@ -259,7 +269,19 @@ curl --location --request POST 'https://account.amer-1.jumio.ai/api/v1/accounts'
             }
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE"
+        "userReference": "YOUR_USER_REFERENCE",
+        "userConsent": {
+            "userIp": "192.168.0.1",                    
+            "userLocation": {
+                "country": "USA",                       
+                "state": "IL"                           
+            },
+             "consent": {
+              "obtained": "yes",                        
+              "obtainedAt": "2022-07-20T17:20:35.000Z"  
+
+            }
+        }
     }'
 ```
 
@@ -313,6 +335,12 @@ YOUR_ACCESS_TOKEN' \
                 }
             }
         ]
+    },
+    "userConsent": {
+        "userIp": "192.168.0.1",                    
+        "userLocation": {
+            "country": "AUT"                       
+        }
     }
 }
 ```
@@ -383,6 +411,46 @@ Workflows are specified using the `key` attribute in the `workflowDefinition` ob
     "credentials": []
 }
 ```
+# End-User Consent for Biometric Data
+
+To collect consent on Jumio’s behalf, you will need to incorporate certain explicit consent collection language and a link to Jumio’s Privacy Notice within your user consent flow before collection of end-user biometric data, if the end-user is located inside the United States.
+
+The following is an example of how consent may be presented to the end-user, but you may use your own custom language as long as the required elements are present:
+
+> “By clicking “Start” you consent to Jumio collecting, processing, and sharing your personal information, which may include biometric data, pursuant to its [Privacy Notice](https://www.jumio.com/legal-information/privacy-policy/jumio-corp-privacy-policy-for-online-services/).”
+
+## When to share consent parameters?
+
+Every transaction which includes any product/workflow step in which biometrics are collected needs to have consent parameters adapted and populated. This means if Face match is enabled for your account, Liveness, or Authentication is used you will need to share consent parameters.
+
+If your Privacy Policy and Terms & Conditions allowing continuous use of consent obtained from end-user on biometric data collection and processing the timestamp (`consent.obtainedAt`) should be when the original/updated consent was obtained.
+
+If consent is not provided or other scenarios where consent needs to be resubmitted use our [Account Update](#account-update) API to add the needed consent parameters.
+
+|⚠️ If the continuous consent applies, the consent is valid for a period of maximum 3 years (between the consent timestamp and current timestamp). A new consent needs to be obtained from the end-user before continuous consent expires. The consent timestamp (`consent.obtainedAt`) has to be updated accordingly.
+|:----------|
+
+Note: Until further notice Jumio will not perform any treatment based on the consent parameters. After a notice period business validation will be performed which could also lead to a rejection of the transaction, also providing additional consent specific error codes. The rejection will happen at the data acquisition step and not at the Account Create or Account Update stage. We will inform you separately on a specific date.
+
+### Which Jumio products collect biometrics?
+
+| Jumio Product / Workflow Steps           | Biometric Component   |
+|----------------------------------------- |------------------------|
+| Jumio Identity Verification              | Involves Liveness and Face match <br > May also serve as base facemap creation for authentication |
+| Jumio Go                                 | Involves Liveness and Face match |
+| Authentication                           | Involves new facemap creation and comparison with existing facemap |
+| ID Verification                          | Involves Face match (if enabled for the account) |
+| Jumio Video verification                 | Involves Liveness and Face match |
+| Jumio Screening                          | ID Verification: Involves Face match (if 1:n face match is enabled for the account)<br> Identity Verification: Involves Liveness and Face match |
+
+## Where to share consent parameters?
+
+Within the consent area in the [API request body](#request-body).
+
+- Always mandatory: Populate the end-user IP address and end-user current location (`userLocation.country`)
+- Mandatory if userLocation.country = USA: Populate the consent parameters (i.e., `consent.status`, `consent.obtainedAt`)
+
+See [examples](#initiate-account) for a sample request including the user consent parameters.
 
 # Data Acquisition
 
@@ -425,7 +493,7 @@ For more information on how to use the Jumio Mobile SDK please refer to our mobi
 ## API
 This section illustrates how to implement the API.
 
-After creating/updating a new account, you receive one or more specific redirect URL(s).
+After creating/updating a new account, you receive one or more specific redirect URL(s) to upload needed credentials (ID, facemap, document, selfie).
 
 ### Request
 

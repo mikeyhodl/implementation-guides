@@ -903,6 +903,11 @@ The existing facemap must have been acquired during a previous workflow, e.g. [W
 * Facemap already on file, acquired through previous workflow
 * Allowed channels: SDK, WEB
 
+If end-user consent may apply to you, please make sure to obtain consent as mentioned on [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data).
+
+|⚠️ If the continuous consent applies, the consent is valid for a period of maximum 3 years (between the consent timestamp and current timestamp). A new consent needs to be obtained from the end-user before continuous consent expires. The consent timestamp (`consent.obtainedAt`) has to be updated accordingly.
+|:----------|
+
 ### Capabilities
 (In order of dependency)
 * [usability](api_guide.md#capabilitiesusability) --> [authentication](api_guide.md#capabilitiesauthentication)
@@ -988,6 +993,11 @@ The existing facemap must have been acquired during a previous workflow, e.g. [W
 * Account already exists, `<accountId>` available
 * Facemap already on file (customer-side), acquired through previous workflow.
 * Allowed channels: SDK, WEB
+
+If end-user consent may apply to you, please make sure to obtain consent as mentioned on [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data).
+
+|⚠️ If the continuous consent applies, the consent is valid for a period of maximum 3 years (between the consent timestamp and current timestamp). A new consent needs to be obtained from the end-user before continuous consent expires. The consent timestamp (`consent.obtainedAt`) has to be updated accordingly.
+|:----------|
 
 ### Capabilities
 In order of dependency:
