@@ -367,8 +367,7 @@ This workflow verifies a photo ID document and returns a) whether that document 
 ### Prerequisites
 * Identity Verification must be enabled for your account. (Contact your Jumio account manager for activation.)
 * Allowed channels: SDK, WEB, API
-
-If end-user consent may apply to you, please make sure to obtain consent as mentioned on [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data).
+* Obtain [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data)
 
 ### Capabilities
 In order of dependency:
@@ -410,7 +409,19 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts'
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE"
+        "userReference": "YOUR_USER_REFERENCE",
+        "userConsent": {
+            "userIp": "192.168.0.1",                    
+            "userLocation": {
+                "country": "USA",                       
+                "state": "IL"                           
+            },
+             "consent": {
+              "obtained": "yes",                        
+              "obtainedAt": "2022-07-20T17:20:35.000Z"  
+
+            }
+        }
     }'
 ```
 
@@ -575,8 +586,7 @@ This workflow matches a selfie of a user to the face of a document holder of a s
 * Identity Verification must be enabled for your account. (Contact your Jumio account manager for activation.)
 * Account already exists, `<accountId>` available
 * Allowed channels: API
-
-If end-user consent may apply to you, please make sure to obtain consent as mentioned on [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data).
+* Obtain [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data)
 
 ### Capabilities
 In order of dependency:
@@ -610,6 +620,18 @@ curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts/1
                 "category": "SELFIE"
             }
         ]
+    },
+    "userConsent": {
+        "userIp": "192.168.0.1",                    
+        "userLocation": {
+            "country": "USA",                       
+            "state": "IL"                           
+        },
+         "consent": {
+          "obtained": "yes",                        
+          "obtainedAt": "2022-07-20T17:20:35.000Z"  
+
+        }
     }
 }'
 ```
@@ -745,8 +767,7 @@ This workflow captures a user's face to verify that the person is physically pre
 ### Prerequisites
 * Identity Verification must be enabled for your account. (Contact your Jumio account manager for activation.)
 * Allowed channels: SDK, API
-
-If end-user consent may apply to you, please make sure to obtain consent as mentioned on [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data).
+* Obtain [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data)
 
 ### Capabilities
 In order of dependency:
@@ -772,6 +793,18 @@ curl --location --request PUT 'https://account.amer-1.jumio.ai/api/v1/accounts' 
     "workflowDefinition": {
         "key": 6,
         "credentials": []
+    },
+    "userConsent": {
+        "userIp": "192.168.0.1",                    
+        "userLocation": {
+            "country": "USA",                       
+            "state": "IL"                           
+        },
+         "consent": {
+          "obtained": "yes",                        
+          "obtainedAt": "2022-07-20T17:20:35.000Z"  
+
+        }
     }
 }'
 ```
@@ -908,8 +941,7 @@ The existing facemap must have been acquired during a previous workflow, e.g. [W
 * Account already exists, `<accountId>` available
 * Facemap already on file, acquired through previous workflow
 * Allowed channels: SDK, WEB
-
-If end-user consent may apply to you, please make sure to obtain consent as mentioned on [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data).
+* Obtain [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data)
 
 |⚠️ If the continuous consent applies, the consent is valid for a period of maximum 3 years (between the consent timestamp and current timestamp). A new consent needs to be obtained from the end-user before continuous consent expires. The consent timestamp (`consent.obtainedAt`) has to be updated accordingly.
 |:----------|
@@ -1011,8 +1043,7 @@ The existing facemap must have been acquired during a previous workflow, e.g. [W
 * Account already exists, `<accountId>` available
 * Facemap already on file (customer-side), acquired through previous workflow.
 * Allowed channels: SDK, WEB
-
-If end-user consent may apply to you, please make sure to obtain consent as mentioned on [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data).
+* Obtain [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data)
 
 |⚠️ If the continuous consent applies, the consent is valid for a period of maximum 3 years (between the consent timestamp and current timestamp). A new consent needs to be obtained from the end-user before continuous consent expires. The consent timestamp (`consent.obtainedAt`) has to be updated accordingly.
 |:----------|
@@ -1178,8 +1209,7 @@ This workflow either matches the user photos on two IDs, two user selfies or a u
 
 ### Prerequisites
 * Allowed channels: API
-
-If end-user consent may apply to you, please make sure to obtain consent as mentioned on [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data).
+* Obtain [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data)
 
 ### Capabilities
 In order of dependency:
@@ -1204,6 +1234,18 @@ curl --location --request POST 'https://account.amer-1.jumio.ai/api/v1/accounts'
     "customerInternalReference": "CUSTOMER_REFERENCE",
     "workflowDefinition": {
         "key": 20
+    },
+    "userConsent": {
+        "userIp": "192.168.0.1",                    
+        "userLocation": {
+            "country": "USA",                       
+            "state": "IL"                           
+        },
+         "consent": {
+          "obtained": "yes",                        
+          "obtainedAt": "2022-07-20T17:20:35.000Z"  
+
+        }
     }
 }'
 ```
@@ -1715,8 +1757,7 @@ This workflow verifies a photo ID document and returns a) whether that document 
 * Screening must be enabled for your account. (Contact your Jumio account manager for activation.)
 * Screening must be set up for your Customer Portal (see [Comply Advantantage Portal Setup](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-screening.md))
 * Allowed channels: API, SDK, WEB
-
-If end-user consent may apply to you, please make sure to obtain consent as mentioned on [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data).
+* Obtain [End-User Consent for Biometric Data](https://github.com/Jumio/implementation-guides/blob/master/api-guide/api_guide.md#end-user-consent-for-biometric-data)
 
 ### Capabilities
 In order of dependency:
@@ -1759,7 +1800,19 @@ curl --request POST --location 'https://account.amer-1.jumio.ai/api/v1/accounts'
             ]
         },
         "callbackUrl": "YOUR_CALLBACK_URL",
-        "userReference": "YOUR_USER_REFERENCE"
+        "userReference": "YOUR_USER_REFERENCE",
+        "userConsent": {
+            "userIp": "192.168.0.1",                    
+            "userLocation": {
+                "country": "USA",                       
+                "state": "IL"                           
+            },
+             "consent": {
+              "obtained": "yes",                        
+              "obtainedAt": "2022-07-20T17:20:35.000Z"  
+
+            }
+        }
     }'
 ```
 
