@@ -1663,6 +1663,8 @@ __Dependency:__ [usability](#capabilitiesusability)
 | decision.details.label | string | if decision.type = REJECTED:<br>• LIVENESS_UNDETERMINED<br>• ID_USED_AS_SELFIE<br>• MULTIPLE_PEOPLE<br>• DIGITAL_COPY<br>• PHOTOCOPY<br>• MANIPULATED<br>• NO_FACE_PRESENT<br>• FACE_NOT_FULLY_VISIBLE<br>• BLACK_WHITE<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = WARNING:<br>• AGE_DIFFERENCE<br>• BAD_QUALITY<br><br>if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR |
 | data                   | object |              |
 | data.type              | object | Possible values:<br>• IPROOV_STANDARD (Web + SDK channel only)<br>• IPROOV_PREMIUM (Workflow 3: ID and Identity Verification (Web + SDK channel only) / Workflow 9: Authentication (SDK only) / Workflow 16: Authentication on Premise (SDK only))<br>• JUMIO_STANDARD |
+| data.predictedAge|integer |Predicted age according to the selfie<br>Example: '28' |
+| data.ageConfidenceRange|string |Age range we are confident the selfie age is within<br>Example: '25-34' |
 | validFaceMapForAuthentication   | string | href to manage facemap   |
 
 #### capabilities.similarity
@@ -1790,6 +1792,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | data.citizenship|string |Citizenship<br>• if idCountry = IDN <br>(activation required) |
 | data.maritalStatus|string |Marital Status<br>• if idCountry = IDN  <br>(activation required) |
 | data.religion|string |Religion<br>• if idCountry = IDN, MYS <br>(activation required) |
+| data.currentAge |integer |Current age calculated as extracted from the ID (= current date - extracted date of birth)<br>Example: '30' |
 
 <sup>1</sup> If one of the values such as "day" is not included in the document it will also not be returned in the object. For examples and additional details, refer to our [Knowledge Base](https://support.jumio.com/hc/en-us/articles/4412166539803-New-Parameters-in-Callback-and-Retrieval-API-dateOfBirthParts-issuingDateParts-expiryDateParts-).
 
