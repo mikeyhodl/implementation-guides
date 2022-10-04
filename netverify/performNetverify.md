@@ -158,7 +158,7 @@ Note: Until further notice Jumio will not perform any treatment based on the con
 Within the consent area in the [API request body](#request-body).
 
 - Always mandatory: Populate the end-user IP address and end-user current location (`userLocation.country`)
-- Mandatory if userLocation.country = USA: Populate the consent parameters (i.e., `consent.status`, `consent.obtainedAt`)
+- Mandatory if userLocation.country = USA: Populate the consent parameters (i.e., status, timestamp)
 
 See [examples](#examples) for a sample request including the user consent parameters.
 

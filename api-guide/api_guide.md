@@ -170,7 +170,7 @@ Values set in your API request will override the corresponding settings configur
 | web.successUrl | string | 255 | URL to which the browser will send the end user at the end of a successful web acquisition user journey. [Overrides success URL](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#callback-error-and-success-urls) in the Customer Portal. |
 | web.errorUrl | string | 255 | URL to which the browser will send the end user at the end of a failed web acquisition user journey. [Overrides error URL](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#callback-error-and-success-urls) in the Customer Portal. |
 | web.locale | string | 5 | Renders content in the specified language.<br>Overrides [Default locale](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#default-locale) in the Customer Portal.<br>See [supported locale values](#supported-locale-values). |
-|__userConsent__<sup>2</sup>|object| |User consent needed where a product uses facial recognition technology or processes biometric data<br>Possible values:<br>See [userConsent](#request-userConsent)|
+|__userConsent__<sup>2</sup>|object| |User consent needed where a product uses facial recognition technology or processes biometric data<br>Possible values:<br>See [userConsent](#request-userconsent)|
 
 <sup>1</sup> Mandatory request parameter for Workflow 32: ID Verification, Identity Verification, Screening.<br>
 <sup>2</sup> Mandatory for [End-User Consent](#end-user-consent-for-biometric-data) even if the user is not based in USA<br>
@@ -456,7 +456,7 @@ Note: Until further notice Jumio will not perform any treatment based on the con
 Within the consent area in the [API request body](#request-body).
 
 - Always mandatory: Populate the end-user IP address and end-user current location (`userLocation.country`)
-- Mandatory if userLocation.country = USA: Populate the consent parameters (i.e., `consent.status`, `consent.obtainedAt`)
+- Mandatory if userLocation.country = USA: Populate the consent parameters (i.e., status, timestamp)
 
 See [examples](#initiate-account) for a sample request including the user consent parameters.
 
