@@ -170,17 +170,10 @@ Values set in your API request will override the corresponding settings configur
 | web.successUrl | string | 255 | URL to which the browser will send the end user at the end of a successful web acquisition user journey. [Overrides success URL](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#callback-error-and-success-urls) in the Customer Portal. |
 | web.errorUrl | string | 255 | URL to which the browser will send the end user at the end of a failed web acquisition user journey. [Overrides error URL](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#callback-error-and-success-urls) in the Customer Portal. |
 | web.locale | string | 5 | Renders content in the specified language.<br>Overrides [Default locale](https://github.com/Jumio/implementation-guides/blob/master/netverify/netverify-web-v4.md#default-locale) in the Customer Portal.<br>See [supported locale values](#supported-locale-values). |
-|__userIp__<sup>2</sup>|string| |Current IP address of the end-user used during the verification|
-|__userLocation__<sup>2</sup>|object| |Possible values:<br>• userLocation.country <br>• userLocation.state|
-|__userLocation.country__<sup>2</sup>|string|3|Current country as per end-user location during the verification<br>Possible values: <br>•	[ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)|
-|userLocation.state|string|100|Current State as per end-user location during the verification<br>Applicable only in countries where state exists, including USA<br>Possible values: <br>•	For [USA](https://www.iso.org/obp/ui/#iso:code:3166:US), [CAN](https://www.iso.org/obp/ui/#iso:code:3166:CA), or [AUS](https://www.iso.org/obp/ui/#iso:code:3166:AU) alpha-2 code (state only - without country & hyphen), e.g. `IL` (Illinois), `NSW` (New South Wales)<br>•	For other countries, if applicable, any string|
-|__consent__<sup>3</sup>|object| |Possible values:<br>• consent.obtained <br>• consent.obtainedAt|
-|__consent.obtained__<sup>3</sup>|String||If the end-user consent has been obtained<br>Possible values: <br>•	yes (the consent was given by the end-user)<br>•	no (the consent was not given by the end-user)<br>•	na (not applicable)<br>__Mandatory for [End-User Consent](#end-user-consent-for-biometric-data) if userLocation.country = USA__|
-|__consent.obtainedAt__<sup>3</sup>|String||Timestamp when the consent was obtained (UTC)<br>Format: YYYY-MM-DDThh:mm:ss.SSSZ<br>__Mandatory for [End-User Consent](#end-user-consent-for-biometric-data) if consent.obtained = yes__|
+|__userConsent__<sup>2</sup>|object| |User consent needed where a product uses facial recognition technology or processes biometric data<br>Possible values:<br>See [userConsent](#request-userConsent)|
 
 <sup>1</sup> Mandatory request parameter for Workflow 32: ID Verification, Identity Verification, Screening.<br>
 <sup>2</sup> Mandatory for [End-User Consent](#end-user-consent-for-biometric-data) even if the user is not based in USA<br>
-<sup>3</sup> Mandatory for [End-User Consent](#end-user-consent-for-biometric-data) if userLocation.country = USA / consent.obtained = yes
 
 #### Request workflowDefinition.credentials
 
@@ -202,6 +195,21 @@ Values set in your API request will override the corresponding settings configur
 |------------------------|----------------|----------------------|---------------------------------------------------------------------------|
 | watchlistScreening      | object         |                      | Possible values:<br>• watchlistScreening.additionalProperties      |
 | watchlistScreening.additionalProperties                | string         |                      | Provide request options for watchlistScreening capability|
+
+#### Request userConsent
+
+| Parameter              | Type           | Max. Length          | Notes                                                                     |
+|------------------------|----------------|----------------------|---------------------------------------------------------------------------|
+|__userIp__<sup>1</sup>|string| |Current IP address of the end-user used during the verification|
+|__userLocation__<sup>1</sup>|object| |Possible values:<br>• userLocation.country <br>• userLocation.state|
+|__userLocation.country__<sup>1</sup>|string|3|Current country as per end-user location during the verification<br>Possible values: <br>•	[ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)|
+|userLocation.state|string|100|Current State as per end-user location during the verification<br>Applicable only in countries where state exists, including USA<br>Possible values: <br>•	For [USA](https://www.iso.org/obp/ui/#iso:code:3166:US), [CAN](https://www.iso.org/obp/ui/#iso:code:3166:CA), or [AUS](https://www.iso.org/obp/ui/#iso:code:3166:AU) alpha-2 code (state only - without country & hyphen), e.g. `IL` (Illinois), `NSW` (New South Wales)<br>•	For other countries, if applicable, any string|
+|__consent__<sup>2</sup>|object| |Possible values:<br>• consent.obtained <br>• consent.obtainedAt|
+|__consent.obtained__|String||If the end-user consent has been obtained<br>Possible values: <br>•	yes (the consent was given by the end-user)<br>•	no (the consent was not given by the end-user)<br>•	na (not applicable)<br>__Mandatory for [End-User Consent](#end-user-consent-for-biometric-data) if userLocation.country = USA__|
+|__consent.obtainedAt__|String||Timestamp when the consent was obtained (UTC)<br>Format: YYYY-MM-DDThh:mm:ss.SSSZ<br>__Mandatory for [End-User Consent](#end-user-consent-for-biometric-data) if consent.obtained = yes__|
+
+<sup>1</sup> Mandatory for [End-User Consent](#end-user-consent-for-biometric-data) even if the user is not based in USA<br>
+<sup>2</sup> Mandatory for [End-User Consent](#end-user-consent-for-biometric-data) if userLocation.country = USA / consent.obtained = yes
 
 ## Response
 Unsuccessful requests will return HTTP status code __400 Bad Request, 401 Unauthorized, 403 Forbidden__ or __404 Not Found__ (in case of a failed update scenario) if the scan is not available.

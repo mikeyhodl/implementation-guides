@@ -101,6 +101,7 @@ The following fields are required in the header section of your request:<br>
 |dob|String||Date of birth in the format YYYY-MM-DD|
 |callbackGranularity|String|255|Possible values:<br>• onFinish (default): Callback is only sent after the whole verification<br>• onAllSteps: Additional callback is sent when the images are received|
 |personalNumber|String|14|Personal number of the document|
+|**userConsent** *|Object| |_User consent needed where a product uses facial recognition technology or processes biometric data_<br>Possible values:<br>• userIp <br>• userLocation<br>• consent<br>__* Mandatory for [End-User Consent](#end-user-consent-for-biometric-data-in-api)__ even if the user is not based in USA|
 |**userIp** *|String| |Current IP address of the end-user used during the verification<br>__* Mandatory for [End-User Consent](#end-user-consent-for-biometric-data-in-api)__ even if the user is not based in USA|
 |**userLocation** *|Object| |Possible values:<br>• userLocation.country <br>• userLocation.state<br>__* Mandatory for [End-User Consent](#end-user-consent-for-biometric-data-in-api)__ even if the user is not based in USA|
 |**userLocation.country** *|String|3|Current country as per end-user location during the verification<br>Possible values: <br>•	[ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)<br>__* Mandatory for [End-User Consent](#end-user-consent-for-biometric-data-in-api)__ even if the user is not based in USA|
