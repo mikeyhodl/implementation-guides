@@ -1801,6 +1801,9 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | data.maritalStatus|string |Marital Status<br>• if idCountry = IDN  <br>(activation required) |
 | data.religion|string |Religion<br>• if idCountry = IDN, MYS <br>(activation required) |
 | data.currentAge |integer |Current age calculated as extracted from the ID (= current date - extracted date of birth)<br>Example: '30' |
+| data.lastNameAtBirth|string |Last name at birth<br>• if idCountry = SLO <br>(activation required) |
+| data.remarks|string |Special remarks/titles<br>• if idCountry = SLO<br>Example: Mgr <br>(activation required) |
+| data.disability|string |Check if there is at least one disability icon available on the back side<br>• if idCountry = BHR<br>Possible values:<br />• YES<br />• NO <br>(activation required) |
 
 <sup>1</sup> If one of the values such as "day" is not included in the document it will also not be returned in the object. For examples and additional details, refer to our [Knowledge Base](https://support.jumio.com/hc/en-us/articles/4412166539803-New-Parameters-in-Callback-and-Retrieval-API-dateOfBirthParts-issuingDateParts-expiryDateParts-).
 

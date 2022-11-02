@@ -364,6 +364,9 @@ Successful requests will return HTTP status code `200 OK` along with a JSON obje
 |citizenship|string| |Citizenship<br>• if idCountry = IDN <br> (if extraction is enabled) |
 |maritalStatus|string| |Marital Status<br>• if idCountry = IDN  <br> (if extraction is enabled) |
 |religion|string| |Religion<br>• if idCountry = IDN, MYS <br> (if extraction is enabled) |
+|lastNameAtBirth|string| |Last name at birth<br>• if idCountry = SLO <br> (if extraction is enabled) |
+|remarks|string| |Special remarks/titles<br>• if idCountry = SLO<br>Example: Mgr <br> (if extraction is enabled) |
+|disability|string| |Check if there is at least one disability icon available on the back side<br>• if idCountry = BHR<br>Possible values:<br />• YES<br />• NO <br> (if extraction is enabled) |
 
 <sup>1</sup> If one of the values such as "day" is not included in the document it will also not be returned in the object. For examples and additional details, refer to our [Knowledge Base](https://support.jumio.com/hc/en-us/articles/4412166539803-New-Parameters-in-Callback-and-Retrieval-API-dateOfBirthParts-issuingDateParts-expiryDateParts-).
 
