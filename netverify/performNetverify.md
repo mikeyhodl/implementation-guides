@@ -196,7 +196,7 @@ Authorization: Basic xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   "idType": "PASSPORT",
   "customerId":"customerId",
   "userConsent": {
-      "userIp": "1.2.3.4",                    
+      "userIp": "226.80.211.232",                    
       "userLocation": {
           "country": "USA",                       
           "state": "IL"                           

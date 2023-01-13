@@ -279,7 +279,7 @@ curl --location --request POST 'https://account.amer-1.jumio.ai/api/v1/accounts'
         "callbackUrl": "YOUR_CALLBACK_URL",
         "userReference": "YOUR_USER_REFERENCE",
         "userConsent": {
-            "userIp": "1.2.3.4",                    
+            "userIp": "226.80.211.232",                    
             "userLocation": {
                 "country": "USA",                       
                 "state": "IL"                           
@@ -345,7 +345,7 @@ YOUR_ACCESS_TOKEN' \
         ]
     },
     "userConsent": {
-        "userIp": "1.2.3.4",                    
+        "userIp": "226.80.211.232",                    
         "userLocation": {
             "country": "AUT"                       
         }
