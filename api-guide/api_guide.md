@@ -772,6 +772,9 @@ When specifying the width and height of your iFrame, you may prefer to use perce
 | ⚠️&nbsp;&nbsp; Camera capture is only possible within an iFrame when the containing page is served securely over https.
 |:----------|
 
+| ⚠️&nbsp;&nbsp; Biometric Face Capture is not possible within an iFrame on incognito mode.
+|:----------|
+
 ##### Example HTML
 
 **Absolute sizing example**

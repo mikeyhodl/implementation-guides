@@ -528,6 +528,9 @@ For a better user experience when creating a three-dimensional map of your user'
 |⚠️ The containing page where the iFrame is added has to be in a secure context (HTTPS).
 |:----------|
 
+|⚠️ Liveness is not possible within an iFrame on incognito mode.
+|:----------|
+
 ### Example HTML
 
 #### Absolute sizing example
