@@ -1395,7 +1395,6 @@ Jumio offers guaranteed support for ID Verification on the following browsers an
 |Google Chrome|current +<br> 1 previous|Windows + Mac|X|X|X|
 |Mozilla Firefox|current +<br>1 previous|Windows + Mac|X|X|X|
 |Apple Safari|current|Mac|X|X|X|
-|Microsoft Internet Explorer|current|Windows|X| | |
 |Microsoft Edge|current|Windows|X|X|X|
 
 #### Mobile
