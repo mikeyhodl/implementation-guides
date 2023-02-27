@@ -528,6 +528,9 @@ For a better user experience when creating a three-dimensional map of your user'
 |⚠️ The containing page where the iFrame is added has to be in a secure context (HTTPS).
 |:----------|
 
+|⚠️ Liveness is not possible within an iFrame on incognito mode.
+|:----------|
+
 ### Example HTML
 
 #### Absolute sizing example
@@ -1195,7 +1198,6 @@ Jumio offers guaranteed support for ID Verification on the following browsers an
 |Google Chrome|current +<br> 1 previous|Windows + Mac|X|X|X|
 |Mozilla Firefox|current +<br>1 previous|Windows + Mac|X|X|X|
 |Apple Safari|current|Mac|X|X|X|
-|Microsoft Internet Explorer|current|Windows|X| | |
 |Microsoft Edge|current|Windows|X|X|X|
 
 ### Mobile browsers

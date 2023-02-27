@@ -101,15 +101,21 @@ The following fields are required in the header section of your request:<br>
 |dob|String||Date of birth in the format YYYY-MM-DD|
 |callbackGranularity|String|255|Possible values:<br>• onFinish (default): Callback is only sent after the whole verification<br>• onAllSteps: Additional callback is sent when the images are received|
 |personalNumber|String|14|Personal number of the document|
-|**userConsent** *|Object| |_User consent needed where a product uses facial recognition technology or processes biometric data_<br>Possible values:<br>• userIp <br>• userLocation<br>• consent<br>__* Mandatory for [End-User Consent](#end-user-consent-for-biometric-data-in-api)__ even if the user is not based in USA|
+|**userConsent** *|Object| |_User consent needed where a product uses facial recognition technology or processes biometric data_<br>Possible values:<br>See [userConsent](#request-userconsent)<br>__* Mandatory for [End-User Consent](#end-user-consent-for-biometric-data-in-api)__ even if the user is not based in USA|
+
+<br>
+
+### Request userConsent
+
+|Parameter|Type|Max. length|Description|
+|:---|:---|:---|:---|
 |**userIp** *|String| |Current IP address of the end-user used during the verification<br>__* Mandatory for [End-User Consent](#end-user-consent-for-biometric-data-in-api)__ even if the user is not based in USA|
 |**userLocation** *|Object| |Possible values:<br>• userLocation.country <br>• userLocation.state<br>__* Mandatory for [End-User Consent](#end-user-consent-for-biometric-data-in-api)__ even if the user is not based in USA|
 |**userLocation.country** *|String|3|Current country as per end-user location during the verification<br>Possible values: <br>•	[ISO 3166-1 alpha-3 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)<br>__* Mandatory for [End-User Consent](#end-user-consent-for-biometric-data-in-api)__ even if the user is not based in USA|
 |userLocation.state|String|100|Current State as per end-user location during the verification<br>Applicable only in countries where state exists, including USA<br>Possible values: <br>•	For [USA](https://www.iso.org/obp/ui/#iso:code:3166:US), [CAN](https://www.iso.org/obp/ui/#iso:code:3166:CA), or [AUS](https://www.iso.org/obp/ui/#iso:code:3166:AU) alpha-2 code (state only - without country & hyphen), e.g. `IL` (Illinois), `NSW` (New South Wales)<br>•	For other countries, if applicable, any string|
 |**consent** *|Object||Possible values:<br>• consent.obtained <br>• consent.obtainedAt<br>__* Mandatory for [End-User Consent](#end-user-consent-for-biometric-data-in-api) and if userLocation.country = USA / consent.obtained = yes__|
-|**consent.obtained** *|String||If the end-user consent has been obtained<br>__* Mandatory for [End-User Consent](#end-user-consent-for-biometric-data-in-api) and if country = USA__<br>Possible values: <br>•	yes (the consent was given by the end-user)<br>•	no (the consent was not given by the end-user)<br>•	na (not applicable)|
+|**consent.obtained** *|String||If the end-user consent has been obtained<br>Possible values: <br>•	yes (the consent was given by the end-user)<br>•	no (the consent was not given by the end-user)<br>•	na (not applicable)<br>__* Mandatory for [End-User Consent](#end-user-consent-for-biometric-data-in-api) and if country = USA__|
 |**consent.obtainedAt** *|String||Timestamp when the consent was obtained (UTC)<br>Format: YYYY-MM-DDThh:mm:ss.SSSZ<br>__* Mandatory for [End-User Consent](#end-user-consent-for-biometric-data-in-api) and if consent.obtained = yes__|
-<br>
 
 ### Supported documents for address extraction
 
@@ -190,7 +196,7 @@ Authorization: Basic xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   "idType": "PASSPORT",
   "customerId":"customerId",
   "userConsent": {
-      "userIp": "192.168.0.1",                    
+      "userIp": "226.80.211.232",                    
       "userLocation": {
           "country": "USA",                       
           "state": "IL"                           

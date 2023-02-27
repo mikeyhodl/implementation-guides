@@ -279,7 +279,7 @@ curl --location --request POST 'https://account.amer-1.jumio.ai/api/v1/accounts'
         "callbackUrl": "YOUR_CALLBACK_URL",
         "userReference": "YOUR_USER_REFERENCE",
         "userConsent": {
-            "userIp": "192.168.0.1",                    
+            "userIp": "226.80.211.232",                    
             "userLocation": {
                 "country": "USA",                       
                 "state": "IL"                           
@@ -345,7 +345,7 @@ YOUR_ACCESS_TOKEN' \
         ]
     },
     "userConsent": {
-        "userIp": "192.168.0.1",                    
+        "userIp": "226.80.211.232",                    
         "userLocation": {
             "country": "AUT"                       
         }
@@ -770,6 +770,9 @@ When specifying the width and height of your iFrame, you may prefer to use perce
 |:----------|
 
 | ⚠️&nbsp;&nbsp; Camera capture is only possible within an iFrame when the containing page is served securely over https.
+|:----------|
+
+| ⚠️&nbsp;&nbsp; Biometric Face Capture is not possible within an iFrame on incognito mode.
 |:----------|
 
 ##### Example HTML
@@ -1392,7 +1395,6 @@ Jumio offers guaranteed support for ID Verification on the following browsers an
 |Google Chrome|current +<br> 1 previous|Windows + Mac|X|X|X|
 |Mozilla Firefox|current +<br>1 previous|Windows + Mac|X|X|X|
 |Apple Safari|current|Mac|X|X|X|
-|Microsoft Internet Explorer|current|Windows|X| | |
 |Microsoft Edge|current|Windows|X|X|X|
 
 #### Mobile
@@ -1632,13 +1634,13 @@ __Capability execution dependencies:__
 | liveness               | array (object) | See [liveness](#capabilitiesliveness)       | usability |
 | similarity             | array (object) | See [similarity](#capabilitiessimilarity)   | usability |
 | authentication         | array (object) | See [authentication](#capabilitiesauthentication)   | usability |
-| imageChecks            | array (object) | See [imageChecks](#capabilitiesimageChecks) | usability |
+| imageChecks            | array (object) | See [imageChecks](#capabilitiesimagechecks) | usability |
 | extraction             | array (object) | See [extraction](#capabilitiesextraction)   | usability, imageChecks |
-| dataChecks             | array (object) | See [dataChecks](#capabilitiesdataChecks)   | usability, imageChecks, extraction |
-| watchlistScreening     | array (object) | See [watchlistScreening](#capabilitieswatchlistScreening)   | usability, imageChecks, extraction |
-| addressValidation      | array (object) | See [addressValidation](#capabilitiesaddressValidation)     | usability, imageChecks, extraction |
-| proofOfResidency       | array (object) | See [proofOfResidency](#capabilitiesproofOfResidency)       | usability, imageChecks, extraction |
-| drivingLicenseVerification | array (object) | See [drivingLicenseVerification](#capabilitiesdrivingLicenseVerification)   | usability, imageChecks, extraction |
+| dataChecks             | array (object) | See [dataChecks](#capabilitiesdatachecks)   | usability, imageChecks, extraction |
+| watchlistScreening     | array (object) | See [watchlistScreening](#capabilitieswatchlistscreening)   | usability, imageChecks, extraction |
+| addressValidation      | array (object) | See [addressValidation](#capabilitiesaddressvalidation)     | usability, imageChecks, extraction |
+| proofOfResidency       | array (object) | See [proofOfResidency](#capabilitiesproofofresidency)       | usability, imageChecks, extraction |
+| drivingLicenseVerification | array (object) | See [drivingLicenseVerification](#capabilitiesdrivinglicenseverification)   | usability, imageChecks, extraction |
 
 #### capabilities.usability
 
@@ -1653,7 +1655,10 @@ __Dependency:__ none
 | decision               | object |              |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |              |
-| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• TECHNICAL_ERROR<br>• NOT_UPLOADED<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• BAD_QUALITY<br>• BLACK_WHITE<br>• MISSING_PAGE<br>• MISSING_SIGNATURE<br>• NOT_A_DOCUMENT<br>• PHOTOCOPY<br><br>if decision.type = WARNING:<br>• LIVENESS_UNDETERMINED<br>•  UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_DOCUMENT_TYPE |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• TECHNICAL_ERROR<br>• NOT_UPLOADED<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• BAD_QUALITY<br>• BLURRED<sup>1</sup><br>• BAD_QUALITY_IMAGE<sup>1</sup><br>• PART_OF_DOCUMENT_MISSING<sup>1</sup><br>• PART_OF_DOCUMENT_HIDDEN<sup>1</sup><br>• DAMAGED_DOCUMENT<sup>1</sup><br>• GLARE<sup>1</sup><br>• MISSING_MANDATORY_DATAPOINTS<sup>1</sup><br>• BLACK_WHITE<br>• MISSING_PAGE<br>• MISSING_SIGNATURE<br>• NOT_A_DOCUMENT<br>• PHOTOCOPY<br><br>if decision.type = WARNING:<br>• LIVENESS_UNDETERMINED<br>•  UNSUPPORTED_COUNTRY<br>• UNSUPPORTED_DOCUMENT_TYPE |
+
+<br>
+<sup>1</sup> Will be added in the week of January 30, 2023.
 
 #### capabilities.liveness
 
@@ -1723,8 +1728,11 @@ __Dependency:__ [usability](#capabilitiesusability)
 | decision               | object |                            |
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• REJECTED<br>• WARNING |
 | decision.details       | object |                            |
-| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DIGITAL_COPY<br>• WATERMARK<br>• MANIPULATED_DOCUMENT<br>• OTHER_REJECTION<br>• GHOST_IMAGE_DIFFERENT<br>• PUNCHED<br>• SAMPLE<br>• FAKE<br>• CHIP_MISSING<br>• DIGITAL_MANIPULATION<br>• MISMATCH_FRONT_BACK<br><br>if decision.type = WARNING:<br>• DIFFERENT_PERSON<br>• REPEATED_FACE (same face with same data occurs multiple times --> potential opening of multiple accounts) |
-| data                   | object | See [imageChecks.data](#capabilitiesimageChecksdata) |
+| decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• PRECONDITION_NOT_FULFILLED<br>• TECHNICAL_ERROR<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = REJECTED:<br>• DIGITAL_COPY<br>• WATERMARK<br>• MANIPULATED_DOCUMENT<br>• MANIPULATED_DOCUMENT_PHOTO<sup>1</sup><br>• MANIPULATED_DOCUMENT_EXPIRY<sup>1</sup><br>• MANIPULATED_DOCUMENT_NAME<sup>1</sup><br>• MANIPULATED_DOCUMENT_ADDRESS<sup>1</sup><br>• MANIPULATED_DOCUMENT_SECURITY_CHECKS<sup>1</sup><br>• MANIPULATED_DOCUMENT_SIGNATURE<sup>1</sup><br>• MANIPULATED_DOCUMENT_PERSONAL_NUMBER<sup>1</sup><br>• MANIPULATED_DOCUMENT_PLACE_OF_BIRTH<sup>1</sup><br>• MANIPULATED_DOCUMENT_GENDER<sup>1</sup><br>• MANIPULATED_DOCUMENT_ISSUING_DATE<sup>1</sup><br>• OTHER_REJECTION<br>• GHOST_IMAGE_DIFFERENT<br>• PUNCHED<br>• SAMPLE<br>• FAKE<br>• CHIP_MISSING<br>• DIGITAL_MANIPULATION<br>• MISMATCH_FRONT_BACK<br><br>if decision.type = WARNING:<br>• DIFFERENT_PERSON<br>• REPEATED_FACE (same face with same data occurs multiple times --> potential opening of multiple accounts) |
+| data                   | object | See [imageChecks.data](#capabilitiesimagechecksdata) |
+
+<br>
+<sup>1</sup> Will be added in the week of January 30, 2023.
 
 #### capabilities.imageChecks.data
 | Parameter                         | Type   | Note                                                                                                        |
@@ -1736,7 +1744,7 @@ __Dependency:__ [usability](#capabilitiesusability)
 
 #### capabilities.extraction
 
-__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimageChecks)
+__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimagechecks)
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
@@ -1824,7 +1832,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 
 #### capabilities.dataChecks
 
-__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimageChecks), [extraction](#capabilitiesextraction)
+__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimagechecks), [extraction](#capabilitiesextraction)
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
@@ -1839,7 +1847,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 
 #### capabilities.watchlistScreening
 
-__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimageChecks), [extraction](#capabilitiesextraction)
+__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimagechecks), [extraction](#capabilitiesextraction)
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
@@ -1851,7 +1859,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 | decision.type          | string | Possible values:<br>• NOT_EXECUTED<br>• PASSED<br>• WARNING |
 | decision.details       | object |                            |
 | decision.details.label | string | if decision.type = NOT_EXECUTED:<br>• NOT_ENOUGH_DATA<br>• VALIDATION_FAILED<br>• INVALID_MERCHANT_SETTINGS<br>• TECHNICAL_ERROR<br>• EXTRACTION_NOT_DONE<br>• NO_VALID_ID_CREDENTIAL<br>• PRECONDITION_NOT_FULFILLED<br><br>if decision.type = PASSED:<br>• OK<br><br>if decision.type = WARNING:<br>• ALERT |
-| data                   | object | See [watchlistScreening.data](#capabilitieswatchlistScreeningdata)        |
+| data                   | object | See [watchlistScreening.data](#capabilitieswatchlistscreeningdata)        |
 
 #### capabilities.watchlistScreening.data
 
@@ -1866,7 +1874,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 
 #### capabilities.addressValidation
 
-__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimageChecks), [extraction](#capabilitiesextraction)
+__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimagechecks), [extraction](#capabilitiesextraction)
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
@@ -1881,7 +1889,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 
 #### capabilities.proofOfResidency
 
-__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimageChecks), [extraction](#capabilitiesextraction)
+__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimagechecks), [extraction](#capabilitiesextraction)
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
@@ -1896,7 +1904,7 @@ __Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabiliti
 
 #### capabilities.drivingLicenseVerification
 
-__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimageChecks), [extraction](#capabilitiesextraction)
+__Dependencies:__ [usability](#capabilitiesusability), [imageChecks](#capabilitiesimagechecks), [extraction](#capabilitiesextraction)
 
 | Parameter              | Type   | Note                       |
 |------------------------|--------|----------------------------|
