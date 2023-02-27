@@ -7,9 +7,9 @@ Additionally, the [Jumio Knowledge Base](https://support.jumio.com) contains a w
 
 ---
 ## Implementing KYX / API v3
-- [Implementation Guide](api_guide.md)
+- [Implementation Guide (Deprecated)](api_guide.md)
 - [Implementation Guide KYX](api-guide-kyx.md)
-- [Workflow Descriptions](workflow_descriptions.md)
+- [Workflow Descriptions (Deprecated)](workflow_descriptions.md)
 - [Workflow Descriptions KYX](workflow-descriptions-kyx.md)
 
 ## Migrating to KYX / API v3
