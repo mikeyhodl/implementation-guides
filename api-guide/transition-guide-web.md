@@ -500,4 +500,4 @@ A result overview page can be found in the Customer Portal under "Workflows".
 No change for supported environments. See the current [ID Verification Implementation Guide](/netverify/netverify-web-v4.md#supported-environments) for further information.
 
 ---
-&copy; Jumio Corporation, 395 Page Mill Road, Suite 150 Palo Alto, CA 94306
+&copy; Jumio Corporation, 100 Mathilda Place, Suite 100, Sunnyvale, CA 94086

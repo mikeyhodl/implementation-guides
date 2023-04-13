@@ -790,4 +790,4 @@ Please refer to Implementation-Guide-Overview.pdf > [Available Retrieval APIs](a
 A result overview page can be found in the Customer Portal under __"Workflows"__.
 
 ---
-&copy; Jumio Corporation, 395 Page Mill Road, Suite 150 Palo Alto, CA 94306
+&copy; Jumio Corporation, 100 Mathilda Place, Suite 100, Sunnyvale, CA 94086

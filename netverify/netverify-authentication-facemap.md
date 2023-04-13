@@ -6,4 +6,4 @@ Please use our new [Jumio KYX Platform API](/api-guide/api_guide.md) > [Workflow
 
 
 ---
-&copy; Jumio Corp. 395 Page Mill Road, Suite 150, Palo Alto, CA 94306
+&copy; Jumio Corporation, 100 Mathilda Place, Suite 100, Sunnyvale, CA 94086

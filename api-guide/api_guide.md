@@ -2318,4 +2318,4 @@ User-Agent: User Demo
 Authorization: Bearer xxx
 ```
 ---
-&copy; Jumio Corporation, 395 Page Mill Road, Suite 150 Palo Alto, CA 94306
+&copy; Jumio Corporation, 100 Mathilda Place, Suite 100, Sunnyvale, CA 94086

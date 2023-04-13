@@ -52,4 +52,4 @@ Fastfill turns a customer's mobile device into an ID data extraction and populat
 - [Plugin for Flutter](https://github.com/Jumio/mobile-flutter)
 - [Plugin for Xamarin (deprecated)](https://github.com/Jumio/mobile-xamarin)
 ---
-&copy; Jumio Corporation, 395 Page Mill Road, Suite 150 Palo Alto, CA 94306
+&copy; Jumio Corporation, 100 Mathilda Place, Suite 100, Sunnyvale, CA 94086

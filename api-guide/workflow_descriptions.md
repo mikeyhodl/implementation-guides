@@ -1883,4 +1883,4 @@ Refer to [Data Acquistion](api_guide.md#data-acquistion) section for more inform
 Use our [Retrieval API](api_guide.md#retrieval) to retrieve account data and/or data acquired during a workflow.
 
 ---
-&copy; Jumio Corporation, 395 Page Mill Road, Suite 150 Palo Alto, CA 94306
+&copy; Jumio Corporation, 100 Mathilda Place, Suite 100, Sunnyvale, CA 94086
