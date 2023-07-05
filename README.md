@@ -1,5 +1,7 @@
 ![Jumio](/images/Jumio-Main-Banner.png)
 
+#### ⚠️&nbsp;New KYX documentation available: [Jumio Documentation](https://docs.jumio.com/production/Content/Home.htm)**<br>⚠️&nbsp;This documentation will no longer be maintained**
+
 # Implementation Guides
 
 The implementation guides below will assist you with integrating Jumio products.<p>

@@ -28,7 +28,7 @@ Information about changes to features and improvements documented in each releas
 	- [Application settings - General](#application-settings--general)
 		- [Callback, Error, and Success URLs](#callback-error-and-success-urls)
 		- [Capture method](#capture-method)
-		- [Skip "Start ID verification" screen](#skip-start-id-verification-screen)
+		- [Skip "Start ID verification" screen (deprecated)](#skip-start-id-verification-screen-deprecated)
 		- [Authorization token lifetime](#authorization-token-lifetime)
 	- [Application settings - Redirect](#application-settings--redirect)
 		- [Domain name prefix](#domain-name-prefix)
@@ -368,7 +368,7 @@ Choose from:
 
 <br>
 
-### Skip "Start ID verification" screen
+### Skip "Start ID verification" screen (deprecated)
 
 Select this checkbox to bypass the introductory screen in the ID Verification Web client.
 
