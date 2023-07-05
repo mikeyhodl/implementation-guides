@@ -1,6 +1,6 @@
 ![Jumio](/images/Jumio-Main-Banner.png)
 
-#### ⚠️&nbsp;New KYX documentation available: [Jumio Documentation](https://docs.jumio.com/production/Content/Home.htm)**<br>⚠️&nbsp;This documentation will no longer be maintained**
+### ⚠️&nbsp;New KYX documentation available: [Jumio Documentation](https://docs.jumio.com/production/Content/Home.htm)**<br>⚠️&nbsp;This documentation will no longer be maintained**
 
 # Implementation Guides
 
